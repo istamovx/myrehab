@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { TopNav } from './top-nav'
+import { Sidebar } from './sidebar'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -7,13 +7,15 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="min-h-screen bg-bg-page">
-      <TopNav />
-      <main className="pt-[var(--nav-height)]">
-        <div className="max-w-[1440px] mx-auto px-6 py-8">
-          {children}
-        </div>
-      </main>
+    <div className="flex min-h-screen">
+      <Sidebar />
+      <div className="flex-1 ml-[280px] min-h-screen flex flex-col">
+        <main className="flex-1 bg-bg-page">
+          <div className="max-w-[1280px] mx-auto px-6 py-6">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   )
 }

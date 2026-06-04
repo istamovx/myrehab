@@ -9,20 +9,20 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default: 'bg-gray-100 text-gray-600',
-  primary: 'bg-primary-light text-primary',
-  success: 'bg-success-bg text-success',
-  danger: 'bg-danger-bg text-danger',
-  warning: 'bg-warning-bg text-warning',
-  info: 'bg-info-bg text-info',
-  neutral: 'bg-gray-100 text-gray-500',
+  default:  'bg-gray-100 text-gray-700',
+  primary:  'bg-brand-50 text-brand-700',
+  success:  'bg-success-50 text-success-700',
+  danger:   'bg-error-50 text-error-700',
+  warning:  'bg-warning-50 text-warning-700',
+  info:     'bg-brand-50 text-brand-700',
+  neutral:  'bg-gray-100 text-gray-600',
 }
 
 export function Badge({ variant = 'default', className, children, ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg whitespace-nowrap',
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap',
         variantClasses[variant],
         className,
       )}
@@ -34,25 +34,25 @@ export function Badge({ variant = 'default', className, children, ...props }: Ba
 }
 
 const statusVariant: Record<PatientStatus, BadgeVariant> = {
-  Ready: 'success',
-  'At-Risk': 'danger',
-  'In Progress': 'primary',
-  'Awaiting clearance': 'warning',
-  Done: 'success',
+  Ready:               'success',
+  'At-Risk':           'danger',
+  'In Progress':       'primary',
+  'Awaiting clearance':'warning',
+  Done:                'success',
 }
 
 const statusDot: Record<PatientStatus, string> = {
-  Ready: 'bg-success',
-  'At-Risk': 'bg-danger',
-  'In Progress': 'bg-primary',
-  'Awaiting clearance': 'bg-warning',
-  Done: 'bg-success',
+  Ready:               'bg-success-600',
+  'At-Risk':           'bg-error-600',
+  'In Progress':       'bg-brand-600',
+  'Awaiting clearance':'bg-warning-600',
+  Done:                'bg-success-600',
 }
 
 export function StatusBadge({ status }: { status: PatientStatus }) {
   return (
     <Badge variant={statusVariant[status]}>
-      <span className={cn('size-1.5 rounded-full', statusDot[status])} />
+      <span className={cn('size-1.5 rounded-full shrink-0', statusDot[status])} />
       {status}
     </Badge>
   )
@@ -60,7 +60,7 @@ export function StatusBadge({ status }: { status: PatientStatus }) {
 
 export function TagBadge({ tag }: { tag: string }) {
   return (
-    <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-600 rounded-lg">
+    <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
       {tag}
     </span>
   )
