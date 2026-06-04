@@ -20,10 +20,10 @@ function durationPercent(startH: number, startM: number, endH: number, endM: num
 }
 
 const blockColors = {
-  surgery:       'bg-gray-900 text-white',
-  'ward-round':  'bg-brand-100 text-brand-800',
-  'consent-talk':'bg-brand-50 text-brand-700',
-  break:         'bg-gray-100 text-gray-500',
+  surgery:       'bg-[var(--text-primary)] text-[var(--bg-primary)]',
+  'ward-round':  'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)]',
+  'consent-talk':'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)]',
+  break:         'bg-[var(--bg-tertiary)] text-[var(--text-quaternary)]',
 }
 
 const blockIcons: Record<string, string> = {
@@ -36,26 +36,26 @@ const blockIcons: Record<string, string> = {
 function AlertIcon({ type }: { type: 'high' | 'medium' | 'low' }) {
   if (type === 'high')
     return (
-      <div className="size-8 rounded-full bg-error-50 flex items-center justify-center shrink-0">
-        <AlertTriangle size={14} className="text-error-600" />
+      <div className="size-8 rounded-full bg-[var(--bg-error-primary)] flex items-center justify-center shrink-0">
+        <AlertTriangle size={14} className="text-[var(--fg-error-primary)]" />
       </div>
     )
   if (type === 'medium')
     return (
-      <div className="size-8 rounded-full bg-warning-50 flex items-center justify-center shrink-0">
-        <AlertTriangle size={14} className="text-warning-600" />
+      <div className="size-8 rounded-full bg-[var(--bg-warning-primary)] flex items-center justify-center shrink-0">
+        <AlertTriangle size={14} className="text-[var(--fg-warning-primary)]" />
       </div>
     )
   return (
-    <div className="size-8 rounded-full bg-brand-50 flex items-center justify-center shrink-0">
-      <Info size={14} className="text-brand-600" />
+    <div className="size-8 rounded-full bg-[var(--bg-brand-primary)] flex items-center justify-center shrink-0">
+      <Info size={14} className="text-[var(--text-brand-primary)]" />
     </div>
   )
 }
 
 function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)]', className)}>
+    <div className={cn('bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)]', className)}>
       {children}
     </div>
   )
@@ -79,15 +79,15 @@ export function DashboardPage() {
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3 flex-wrap">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">{t('dashboard.title')}</h1>
-            <p className="text-sm text-gray-500 mt-0.5">{t('dashboard.subtitle')}</p>
+            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('dashboard.title')}</h1>
+            <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('dashboard.subtitle')}</p>
           </div>
           <PillSelect value={department} onValueChange={setDepartment} options={DEPARTMENTS} />
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
-          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-xs">
-            <Calendar size={14} className="text-gray-400" />
+          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer shadow-xs">
+            <Calendar size={14} className="text-[var(--fg-quaternary)]" />
             Apr 03, 2025
           </button>
           <Input
@@ -105,8 +105,8 @@ export function DashboardPage() {
         {/* Sessions card */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-gray-500">{t('dashboard.sessionsToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-success-50 text-success-700 text-xs font-medium">
+            <p className="text-sm font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] text-xs font-medium">
               <TrendingUp size={11} />
               +2
             </span>
@@ -114,24 +114,24 @@ export function DashboardPage() {
 
           <div className="flex items-center gap-6 mt-4">
             <div className="relative shrink-0">
-              <DonutChart percentage={70} color="#155EEF" size={120} strokeWidth={14} />
+              <DonutChart percentage={70} color="#2970FF" size={120} strokeWidth={14} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-gray-900">12</span>
-                <span className="text-[10px] text-gray-400 -mt-0.5">{t('dashboard.session')}</span>
+                <span className="text-2xl font-bold text-[var(--text-primary)]">12</span>
+                <span className="text-[10px] text-[var(--fg-quaternary)] -mt-0.5">{t('dashboard.session')}</span>
               </div>
             </div>
 
             <div className="space-y-2.5 flex-1 min-w-0">
               <div className="flex items-center gap-2 text-sm">
-                <span className="size-2 rounded-full bg-brand-600 shrink-0" />
-                <span className="text-gray-500">{t('dashboard.finished', { count: 8 })}</span>
+                <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
+                <span className="text-[var(--text-quaternary)]">{t('dashboard.finished', { count: 8 })}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <span className="size-2 rounded-full bg-gray-200 shrink-0" />
-                <span className="text-gray-500">{t('dashboard.upcoming', { count: 4 })}</span>
+                <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
+                <span className="text-[var(--text-quaternary)]">{t('dashboard.upcoming', { count: 4 })}</span>
               </div>
-              <p className="text-xs text-gray-400 pt-1 border-t border-gray-100">
-                <span className="font-semibold text-gray-700">70%</span> {t('dashboard.onSchedule')}
+              <p className="text-xs text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
+                <span className="font-semibold text-[var(--text-secondary)]">70%</span> {t('dashboard.onSchedule')}
               </p>
             </div>
           </div>
@@ -140,32 +140,32 @@ export function DashboardPage() {
         {/* At-risk card */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-gray-500">{t('dashboard.atRiskToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-error-50 text-error-700 text-xs font-medium">
+            <p className="text-sm font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] text-xs font-medium">
               −3 critical
             </span>
           </div>
 
           <div className="flex items-center gap-6 mt-4">
             <div className="relative shrink-0">
-              <DonutChart percentage={60} color="#155EEF" size={120} strokeWidth={14} />
+              <DonutChart percentage={60} color="#2970FF" size={120} strokeWidth={14} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-gray-900">8</span>
-                <span className="text-[10px] text-gray-400 -mt-0.5">{t('patients.atRisk')}</span>
+                <span className="text-2xl font-bold text-[var(--text-primary)]">8</span>
+                <span className="text-[10px] text-[var(--fg-quaternary)] -mt-0.5">{t('patients.atRisk')}</span>
               </div>
             </div>
 
             <div className="space-y-2.5 flex-1 min-w-0">
               <div className="flex items-center gap-2 text-sm">
-                <span className="size-2 rounded-full bg-brand-600 shrink-0" />
-                <span className="text-gray-500">{t('dashboard.reviewed', { count: 5 })}</span>
+                <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
+                <span className="text-[var(--text-quaternary)]">{t('dashboard.reviewed', { count: 5 })}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <span className="size-2 rounded-full bg-gray-200 shrink-0" />
-                <span className="text-gray-500">{t('dashboard.pending', { count: 3 })}</span>
+                <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
+                <span className="text-[var(--text-quaternary)]">{t('dashboard.pending', { count: 3 })}</span>
               </div>
-              <p className="text-xs text-gray-400 pt-1 border-t border-gray-100">
-                <span className="font-semibold text-gray-700">60%</span> {t('dashboard.atRiskPct', { pct: 60 }).replace('60% ', '')}
+              <p className="text-xs text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
+                <span className="font-semibold text-[var(--text-secondary)]">60%</span> {t('dashboard.atRiskPct', { pct: 60 }).replace('60% ', '')}
               </p>
             </div>
           </div>
@@ -173,23 +173,23 @@ export function DashboardPage() {
 
         {/* Alerts panel */}
         <Card className="flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-900">{t('dashboard.alerts')}</h3>
-            <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer transition-colors">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.alerts')}</h3>
+            <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
               <Settings2 size={14} />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto divide-y divide-gray-50">
+          <div className="flex-1 overflow-y-auto divide-y divide-[var(--border-secondary)]">
             {DASHBOARD_ALERTS.map(alert => (
-              <div key={alert.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors group">
+              <div key={alert.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-[var(--bg-secondary)] transition-colors group">
                 <AlertIcon type={alert.type} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">{alert.title}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{alert.message}</p>
-                  <p className="text-xs text-gray-400 mt-1">{alert.time}</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)]">{alert.title}</p>
+                  <p className="text-xs text-[var(--text-quaternary)] mt-0.5 line-clamp-2">{alert.message}</p>
+                  <p className="text-xs text-[var(--fg-quaternary)] mt-1">{alert.time}</p>
                 </div>
-                <button className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-gray-400 hover:text-gray-600 mt-0.5">
+                <button className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)] mt-0.5">
                   <MoreHorizontal size={15} />
                 </button>
               </div>
@@ -202,33 +202,33 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         {/* Gantt chart */}
         <Card className="xl:col-span-2">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
             <div className="flex items-center gap-4 flex-wrap">
-              <h3 className="text-sm font-semibold text-gray-900">{t('dashboard.teamSchedule')}</h3>
-              <div className="flex items-center gap-3 text-xs text-gray-500 flex-wrap">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.teamSchedule')}</h3>
+              <div className="flex items-center gap-3 text-xs text-[var(--text-quaternary)] flex-wrap">
                 <span className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-sm bg-gray-900" />
+                  <span className="size-2 rounded-sm bg-[var(--text-primary)]" />
                   {t('dashboard.surgery')}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-sm bg-brand-100" />
+                  <span className="size-2 rounded-sm bg-[var(--bg-brand-primary)]" />
                   {t('dashboard.session')}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-sm bg-brand-50 border border-brand-100" />
+                  <span className="size-2 rounded-sm bg-[var(--bg-brand-primary)] border border-[var(--blue-200)]" />
                   {t('dashboard.consent')}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="size-2 rounded-sm bg-gray-100 border border-gray-200" />
+                  <span className="size-2 rounded-sm bg-[var(--bg-tertiary)] border border-[var(--border-secondary)]" />
                   {t('dashboard.break')}
                 </span>
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer transition-colors">
+              <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
                 <Settings2 size={14} />
               </button>
-              <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer transition-colors">
+              <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
                 <Maximize2 size={14} />
               </button>
             </div>
@@ -238,9 +238,9 @@ export function DashboardPage() {
             <div className="min-w-[560px]">
               <div className="flex mb-3">
                 <div className="w-36 shrink-0 pr-3">
-                  <div className="flex items-center gap-1 text-xs text-gray-400">
+                  <div className="flex items-center gap-1 text-xs text-[var(--fg-quaternary)]">
                     <span>{t('dashboard.doctors')}</span>
-                    <button className="size-5 rounded-md bg-brand-50 text-brand-600 flex items-center justify-center hover:bg-brand-100 transition-colors cursor-pointer">
+                    <button className="size-5 rounded-md bg-[var(--bg-brand-primary)] text-[var(--text-brand-primary)] flex items-center justify-center hover:bg-[var(--bg-brand-primary)] transition-colors cursor-pointer">
                       <Plus size={11} />
                     </button>
                   </div>
@@ -249,7 +249,7 @@ export function DashboardPage() {
                   {TIME_SLOTS.map((h) => (
                     <span
                       key={h}
-                      className="absolute text-[10px] text-gray-400 -translate-x-1/2"
+                      className="absolute text-[10px] text-[var(--fg-quaternary)] -translate-x-1/2"
                       style={{ left: `${((h - 8) / TOTAL_HOURS) * 100}%` }}
                     >
                       {h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h - 12}pm`}
@@ -264,20 +264,20 @@ export function DashboardPage() {
                     <div className="w-36 shrink-0 pr-3 flex items-center gap-2">
                       <Avatar name={doc.name} size="xs" />
                       <div className="min-w-0">
-                        <p className="text-xs font-medium text-gray-700 truncate">{doc.name}</p>
-                        <p className="text-[10px] text-gray-400 truncate">{doc.role}</p>
+                        <p className="text-xs font-medium text-[var(--text-secondary)] truncate">{doc.name}</p>
+                        <p className="text-[10px] text-[var(--fg-quaternary)] truncate">{doc.role}</p>
                       </div>
                     </div>
-                    <div className="flex-1 h-9 bg-gray-50 rounded-lg relative overflow-hidden border border-gray-100">
+                    <div className="flex-1 h-9 bg-[var(--bg-secondary)] rounded-lg relative overflow-hidden border border-[var(--border-secondary)]">
                       {TIME_SLOTS.slice(1).map(h => (
                         <div
                           key={h}
-                          className="absolute top-0 bottom-0 w-px bg-gray-200"
+                          className="absolute top-0 bottom-0 w-px bg-[var(--bg-tertiary)]"
                           style={{ left: `${((h - 8) / TOTAL_HOURS) * 100}%` }}
                         />
                       ))}
                       <div
-                        className="absolute top-0 bottom-0 w-0.5 bg-brand-400/60 z-10"
+                        className="absolute top-0 bottom-0 w-0.5 bg-[var(--fg-brand-primary)]/60 z-10"
                         style={{ left: `${timeToPercent(10)}%` }}
                       />
                       {doc.schedule?.map((block, i) => (
@@ -285,7 +285,7 @@ export function DashboardPage() {
                           key={i}
                           className={cn(
                             'absolute top-1 bottom-1 rounded-md flex items-center px-1.5 text-[11px] font-medium overflow-hidden',
-                            blockColors[block.type as keyof typeof blockColors] ?? 'bg-gray-100 text-gray-600',
+                            blockColors[block.type as keyof typeof blockColors] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                           )}
                           style={{
                             left:  `${timeToPercent(block.startHour, block.startMin)}%`,
@@ -306,28 +306,28 @@ export function DashboardPage() {
 
         {/* Team availability */}
         <Card>
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-900">{t('dashboard.teamAvailable')}</h3>
-            <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 cursor-pointer transition-colors">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.teamAvailable')}</h3>
+            <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
               <Settings2 size={14} />
             </button>
           </div>
 
-          <div className="divide-y divide-gray-50">
+          <div className="divide-y divide-[var(--border-secondary)]">
             {DOCTORS.map(doc => (
-              <div key={doc.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors">
+              <div key={doc.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-[var(--bg-secondary)] transition-colors">
                 <Avatar name={doc.name} size="sm" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{doc.name}</p>
-                  <p className="text-xs text-gray-400 truncate">{doc.role}</p>
+                  <p className="text-sm font-medium text-[var(--text-primary)] truncate">{doc.name}</p>
+                  <p className="text-xs text-[var(--fg-quaternary)] truncate">{doc.role}</p>
                   {doc.availableFrom && (
-                    <p className="text-xs text-success-600 flex items-center gap-1 mt-0.5">
-                      <span className="size-1.5 rounded-full bg-success-600" />
+                    <p className="text-xs text-[var(--fg-success-primary)] flex items-center gap-1 mt-0.5">
+                      <span className="size-1.5 rounded-full bg-[var(--fg-success-primary)]" />
                       {t('team.available', { from: doc.availableFrom, to: doc.availableTo })}
                     </p>
                   )}
                 </div>
-                <button className="size-8 rounded-full bg-brand-600 flex items-center justify-center hover:bg-brand-700 transition-colors cursor-pointer shrink-0 shadow-xs">
+                <button className="size-8 rounded-full bg-[var(--fg-brand-primary)] flex items-center justify-center hover:bg-[var(--text-brand-secondary)] transition-colors cursor-pointer shrink-0 shadow-xs">
                   <Phone size={13} className="text-white" />
                 </button>
               </div>

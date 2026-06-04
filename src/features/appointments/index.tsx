@@ -16,15 +16,15 @@ const APPOINTMENTS = [
 ]
 
 const STATUS_STYLE: Record<string, string> = {
-  confirmed: 'text-success-700 bg-success-50',
-  pending:   'text-warning-700 bg-warning-50',
-  cancelled: 'text-error-600 bg-error-50',
+  confirmed: 'text-[var(--text-success-primary)] bg-[var(--bg-success-primary)]',
+  pending:   'text-[var(--text-warning-primary)] bg-[var(--bg-warning-primary)]',
+  cancelled: 'text-[var(--fg-error-primary)] bg-[var(--bg-error-primary)]',
 }
 
 const STATUS_BORDER: Record<string, string> = {
-  confirmed: 'border-l-success-600',
-  pending:   'border-l-warning-600',
-  cancelled: 'border-l-error-600 opacity-60',
+  confirmed: 'border-l-[var(--fg-success-primary)]',
+  pending:   'border-l-[var(--fg-warning-primary)]',
+  cancelled: 'border-l-[var(--fg-error-primary)] opacity-60',
 }
 
 function getDaysInMonth(year: number, month: number) {
@@ -61,8 +61,8 @@ export function AppointmentsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{t('appointments.title')}</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{t('appointments.subtitle', { count: APPOINTMENTS.length })}</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('appointments.title')}</h1>
+          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('appointments.subtitle', { count: APPOINTMENTS.length })}</p>
         </div>
         <Button size="md">
           <Plus size={15} />
@@ -72,21 +72,21 @@ export function AppointmentsPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         {/* Calendar */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)] p-5">
+        <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] p-5">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="text-sm font-semibold text-gray-900">
+            <h3 className="text-sm font-semibold text-[var(--text-primary)]">
               {MONTHS[month]} {year}
             </h3>
             <div className="flex items-center gap-0.5">
               <button
                 onClick={prevMonth}
-                className="size-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 cursor-pointer transition-colors"
+                className="size-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--text-quaternary)] cursor-pointer transition-colors"
               >
                 <ChevronLeft size={15} />
               </button>
               <button
                 onClick={nextMonth}
-                className="size-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 cursor-pointer transition-colors"
+                className="size-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--text-quaternary)] cursor-pointer transition-colors"
               >
                 <ChevronRight size={15} />
               </button>
@@ -96,7 +96,7 @@ export function AppointmentsPage() {
           {/* Day headers */}
           <div className="grid grid-cols-7 mb-1">
             {DAYS.map(d => (
-              <div key={d} className="text-center text-[11px] font-medium text-gray-400 py-1">
+              <div key={d} className="text-center text-[11px] font-medium text-[var(--fg-quaternary)] py-1">
                 {d}
               </div>
             ))}
@@ -116,9 +116,9 @@ export function AppointmentsPage() {
                   onClick={() => setSelectedDay(day)}
                   className={cn(
                     'h-8 w-full rounded-lg text-sm font-medium transition-all cursor-pointer flex items-center justify-center',
-                    isSelected && 'bg-brand-600 text-white',
-                    isToday && !isSelected && 'bg-brand-50 text-brand-700 font-semibold',
-                    !isSelected && !isToday && 'text-gray-600 hover:bg-gray-100',
+                    isSelected && 'bg-[var(--fg-brand-primary)] text-white',
+                    isToday && !isSelected && 'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] font-semibold',
+                    !isSelected && !isToday && 'text-[var(--text-tertiary)] hover:bg-[var(--bg-tertiary)]',
                   )}
                 >
                   {day}
@@ -128,13 +128,13 @@ export function AppointmentsPage() {
           </div>
 
           {/* Legend */}
-          <div className="mt-5 pt-4 border-t border-gray-100 space-y-2">
+          <div className="mt-5 pt-4 border-t border-[var(--border-secondary)] space-y-2">
             {[
-              { color: 'bg-success-600', label: t('appointments.confirmed') },
-              { color: 'bg-warning-600', label: t('appointments.pending') },
-              { color: 'bg-error-600',   label: t('appointments.cancelled') },
+              { color: 'bg-[var(--fg-success-primary)]', label: t('appointments.confirmed') },
+              { color: 'bg-[var(--fg-warning-primary)]', label: t('appointments.pending') },
+              { color: 'bg-[var(--fg-error-primary)]',   label: t('appointments.cancelled') },
             ].map(item => (
-              <div key={item.label} className="flex items-center gap-2 text-xs text-gray-500">
+              <div key={item.label} className="flex items-center gap-2 text-xs text-[var(--text-quaternary)]">
                 <span className={cn('size-2 rounded-full', item.color)} />
                 {item.label}
               </div>
@@ -143,21 +143,21 @@ export function AppointmentsPage() {
         </div>
 
         {/* Day schedule */}
-        <div className="xl:col-span-2 bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)]">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+        <div className="xl:col-span-2 bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)]">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
             <div>
-              <h3 className="text-sm font-semibold text-gray-900">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 {t('appointments.schedule', { month: MONTHS[month], day: selectedDay })}
               </h3>
-              <p className="text-xs text-gray-500 mt-0.5">{t('appointments.totalCount', { count: APPOINTMENTS.length })}</p>
+              <p className="text-xs text-[var(--text-quaternary)] mt-0.5">{t('appointments.totalCount', { count: APPOINTMENTS.length })}</p>
             </div>
-            <span className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
+            <span className="flex items-center gap-1.5 text-xs text-[var(--text-quaternary)] bg-[var(--bg-secondary)] border border-[var(--border-secondary)] px-3 py-1.5 rounded-lg">
               <Calendar size={12} />
               {t('common.today')}
             </span>
           </div>
 
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-[var(--border-secondary)]">
             {APPOINTMENTS.map(apt => {
               const patient = PATIENTS.find(p => p.id === apt.patientId)
 
@@ -165,40 +165,40 @@ export function AppointmentsPage() {
                 <div
                   key={apt.id}
                   className={cn(
-                    'flex items-center gap-4 px-5 py-4 border-l-[3px] hover:bg-gray-50 transition-colors cursor-pointer',
+                    'flex items-center gap-4 px-5 py-4 border-l-[3px] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer',
                     STATUS_BORDER[apt.status] ?? 'border-l-gray-200',
                   )}
                 >
                   <div className="w-14 shrink-0 text-center">
-                    <p className="text-sm font-semibold text-gray-900">{apt.time}</p>
-                    <p className="text-xs text-gray-400 flex items-center justify-center gap-0.5 mt-0.5">
+                    <p className="text-sm font-semibold text-[var(--text-primary)]">{apt.time}</p>
+                    <p className="text-xs text-[var(--fg-quaternary)] flex items-center justify-center gap-0.5 mt-0.5">
                       <Clock size={9} />
                       {t('appointments.minutes', { count: apt.duration })}
                     </p>
                   </div>
 
-                  <div className="w-px h-10 bg-gray-200 shrink-0" />
+                  <div className="w-px h-10 bg-[var(--bg-tertiary)] shrink-0" />
 
                   {patient && (
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       <Avatar name={patient.name} size="sm" />
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{patient.name}</p>
-                        <p className="text-xs text-gray-400">{t('patients.id')}: {patient.id}</p>
+                        <p className="text-sm font-medium text-[var(--text-primary)] truncate">{patient.name}</p>
+                        <p className="text-xs text-[var(--fg-quaternary)]">{t('patients.id')}: {patient.id}</p>
                       </div>
                     </div>
                   )}
 
                   <div className="flex-1 min-w-0 hidden sm:block">
-                    <p className="text-sm font-medium text-gray-700">
+                    <p className="text-sm font-medium text-[var(--text-secondary)]">
                       {t(`appointments.${apt.type}` as any, apt.type)}
                     </p>
-                    <p className="text-xs text-gray-400 mt-0.5">{apt.room}</p>
+                    <p className="text-xs text-[var(--fg-quaternary)] mt-0.5">{apt.room}</p>
                   </div>
 
                   <span className={cn(
                     'text-xs font-medium px-2.5 py-1 rounded-full shrink-0',
-                    STATUS_STYLE[apt.status] ?? 'bg-gray-100 text-gray-600',
+                    STATUS_STYLE[apt.status] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                   )}>
                     {t(`appointments.${apt.status}` as any, apt.status)}
                   </span>

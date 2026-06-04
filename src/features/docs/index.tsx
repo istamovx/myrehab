@@ -15,10 +15,10 @@ const DOCS = [
 ]
 
 const CAT_BADGE: Record<string, string> = {
-  protocols: 'bg-brand-50 text-brand-700',
-  forms:     'bg-warning-50 text-warning-700',
-  research:  'bg-success-50 text-success-700',
-  templates: 'bg-gray-100 text-gray-600',
+  protocols: 'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)]',
+  forms:     'bg-[var(--bg-warning-primary)] text-[var(--text-warning-primary)]',
+  research:  'bg-[var(--bg-success-primary)] text-[var(--text-success-primary)]',
+  templates: 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
 }
 
 export function DocsPage() {
@@ -39,8 +39,8 @@ export function DocsPage() {
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{t('documents.title')}</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{t('documents.subtitle', { count: DOCS.length })}</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('documents.title')}</h1>
+          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('documents.subtitle', { count: DOCS.length })}</p>
         </div>
         <div className="flex items-center gap-2">
           <Input placeholder={t('documents.searchPlaceholder')} leftIcon={<Search size={14} />} className="w-52" />
@@ -60,8 +60,8 @@ export function DocsPage() {
             className={cn(
               'px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer',
               activeCat === cat.key
-                ? 'bg-brand-600 text-white shadow-xs'
-                : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 shadow-xs',
+                ? 'bg-[var(--fg-brand-primary)] text-white shadow-xs'
+                : 'bg-[var(--bg-primary)] border border-[var(--border-primary)] text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] shadow-xs',
             )}
           >
             {cat.label}
@@ -69,45 +69,45 @@ export function DocsPage() {
         ))}
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)] overflow-hidden">
+      <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
+              <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-secondary)]">
                 {[t('documents.name'), t('documents.category'), t('documents.size'), t('documents.lastUpdated'), ''].map((h, i) => (
-                  <th key={i} className="px-5 py-3 text-left text-xs font-medium text-gray-500">
+                  <th key={i} className="px-5 py-3 text-left text-xs font-medium text-[var(--text-quaternary)]">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[var(--border-secondary)]">
               {filtered.map(doc => (
-                <tr key={doc.id} className="hover:bg-gray-50 transition-colors group">
+                <tr key={doc.id} className="hover:bg-[var(--bg-secondary)] transition-colors group">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="size-9 rounded-lg bg-error-50 flex items-center justify-center shrink-0">
-                        <FileText size={15} className="text-error-600" />
+                      <div className="size-9 rounded-lg bg-[var(--bg-error-primary)] flex items-center justify-center shrink-0">
+                        <FileText size={15} className="text-[var(--fg-error-primary)]" />
                       </div>
-                      <span className="text-sm font-medium text-gray-900">{doc.name}</span>
+                      <span className="text-sm font-medium text-[var(--text-primary)]">{doc.name}</span>
                     </div>
                   </td>
                   <td className="px-5 py-3.5">
                     <span className={cn(
                       'px-2.5 py-0.5 text-xs font-medium rounded-full',
-                      CAT_BADGE[doc.categoryKey] ?? 'bg-gray-100 text-gray-600',
+                      CAT_BADGE[doc.categoryKey] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                     )}>
                       {t(`documents.${doc.categoryKey}` as any, doc.categoryKey)}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500">{doc.size}</td>
-                  <td className="px-5 py-3.5 text-sm text-gray-500">{doc.updated}</td>
+                  <td className="px-5 py-3.5 text-sm text-[var(--text-quaternary)]">{doc.size}</td>
+                  <td className="px-5 py-3.5 text-sm text-[var(--text-quaternary)]">{doc.updated}</td>
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
-                      <button className="size-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-700 cursor-pointer">
+                      <button className="size-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] cursor-pointer">
                         <Eye size={14} />
                       </button>
-                      <button className="size-8 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-700 cursor-pointer">
+                      <button className="size-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] cursor-pointer">
                         <Download size={14} />
                       </button>
                     </div>
@@ -118,8 +118,8 @@ export function DocsPage() {
           </table>
         </div>
 
-        <div className="px-5 py-3 border-t border-gray-100">
-          <p className="text-sm text-gray-500">
+        <div className="px-5 py-3 border-t border-[var(--border-secondary)]">
+          <p className="text-sm text-[var(--text-quaternary)]">
             {t('documents.showingOf', { count: filtered.length, total: DOCS.length })}
           </p>
         </div>

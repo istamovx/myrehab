@@ -9,20 +9,20 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantClasses: Record<BadgeVariant, string> = {
-  default:  'bg-gray-100 text-gray-700',
-  primary:  'bg-brand-50 text-brand-700',
-  success:  'bg-success-50 text-success-700',
-  danger:   'bg-error-50 text-error-700',
-  warning:  'bg-warning-50 text-warning-700',
-  info:     'bg-brand-50 text-brand-700',
-  neutral:  'bg-gray-100 text-gray-600',
+  default:  'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-secondary)]',
+  primary:  'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] border border-[var(--blue-200)]',
+  success:  'bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] border border-transparent',
+  danger:   'bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] border border-transparent',
+  warning:  'bg-[var(--bg-warning-primary)] text-[var(--text-warning-primary)] border border-transparent',
+  info:     'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] border border-[var(--blue-200)]',
+  neutral:  'bg-[var(--bg-secondary)] text-[var(--text-tertiary)] border border-[var(--border-secondary)]',
 }
 
 export function Badge({ variant = 'default', className, children, ...props }: BadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-xs font-medium rounded-full whitespace-nowrap',
+        'inline-flex items-center gap-1.5 px-2.5 py-0.5 text-[12px] font-medium rounded-full whitespace-nowrap',
         variantClasses[variant],
         className,
       )}
@@ -42,11 +42,11 @@ const statusVariant: Record<PatientStatus, BadgeVariant> = {
 }
 
 const statusDot: Record<PatientStatus, string> = {
-  Ready:               'bg-success-600',
-  'At-Risk':           'bg-error-600',
-  'In Progress':       'bg-brand-600',
-  'Awaiting clearance':'bg-warning-600',
-  Done:                'bg-success-600',
+  Ready:               'bg-[var(--fg-success-primary)]',
+  'At-Risk':           'bg-[var(--fg-error-primary)]',
+  'In Progress':       'bg-[var(--fg-brand-primary)]',
+  'Awaiting clearance':'bg-[var(--fg-warning-primary)]',
+  Done:                'bg-[var(--fg-success-primary)]',
 }
 
 export function StatusBadge({ status }: { status: PatientStatus }) {
@@ -60,7 +60,7 @@ export function StatusBadge({ status }: { status: PatientStatus }) {
 
 export function TagBadge({ tag }: { tag: string }) {
   return (
-    <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full">
+    <span className="inline-flex items-center px-2.5 py-0.5 text-[12px] font-medium bg-[var(--bg-secondary)] text-[var(--text-tertiary)] border border-[var(--border-secondary)] rounded-full">
       {tag}
     </span>
   )

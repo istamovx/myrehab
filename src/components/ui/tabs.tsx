@@ -24,8 +24,8 @@ export function Tabs({ defaultValue, value, onValueChange, items, className, lis
       <BaseTabs.List
         className={cn(
           'flex items-center',
-          variant === 'pills' && 'gap-1 p-1 bg-gray-100 rounded-xl w-fit',
-          variant === 'underline' && 'gap-0 border-b border-gray-200',
+          variant === 'pills' && 'gap-1 p-1 bg-[var(--bg-secondary)] rounded-xl w-fit',
+          variant === 'underline' && 'gap-0 border-b border-[var(--border-secondary)]',
           listClassName,
         )}
       >
@@ -36,14 +36,14 @@ export function Tabs({ defaultValue, value, onValueChange, items, className, lis
             className={cn(
               'text-sm font-medium cursor-pointer outline-none transition-all',
               variant === 'pills' && [
-                'px-4 py-2 rounded-lg text-gray-500',
-                'data-[selected]:bg-white data-[selected]:text-navy data-[selected]:shadow-sm',
-                'hover:text-navy',
+                'px-4 py-2 rounded-lg text-[var(--text-quaternary)]',
+                'data-[selected]:bg-[var(--bg-primary)] data-[selected]:text-[var(--text-primary)] data-[selected]:[box-shadow:var(--shadow-xs)]',
+                'hover:text-[var(--text-secondary)]',
               ],
               variant === 'underline' && [
-                'px-4 py-2.5 text-gray-500 border-b-2 border-transparent -mb-px',
-                'data-[selected]:text-primary data-[selected]:border-primary',
-                'hover:text-navy',
+                'px-4 py-2.5 text-[var(--text-quaternary)] border-b-2 border-transparent -mb-px',
+                'data-[selected]:text-[var(--text-brand-primary)] data-[selected]:border-[var(--fg-brand-primary)]',
+                'hover:text-[var(--text-secondary)]',
               ],
             )}
           >

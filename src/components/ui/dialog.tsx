@@ -24,29 +24,29 @@ export function Dialog({ open, onOpenChange, trigger, title, description, childr
       )}
       <BaseDialog.Portal>
         <BaseDialog.Backdrop
-          className="fixed inset-0 bg-navy/40 backdrop-blur-sm z-50"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
         />
         <BaseDialog.Popup
           className={cn(
             'fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-            'bg-white rounded-2xl shadow-[0_25px_50px_-12px_rgb(0_0_0/0.25)] w-full max-w-lg p-6',
+            'bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-2xl [box-shadow:var(--shadow-lg)] w-full max-w-lg p-6',
             className,
           )}
         >
           <div className="flex items-start justify-between mb-4">
             <div>
               {title && (
-                <BaseDialog.Title className="text-lg font-bold text-navy">
+                <BaseDialog.Title className="text-[18px] font-bold text-[var(--text-primary)]">
                   {title}
                 </BaseDialog.Title>
               )}
               {description && (
-                <BaseDialog.Description className="text-sm text-gray-500 mt-1">
+                <BaseDialog.Description className="text-[14px] text-[var(--text-tertiary)] mt-1">
                   {description}
                 </BaseDialog.Description>
               )}
             </div>
-            <BaseDialog.Close className="text-gray-400 hover:text-gray-600 transition-colors rounded-lg p-1 hover:bg-gray-100 cursor-pointer">
+            <BaseDialog.Close className="text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] transition-colors rounded-lg p-1 hover:bg-[var(--bg-secondary)] cursor-pointer">
               <X size={18} />
             </BaseDialog.Close>
           </div>

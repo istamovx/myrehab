@@ -2,10 +2,11 @@ import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Users, BarChart2, Calendar, FileText, UsersRound,
-  HelpCircle, Settings, LogOut, X,
+  HelpCircle, Settings, LogOut, X, Sun, Moon,
 } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { useLangStore } from '@/store/lang'
+import { useThemeStore } from '@/store/theme'
 import { cn } from '@/lib/utils'
 
 const LANG_OPTIONS = [
@@ -25,11 +26,11 @@ function NavItem({ to, icon: Icon, label, onClose }: {
       to={to}
       onClick={onClose}
       className={cn(
-        'flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium',
-        'text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors',
+        'flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] font-medium',
+        'text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors',
       )}
       activeProps={{
-        className: 'bg-brand-50 text-brand-700 hover:bg-brand-50 hover:text-brand-700',
+        className: 'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] hover:bg-[var(--bg-brand-primary)] hover:text-[var(--text-brand-secondary)]',
       }}
     >
       <Icon size={18} className="shrink-0" />
@@ -45,26 +46,27 @@ interface SidebarProps {
 export function Sidebar({ onClose }: SidebarProps) {
   const { t } = useTranslation()
   const { lang, setLang } = useLangStore()
+  const { theme, toggle } = useThemeStore()
 
   return (
-    <aside className="w-[280px] h-full bg-white border-r border-gray-200 flex flex-col select-none">
+    <aside className="w-[280px] h-full bg-[var(--bg-primary)] border-r border-[var(--border-secondary)] flex flex-col select-none">
       {/* Logo */}
-      <div className="flex items-center justify-between px-5 h-[68px] border-b border-gray-100 shrink-0">
+      <div className="flex items-center justify-between px-5 h-[68px] border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-3">
-          <div className="size-9 rounded-xl bg-brand-600 flex items-center justify-center shrink-0 shadow-sm">
+          <div className="size-9 rounded-xl bg-gradient-to-br from-[#2970FF] to-[#155EEF] flex items-center justify-center shrink-0 [box-shadow:0_2px_6px_-2px_rgba(21,94,239,0.5)]">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
               <path d="M8 3h4v4h4v4h-4v4H8v-4H4V7h4V3z" fill="white" />
             </svg>
           </div>
           <div className="min-w-0">
-            <p className="font-bold text-base text-gray-900 leading-tight">MyRehab</p>
-            <p className="text-xs text-gray-400 leading-tight">{t('nav.clinicalPlatform')}</p>
+            <p className="font-bold text-[16px] text-[var(--text-primary)] leading-tight">MyRehab</p>
+            <p className="text-[12px] text-[var(--text-quaternary)] leading-tight">{t('nav.clinicalPlatform')}</p>
           </div>
         </div>
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden size-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 cursor-pointer transition-colors"
+            className="lg:hidden size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
           >
             <X size={18} />
           </button>
@@ -81,7 +83,7 @@ export function Sidebar({ onClose }: SidebarProps) {
         </div>
 
         <div className="mt-6 mb-2 px-3">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+          <p className="text-[12px] font-semibold text-[var(--text-quaternary)] uppercase tracking-wider">
             {t('nav.management')}
           </p>
         </div>
@@ -92,47 +94,54 @@ export function Sidebar({ onClose }: SidebarProps) {
         </div>
       </nav>
 
-      {/* Language switcher */}
-      <div className="px-4 pb-3">
-        <div className="flex items-center gap-1 p-1 bg-gray-100 rounded-lg">
+      {/* Language + theme */}
+      <div className="px-4 pb-3 space-y-2">
+        <div className="flex items-center gap-1 p-1 bg-[var(--bg-secondary)] rounded-lg">
           {LANG_OPTIONS.map(opt => (
             <button
               key={opt.code}
               onClick={() => setLang(opt.code)}
               className={cn(
-                'flex-1 h-8 rounded-md text-sm font-semibold transition-all cursor-pointer',
+                'flex-1 h-8 rounded-md text-[13px] font-semibold transition-all cursor-pointer',
                 lang === opt.code
-                  ? 'bg-white text-gray-900 shadow-xs'
-                  : 'text-gray-500 hover:text-gray-700',
+                  ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] [box-shadow:var(--shadow-xs)]'
+                  : 'text-[var(--text-quaternary)] hover:text-[var(--text-secondary)]',
               )}
             >
               {opt.label}
             </button>
           ))}
         </div>
+        <button
+          onClick={toggle}
+          className="w-full flex items-center justify-center gap-2 h-9 rounded-lg border border-[var(--border-secondary)] text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer"
+        >
+          {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          {theme === 'dark' ? 'Yorug‘ rejim' : 'Tungi rejim'}
+        </button>
       </div>
 
       {/* Bottom actions */}
-      <div className="px-3 pb-2 space-y-0.5 border-t border-gray-100 pt-3">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer">
-          <HelpCircle size={18} className="shrink-0 text-gray-400" />
+      <div className="px-3 pb-2 space-y-0.5 border-t border-[var(--border-secondary)] pt-3">
+        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] font-medium text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+          <HelpCircle size={18} className="shrink-0 text-[var(--fg-quaternary)]" />
           {t('nav.support')}
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors cursor-pointer">
-          <Settings size={18} className="shrink-0 text-gray-400" />
+        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[15px] font-medium text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] transition-colors cursor-pointer">
+          <Settings size={18} className="shrink-0 text-[var(--fg-quaternary)]" />
           {t('nav.settings')}
         </button>
       </div>
 
       {/* User profile */}
-      <div className="px-3 pb-4 pt-2 border-t border-gray-100">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer group">
+      <div className="px-3 pb-4 pt-2 border-t border-[var(--border-secondary)]">
+        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer group">
           <Avatar name="Dr. Robert Fox" size="sm" />
           <div className="flex-1 min-w-0 text-left">
-            <p className="text-sm font-semibold text-gray-700 truncate">Dr. Robert Fox</p>
-            <p className="text-xs text-gray-400 truncate">Rehab Specialist</p>
+            <p className="text-[14px] font-semibold text-[var(--text-secondary)] truncate">Dr. Robert Fox</p>
+            <p className="text-[12px] text-[var(--text-quaternary)] truncate">Rehab Specialist</p>
           </div>
-          <LogOut size={14} className="text-gray-400 group-hover:text-gray-600 shrink-0 transition-colors" />
+          <LogOut size={14} className="text-[var(--fg-quaternary)] group-hover:text-[var(--text-secondary)] shrink-0 transition-colors" />
         </button>
       </div>
     </aside>

@@ -9,7 +9,7 @@ interface DonutChartProps {
 
 export function DonutChart({
   percentage,
-  color = '#4684FE',
+  color = '#2970FF',
   size = 160,
   strokeWidth = 18,
 }: DonutChartProps) {
@@ -37,7 +37,7 @@ export function DonutChart({
             strokeWidth={0}
           >
             <Cell fill={color} />
-            <Cell fill="#E9EFF7" />
+            <Cell fill="var(--bg-secondary-hover)" />
           </Pie>
         </PieChart>
       </ResponsiveContainer>
