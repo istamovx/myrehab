@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
+/* Dark mode is class-based (toggle adds `.dark` to <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
 
-  /* === Untitled UI — Blue Design System === */
-
-  /* Brand blue */
-  --color-brand-25: #F5F8FF;
-  --color-brand-50: #EFF4FF;
+  /* === Untitled UI — Blue brand === */
+  --color-brand-25:  #F5F8FF;
+  --color-brand-50:  #EFF4FF;
   --color-brand-100: #D1E0FF;
   --color-brand-200: #B2CCFF;
   --color-brand-300: #84ADFF;
@@ -18,11 +19,11 @@
   --color-brand-800: #0040C1;
   --color-brand-900: #00359E;
 
-  /* Gray scale */
-  --color-gray-25: #FCFCFD;
-  --color-gray-50: #F9FAFB;
-  --color-gray-100: #F3F4F6;
-  --color-gray-200: #E4E7EC;
+  /* Gray scale (Untitled UI) */
+  --color-gray-25:  #FCFCFD;
+  --color-gray-50:  #F9FAFB;
+  --color-gray-100: #F2F4F7;
+  --color-gray-200: #EAECF0;
   --color-gray-300: #D0D5DD;
   --color-gray-400: #98A2B3;
   --color-gray-500: #667085;
@@ -30,69 +31,147 @@
   --color-gray-700: #344054;
   --color-gray-800: #1D2939;
   --color-gray-900: #101828;
+  --color-gray-950: #0C111D;
 
   /* Success */
-  --color-success-50: #ECFDF3;
-  --color-success-100: #DCFCE7;
-  --color-success-600: #039855;
-  --color-success-700: #027A48;
+  --color-success-50:  #ECFDF3;
+  --color-success-100: #DCFAE6;
+  --color-success-500: #16B364;
+  --color-success-600: #079455;
+  --color-success-700: #067647;
 
   /* Error */
-  --color-error-50: #FEF3F2;
+  --color-error-50:  #FEF3F2;
   --color-error-100: #FEE4E2;
   --color-error-300: #FDA29B;
+  --color-error-500: #F04438;
   --color-error-600: #D92D20;
   --color-error-700: #B42318;
 
   /* Warning */
-  --color-warning-50: #FFFAEB;
+  --color-warning-50:  #FFFAEB;
+  --color-warning-100: #FEF0C7;
   --color-warning-300: #FEC84B;
+  --color-warning-500: #F79009;
   --color-warning-600: #DC6803;
   --color-warning-700: #B54708;
 
-  /* === Backwards-compat aliases === */
-  --color-primary: #155EEF;
-  --color-primary-hover: #004EEB;
-  --color-primary-light: #EFF4FF;
-  --color-navy: #101828;
-  --color-navy-800: #1D2939;
-  --color-danger: #D92D20;
-  --color-danger-bg: #FEF3F2;
-  --color-success: #039855;
-  --color-success-bg: #ECFDF3;
-  --color-warning: #DC6803;
-  --color-warning-bg: #FFFAEB;
-  --color-info: #155EEF;
-  --color-info-bg: #EFF4FF;
-  --color-light-blue: #B2CCFF;
-  --color-bg-page: #F9FAFB;
-
-  /* Patient status */
-  --color-at-risk-bg: #FEF3F2;
-  --color-at-risk: #D92D20;
-  --color-ready-bg: #ECFDF3;
-  --color-ready: #039855;
-  --color-in-progress-bg: #EFF4FF;
-  --color-in-progress: #155EEF;
-  --color-pending-bg: #FFFAEB;
-  --color-pending: #DC6803;
-  --color-done-bg: #ECFDF3;
-  --color-done: #027A48;
-
   /* === Radius === */
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 10px;
-  --radius-xl: 12px;
+  --radius-sm:  6px;
+  --radius-md:  8px;
+  --radius-lg:  10px;
+  --radius-xl:  12px;
   --radius-2xl: 16px;
+}
 
-  /* === Shadows — Untitled UI === */
-  --shadow-xs:  0 1px 2px 0 rgb(16 24 40 / 0.05);
-  --shadow-sm:  0 1px 3px 0 rgb(16 24 40 / 0.10), 0 1px 2px -1px rgb(16 24 40 / 0.10);
-  --shadow-md:  0 4px 8px -2px rgb(16 24 40 / 0.10), 0 2px 4px -2px rgb(16 24 40 / 0.06);
-  --shadow-lg:  0 12px 16px -4px rgb(16 24 40 / 0.08), 0 4px 6px -2px rgb(16 24 40 / 0.03);
-  --shadow-card: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+/* =====================================================================
+   Untitled UI — semantic tokens (LIGHT)
+   ===================================================================== */
+:root {
+  /* Background */
+  --bg-primary:           #FFFFFF;
+  --bg-primary-hover:     #F9FAFB;
+  --bg-secondary:         #F9FAFB;
+  --bg-secondary-subtle:  #FCFCFD;
+  --bg-secondary-hover:   #F2F4F7;
+  --bg-tertiary:          #F2F4F7;
+  --bg-brand-primary:     #EFF4FF;
+  --bg-brand-solid:       #2970FF;
+  --bg-success-primary:   #ECFDF3;
+  --bg-warning-primary:   #FFFAEB;
+  --bg-error-primary:     #FEF3F2;
+  --bg-page:              #F9FAFB;
+
+  /* Foreground (icons / accents) */
+  --fg-primary:           #101828;
+  --fg-secondary:         #344054;
+  --fg-tertiary:          #475467;
+  --fg-quaternary:        #98A2B3;
+  --fg-brand-primary:     #2970FF;
+  --fg-success-primary:   #079455;
+  --fg-warning-primary:   #DC6803;
+  --fg-error-primary:     #D92D20;
+
+  /* Text */
+  --text-primary:         #101828;
+  --text-secondary:       #344054;
+  --text-tertiary:        #475467;
+  --text-quaternary:      #667085;
+  --text-placeholder:     #98A2B3;
+  --text-brand-primary:   #2970FF;
+  --text-brand-secondary: #004EEB;
+  --text-success-primary: #067647;
+  --text-warning-primary: #B54708;
+  --text-error-primary:   #B42318;
+
+  /* Border */
+  --border-primary:       #D0D5DD;
+  --border-secondary:     #EAECF0;
+  --border-brand:         #84ADFF;
+  --border-error:         #FDA29B;
+  --border-warning:       #FEC84B;
+
+  /* Brand tints for chips */
+  --blue-200:             #B2CCFF;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(16 24 40 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(16 24 40 / 0.10), 0 1px 2px -1px rgb(16 24 40 / 0.10);
+  --shadow-md: 0 4px 8px -2px rgb(16 24 40 / 0.10), 0 2px 4px -2px rgb(16 24 40 / 0.06);
+  --shadow-lg: 0 12px 16px -4px rgb(16 24 40 / 0.08), 0 4px 6px -2px rgb(16 24 40 / 0.03);
   --shadow-dropdown: 0 8px 24px -4px rgb(16 24 40 / 0.18), 0 4px 6px -2px rgb(16 24 40 / 0.08);
+}
+
+/* =====================================================================
+   Untitled UI — semantic tokens (DARK)
+   ===================================================================== */
+.dark {
+  --bg-primary:           #0C111D;
+  --bg-primary-hover:     #161B26;
+  --bg-secondary:         #161B26;
+  --bg-secondary-subtle:  #13161B;
+  --bg-secondary-hover:   #1F242F;
+  --bg-tertiary:          #1F242F;
+  --bg-brand-primary:     #102A56;
+  --bg-brand-solid:       #2970FF;
+  --bg-success-primary:   #053321;
+  --bg-warning-primary:   #4E1D09;
+  --bg-error-primary:     #55160C;
+  --bg-page:              #0C111D;
+
+  --fg-primary:           #FFFFFF;
+  --fg-secondary:         #CECFD2;
+  --fg-tertiary:          #94969C;
+  --fg-quaternary:        #61656C;
+  --fg-brand-primary:     #528BFF;
+  --fg-success-primary:   #47CD89;
+  --fg-warning-primary:   #FDB022;
+  --fg-error-primary:     #F97066;
+
+  --text-primary:         #F5F5F6;
+  --text-secondary:       #CECFD2;
+  --text-tertiary:        #94969C;
+  --text-quaternary:      #85888E;
+  --text-placeholder:     #85888E;
+  --text-brand-primary:   #84ADFF;
+  --text-brand-secondary: #B2CCFF;
+  --text-success-primary: #75E0A7;
+  --text-warning-primary: #FEDF89;
+  --text-error-primary:   #FDA29B;
+
+  --border-primary:       #333741;
+  --border-secondary:     #1F242F;
+  --border-brand:         #2970FF;
+  --border-error:         #912018;
+  --border-warning:       #93370D;
+
+  --blue-200:             #1849A9;
+
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.30);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.40), 0 1px 2px -1px rgb(0 0 0 / 0.40);
+  --shadow-md: 0 4px 8px -2px rgb(0 0 0 / 0.40), 0 2px 4px -2px rgb(0 0 0 / 0.30);
+  --shadow-lg: 0 12px 16px -4px rgb(0 0 0 / 0.50), 0 4px 6px -2px rgb(0 0 0 / 0.30);
+  --shadow-dropdown: 0 8px 24px -4px rgb(0 0 0 / 0.60), 0 4px 6px -2px rgb(0 0 0 / 0.40);
 }
 
 *, *::before, *::after {
@@ -104,17 +183,21 @@ html, body {
   padding: 0;
   font-family: var(--font-sans);
   font-size: 16px;
-  background-color: var(--color-bg-page);
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--color-navy);
+}
+
+#root {
+  min-height: 100vh;
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D0D5DD; border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: #98A2B3; }
+::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--fg-quaternary); }
 
 /* Base UI animations */
 @keyframes slideDown {

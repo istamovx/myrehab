@@ -20,8 +20,8 @@ function PatientCard({ patient, selected, onSelect }: {
   return (
     <div
       className={cn(
-        'bg-white rounded-xl border shadow-[var(--shadow-xs)] transition-all hover:shadow-sm group',
-        selected ? 'border-brand-300 ring-1 ring-brand-200' : 'border-gray-200',
+        'bg-[var(--bg-primary)] rounded-xl border shadow-[var(--shadow-xs)] transition-all hover:shadow-sm group',
+        selected ? 'border-[var(--border-brand)] ring-1 ring-[var(--blue-200)]' : 'border-[var(--border-secondary)]',
       )}
     >
       <div className="p-5">
@@ -29,11 +29,11 @@ function PatientCard({ patient, selected, onSelect }: {
           <Checkbox checked={selected} onCheckedChange={() => onSelect(patient.id)} />
           <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
             <Link to="/patients/$patientId" params={{ patientId: patient.id }}>
-              <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-700 transition-colors cursor-pointer">
+              <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] transition-colors cursor-pointer">
                 <Edit size={13} />
               </button>
             </Link>
-            <button className="size-7 rounded-md hover:bg-error-50 flex items-center justify-center text-gray-400 hover:text-error-600 transition-colors cursor-pointer">
+            <button className="size-7 rounded-md hover:bg-[var(--bg-error-primary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--fg-error-primary)] transition-colors cursor-pointer">
               <Trash2 size={13} />
             </button>
           </div>
@@ -43,28 +43,28 @@ function PatientCard({ patient, selected, onSelect }: {
           <div className="flex items-center gap-3 mb-4 cursor-pointer group/link">
             <Avatar name={patient.name} size="md" />
             <div>
-              <p className="text-[11px] font-medium text-brand-600 uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
-              <p className="text-sm font-semibold text-gray-900 group-hover/link:text-brand-700 transition-colors">{patient.name}</p>
+              <p className="text-[11px] font-medium text-[var(--text-brand-primary)] uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
+              <p className="text-sm font-semibold text-[var(--text-primary)] group-hover/link:text-[var(--text-brand-secondary)] transition-colors">{patient.name}</p>
             </div>
           </div>
         </Link>
 
         <div className="space-y-2">
           <div className="flex items-start gap-2 text-sm">
-            <span className="text-gray-400 w-20 shrink-0 text-xs">{t('patients.procedure')}</span>
-            <span className="font-medium text-gray-700 text-xs leading-snug">{patient.procedure}</span>
+            <span className="text-[var(--fg-quaternary)] w-20 shrink-0 text-xs">{t('patients.procedure')}</span>
+            <span className="font-medium text-[var(--text-secondary)] text-xs leading-snug">{patient.procedure}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-gray-400 w-20 shrink-0 text-xs">{t('common.status')}</span>
+            <span className="text-[var(--fg-quaternary)] w-20 shrink-0 text-xs">{t('common.status')}</span>
             <StatusBadge status={patient.status} />
           </div>
           <div className="flex items-start gap-2">
-            <span className="text-gray-400 w-20 shrink-0 text-xs">{t('common.date')}</span>
-            <span className="font-medium text-gray-700 text-xs">{formatDate(patient.procedureDate)}</span>
+            <span className="text-[var(--fg-quaternary)] w-20 shrink-0 text-xs">{t('common.date')}</span>
+            <span className="font-medium text-[var(--text-secondary)] text-xs">{formatDate(patient.procedureDate)}</span>
           </div>
           <div className="flex items-start gap-2">
-            <span className="text-gray-400 w-20 shrink-0 text-xs">{t('patients.physician')}</span>
-            <span className="font-medium text-gray-700 text-xs truncate">{patient.attendingPhysician}</span>
+            <span className="text-[var(--fg-quaternary)] w-20 shrink-0 text-xs">{t('patients.physician')}</span>
+            <span className="font-medium text-[var(--text-secondary)] text-xs truncate">{patient.attendingPhysician}</span>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ function PatientRow({ patient, selected, onSelect }: {
 }) {
   const { t } = useTranslation()
   return (
-    <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors group">
+    <tr className="border-b border-[var(--border-secondary)] hover:bg-[var(--bg-secondary)] transition-colors group">
       <td className="pl-4 py-3">
         <Checkbox checked={selected} onCheckedChange={() => onSelect(patient.id)} />
       </td>
@@ -94,16 +94,16 @@ function PatientRow({ patient, selected, onSelect }: {
           <div className="flex items-center gap-3 cursor-pointer">
             <Avatar name={patient.name} size="sm" />
             <div>
-              <p className="text-[11px] text-brand-600 font-medium uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
-              <p className="text-sm font-medium text-gray-900">{patient.name}</p>
+              <p className="text-[11px] text-[var(--text-brand-primary)] font-medium uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
+              <p className="text-sm font-medium text-[var(--text-primary)]">{patient.name}</p>
             </div>
           </div>
         </Link>
       </td>
-      <td className="px-4 py-3 text-sm text-gray-600 max-w-[180px] truncate">{patient.procedure}</td>
+      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)] max-w-[180px] truncate">{patient.procedure}</td>
       <td className="px-4 py-3"><StatusBadge status={patient.status} /></td>
-      <td className="px-4 py-3 text-sm text-gray-600">{formatDate(patient.procedureDate)}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">{patient.attendingPhysician}</td>
+      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)]">{formatDate(patient.procedureDate)}</td>
+      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)]">{patient.attendingPhysician}</td>
       <td className="px-4 py-3">
         <div className="flex flex-wrap gap-1">
           {patient.tags.slice(0, 2).map(tag => <TagBadge key={tag} tag={tag} />)}
@@ -112,11 +112,11 @@ function PatientRow({ patient, selected, onSelect }: {
       <td className="pr-4 py-3">
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Link to="/patients/$patientId" params={{ patientId: patient.id }}>
-            <button className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-700 transition-colors cursor-pointer">
+            <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] transition-colors cursor-pointer">
               <Edit size={13} />
             </button>
           </Link>
-          <button className="size-7 rounded-md hover:bg-error-50 flex items-center justify-center text-gray-400 hover:text-error-600 transition-colors cursor-pointer">
+          <button className="size-7 rounded-md hover:bg-[var(--bg-error-primary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--fg-error-primary)] transition-colors cursor-pointer">
             <Trash2 size={13} />
           </button>
         </div>
@@ -178,8 +178,8 @@ export function PatientsListPage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{t('patients.title')}</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{t('patients.subtitle', { count: PATIENTS.length })}</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('patients.title')}</h1>
+          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('patients.subtitle', { count: PATIENTS.length })}</p>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
@@ -193,12 +193,12 @@ export function PatientsListPage() {
           <Select value={filterBy} onValueChange={setFilterBy} options={FILTER_OPTIONS} placeholder={t('common.filter')} />
           <Select value={sortBy} onValueChange={setSortBy} options={SORT_OPTIONS} placeholder={t('common.sortBy')} />
 
-          <div className="flex items-center h-9 bg-gray-100 rounded-lg p-0.5 gap-0.5">
+          <div className="flex items-center h-9 bg-[var(--bg-tertiary)] rounded-lg p-0.5 gap-0.5">
             <button
               onClick={() => setViewMode('list')}
               className={cn(
                 'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
-                viewMode === 'list' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-400 hover:text-gray-600',
+                viewMode === 'list' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-xs' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
               )}
             >
               <List size={14} />
@@ -207,15 +207,15 @@ export function PatientsListPage() {
               onClick={() => setViewMode('grid')}
               className={cn(
                 'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
-                viewMode === 'grid' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-400 hover:text-gray-600',
+                viewMode === 'grid' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-xs' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
               )}
             >
               <LayoutGrid size={14} />
             </button>
           </div>
 
-          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer shadow-xs">
-            <Download size={14} className="text-gray-400" />
+          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer shadow-xs">
+            <Download size={14} className="text-[var(--fg-quaternary)]" />
             {t('common.export')}
           </button>
 
@@ -238,17 +238,17 @@ export function PatientsListPage() {
             />
           ))}
           {filtered.length === 0 && (
-            <div className="col-span-full text-center py-16 text-gray-400 text-sm">
+            <div className="col-span-full text-center py-16 text-[var(--fg-quaternary)] text-sm">
               {t('patients.noPatients')}
             </div>
           )}
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)] overflow-hidden">
+        <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
+                <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-secondary)]">
                   <th className="pl-4 py-3 w-10">
                     <Checkbox
                       checked={allSelected ? true : selected.size > 0 ? 'indeterminate' : false}
@@ -256,7 +256,7 @@ export function PatientsListPage() {
                     />
                   </th>
                   {[t('common.name'), t('patients.procedure'), t('common.status'), t('common.date'), t('patients.physician'), t('patients.tags'), ''].map((h, i) => (
-                    <th key={i} className="px-4 py-3 text-left text-xs font-medium text-gray-500">
+                    <th key={i} className="px-4 py-3 text-left text-xs font-medium text-[var(--text-quaternary)]">
                       {h && (
                         <span className="flex items-center gap-1">
                           {h}
@@ -267,7 +267,7 @@ export function PatientsListPage() {
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-[var(--border-secondary)]">
                 {filtered.map(patient => (
                   <PatientRow
                     key={patient.id}
@@ -278,7 +278,7 @@ export function PatientsListPage() {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="text-center py-16 text-gray-400 text-sm">
+                    <td colSpan={8} className="text-center py-16 text-[var(--fg-quaternary)] text-sm">
                       {t('patients.noPatients')}
                     </td>
                   </tr>
@@ -288,8 +288,8 @@ export function PatientsListPage() {
           </div>
 
           {filtered.length > 0 && (
-            <div className="px-4 py-3 border-t border-gray-100 flex items-center justify-between">
-              <p className="text-sm text-gray-500">
+            <div className="px-4 py-3 border-t border-[var(--border-secondary)] flex items-center justify-between">
+              <p className="text-sm text-[var(--text-quaternary)]">
                 {t('patients.showingOf', { count: filtered.length, total: PATIENTS.length })}
               </p>
             </div>

@@ -16,38 +16,38 @@ import { formatDate, cn } from '@/lib/utils'
 
 function AlertIcon({ type }: { type: 'high' | 'medium' | 'low' }) {
   if (type === 'high') return (
-    <div className="size-8 rounded-full bg-error-50 flex items-center justify-center shrink-0">
-      <AlertTriangle size={13} className="text-error-600" />
+    <div className="size-8 rounded-full bg-[var(--bg-error-primary)] flex items-center justify-center shrink-0">
+      <AlertTriangle size={13} className="text-[var(--fg-error-primary)]" />
     </div>
   )
   if (type === 'medium') return (
-    <div className="size-8 rounded-full bg-warning-50 flex items-center justify-center shrink-0">
-      <AlertTriangle size={13} className="text-warning-600" />
+    <div className="size-8 rounded-full bg-[var(--bg-warning-primary)] flex items-center justify-center shrink-0">
+      <AlertTriangle size={13} className="text-[var(--fg-warning-primary)]" />
     </div>
   )
   return (
-    <div className="size-8 rounded-full bg-brand-50 flex items-center justify-center shrink-0">
-      <Info size={13} className="text-brand-600" />
+    <div className="size-8 rounded-full bg-[var(--bg-brand-primary)] flex items-center justify-center shrink-0">
+      <Info size={13} className="text-[var(--text-brand-primary)]" />
     </div>
   )
 }
 
 function FileIcon({ type }: { type: 'pdf' | 'txt' | 'img' }) {
   if (type === 'pdf') return (
-    <div className="size-7 rounded-lg bg-error-50 flex items-center justify-center shrink-0">
-      <FileType size={13} className="text-error-600" />
+    <div className="size-7 rounded-lg bg-[var(--bg-error-primary)] flex items-center justify-center shrink-0">
+      <FileType size={13} className="text-[var(--fg-error-primary)]" />
     </div>
   )
   return (
-    <div className="size-7 rounded-lg bg-brand-50 flex items-center justify-center shrink-0">
-      <FileText size={13} className="text-brand-600" />
+    <div className="size-7 rounded-lg bg-[var(--bg-brand-primary)] flex items-center justify-center shrink-0">
+      <FileText size={13} className="text-[var(--text-brand-primary)]" />
     </div>
   )
 }
 
 function Card({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={cn('bg-white rounded-xl border border-gray-200 shadow-[var(--shadow-xs)]', className)}>
+    <div className={cn('bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)]', className)}>
       {children}
     </div>
   )
@@ -55,8 +55,8 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
 
 function CardHeader({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-      <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+    <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
+      <h3 className="text-sm font-semibold text-[var(--text-primary)]">{title}</h3>
       {children && <div className="flex items-center gap-1">{children}</div>}
     </div>
   )
@@ -66,7 +66,7 @@ function IconBtn({ icon: Icon, onClick }: { icon: React.ElementType; onClick?: (
   return (
     <button
       onClick={onClick}
-      className="size-7 rounded-md hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+      className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)] cursor-pointer transition-colors"
     >
       <Icon size={13} />
     </button>
@@ -106,13 +106,13 @@ export function PatientDetailPage() {
       {/* Breadcrumb / header */}
       <div className="flex items-center gap-3">
         <Link to="/patients">
-          <button className="size-9 rounded-lg border border-gray-300 bg-white hover:bg-gray-50 flex items-center justify-center transition-colors cursor-pointer shadow-xs">
-            <ChevronLeft size={16} className="text-gray-500" />
+          <button className="size-9 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] hover:bg-[var(--bg-secondary)] flex items-center justify-center transition-colors cursor-pointer shadow-xs">
+            <ChevronLeft size={16} className="text-[var(--text-quaternary)]" />
           </button>
         </Link>
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">{t('patientDetail.title')}</h1>
-          <p className="text-sm text-gray-500">{t('patientDetail.subtitle', { id: patient.id, name: patient.name })}</p>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('patientDetail.title')}</h1>
+          <p className="text-sm text-[var(--text-quaternary)]">{t('patientDetail.subtitle', { id: patient.id, name: patient.name })}</p>
         </div>
       </div>
 
@@ -127,12 +127,12 @@ export function PatientDetailPage() {
                 <Avatar name={patient.name} size="xl" className="rounded-xl shrink-0" />
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                    <p className="text-base font-semibold text-gray-900">{patient.name}</p>
-                    <span className="text-xs font-medium text-brand-600 bg-brand-50 px-2 py-0.5 rounded-full">
+                    <p className="text-base font-semibold text-[var(--text-primary)]">{patient.name}</p>
+                    <span className="text-xs font-medium text-[var(--text-brand-primary)] bg-[var(--bg-brand-primary)] px-2 py-0.5 rounded-full">
                       {patient.id}
                     </span>
                   </div>
-                  <div className="flex flex-wrap gap-x-2 text-xs text-gray-500">
+                  <div className="flex flex-wrap gap-x-2 text-xs text-[var(--text-quaternary)]">
                     <span>{patient.gender}</span>
                     <span>·</span>
                     <span>{patient.dateOfBirth}</span>
@@ -151,7 +151,7 @@ export function PatientDetailPage() {
                   <Calendar size={14} />
                   {t('patientDetail.schedule')}
                 </Button>
-                <button className="size-10 rounded-lg border border-gray-300 hover:bg-gray-50 flex items-center justify-center text-gray-500 cursor-pointer transition-colors shadow-xs">
+                <button className="size-10 rounded-lg border border-[var(--border-primary)] hover:bg-[var(--bg-secondary)] flex items-center justify-center text-[var(--text-quaternary)] cursor-pointer transition-colors shadow-xs">
                   <MoreHorizontal size={15} />
                 </button>
               </div>
@@ -171,12 +171,12 @@ export function PatientDetailPage() {
                 { label: t('patientDetail.physiotherapist'), value: patient.physioTherapist ?? 'Dr. Wade Warren' },
               ].map(row => (
                 <div key={row.label} className="flex items-start gap-3 text-sm">
-                  <span className="text-gray-400 w-28 shrink-0 text-xs">{row.label}</span>
-                  <span className="font-medium text-gray-700 text-xs leading-snug">{row.value}</span>
+                  <span className="text-[var(--fg-quaternary)] w-28 shrink-0 text-xs">{row.label}</span>
+                  <span className="font-medium text-[var(--text-secondary)] text-xs leading-snug">{row.value}</span>
                 </div>
               ))}
               <div className="flex items-center gap-3 text-sm">
-                <span className="text-gray-400 w-28 shrink-0 text-xs">{t('common.status')}</span>
+                <span className="text-[var(--fg-quaternary)] w-28 shrink-0 text-xs">{t('common.status')}</span>
                 <StatusBadge status={patient.status} />
               </div>
             </div>
@@ -189,12 +189,12 @@ export function PatientDetailPage() {
                 <IconBtn icon={Plus} />
                 <IconBtn icon={Settings2} />
               </CardHeader>
-              <div className="divide-y divide-gray-50">
+              <div className="divide-y divide-[var(--border-secondary)]">
                 {patient.alerts.map(alert => (
-                  <div key={alert.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50 transition-colors group">
+                  <div key={alert.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-[var(--bg-secondary)] transition-colors group">
                     <AlertIcon type={alert.type} />
-                    <p className="text-sm text-gray-700 flex-1 leading-relaxed">{alert.message}</p>
-                    <button className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-gray-400 hover:text-gray-600 mt-0.5">
+                    <p className="text-sm text-[var(--text-secondary)] flex-1 leading-relaxed">{alert.message}</p>
+                    <button className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)] mt-0.5">
                       <MoreHorizontal size={14} />
                     </button>
                   </div>
@@ -238,29 +238,29 @@ export function PatientDetailPage() {
               ].map(row => (
                 <div
                   key={row.label}
-                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-start gap-3 px-3 py-2.5 rounded-lg hover:bg-[var(--bg-secondary)] transition-colors"
                 >
-                  <span className="text-gray-400 text-xs w-28 shrink-0 mt-0.5">{row.label}</span>
+                  <span className="text-[var(--fg-quaternary)] text-xs w-28 shrink-0 mt-0.5">{row.label}</span>
                   <div className="flex-1 flex items-center gap-2 flex-wrap">
                     {'isDnr' in row && row.isDnr ? (
-                      <span className="flex items-center gap-1.5 text-xs font-medium text-success-700">
-                        <span className="size-1.5 rounded-full bg-success-600" />
+                      <span className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-success-primary)]">
+                        <span className="size-1.5 rounded-full bg-[var(--fg-success-primary)]" />
                         {row.value}
                       </span>
                     ) : 'isAsa' in row && row.isAsa ? (
                       <span className={cn(
                         'flex items-center gap-1.5 text-xs font-semibold',
-                        row.asaHigh ? 'text-error-600' : 'text-success-700',
+                        row.asaHigh ? 'text-[var(--fg-error-primary)]' : 'text-[var(--text-success-primary)]',
                       )}>
-                        <span className={cn('size-1.5 rounded-full', row.asaHigh ? 'bg-error-600' : 'bg-success-600')} />
+                        <span className={cn('size-1.5 rounded-full', row.asaHigh ? 'bg-[var(--fg-error-primary)]' : 'bg-[var(--fg-success-primary)]')} />
                         {row.value}
                       </span>
                     ) : (
-                      <span className="text-xs font-medium text-gray-700">{row.value}</span>
+                      <span className="text-xs font-medium text-[var(--text-secondary)]">{row.value}</span>
                     )}
-                    {row.sub && <span className="text-xs text-gray-400">{row.sub}</span>}
+                    {row.sub && <span className="text-xs text-[var(--fg-quaternary)]">{row.sub}</span>}
                     {'isIcu' in row && row.isIcu && row.sub && (
-                      <span className="text-xs px-2 py-0.5 bg-brand-50 text-brand-700 rounded-full font-medium">{row.sub}</span>
+                      <span className="text-xs px-2 py-0.5 bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] rounded-full font-medium">{row.sub}</span>
                     )}
                   </div>
                 </div>
@@ -282,12 +282,12 @@ export function PatientDetailPage() {
                   <div key={group.group}>
                     <button
                       onClick={() => toggleGroup(group.group)}
-                      className="flex items-center gap-2 w-full text-left py-1.5 px-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="flex items-center gap-2 w-full text-left py-1.5 px-2 rounded-lg hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
                     >
                       {expandedGroups.has(group.group)
-                        ? <ChevronDown size={13} className="text-brand-500 shrink-0" />
-                        : <ChevronRight size={13} className="text-gray-400 shrink-0" />}
-                      <span className="text-xs font-semibold text-brand-700">{group.group}</span>
+                        ? <ChevronDown size={13} className="text-[var(--text-brand-primary)] shrink-0" />
+                        : <ChevronRight size={13} className="text-[var(--fg-quaternary)] shrink-0" />}
+                      <span className="text-xs font-semibold text-[var(--text-brand-secondary)]">{group.group}</span>
                     </button>
 
                     {expandedGroups.has(group.group) && (
@@ -295,22 +295,22 @@ export function PatientDetailPage() {
                         {group.files.map(file => (
                           <div
                             key={file.id}
-                            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors group/file"
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-lg bg-[var(--bg-secondary)] hover:bg-[var(--bg-tertiary)] transition-colors group/file"
                           >
                             <FileIcon type={file.type} />
-                            <span className="text-xs text-gray-700 flex-1 truncate">{file.name}</span>
+                            <span className="text-xs text-[var(--text-secondary)] flex-1 truncate">{file.name}</span>
                             <div className="flex items-center gap-0.5 opacity-0 group-hover/file:opacity-100 transition-opacity">
-                              <button className="size-6 rounded-md hover:bg-white flex items-center justify-center text-gray-400 hover:text-gray-700 cursor-pointer">
+                              <button className="size-6 rounded-md hover:bg-[var(--bg-primary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] cursor-pointer">
                                 <Eye size={12} />
                               </button>
-                              <button className="size-6 rounded-md hover:bg-white flex items-center justify-center text-gray-400 hover:text-gray-700 cursor-pointer">
+                              <button className="size-6 rounded-md hover:bg-[var(--bg-primary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] cursor-pointer">
                                 <Download size={12} />
                               </button>
                             </div>
                           </div>
                         ))}
                         {group.files.length === 0 && (
-                          <p className="text-xs text-gray-400 py-2 px-3">{t('patientDetail.noFiles')}</p>
+                          <p className="text-xs text-[var(--fg-quaternary)] py-2 px-3">{t('patientDetail.noFiles')}</p>
                         )}
                       </div>
                     )}
@@ -336,26 +336,26 @@ export function PatientDetailPage() {
                   return (
                     <div key={item.id} className="relative">
                       {!isLast && (
-                        <div className="absolute left-4 top-8 bottom-0 w-px bg-gray-100" />
+                        <div className="absolute left-4 top-8 bottom-0 w-px bg-[var(--bg-tertiary)]" />
                       )}
 
                       <div
-                        className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                        className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer"
                         onClick={() => toggleChecklist(item.id)}
                       >
                         <CircleCheck checked={isDone} inProgress={isInProgress} />
 
                         <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                          <span className="text-gray-400 hover:text-gray-600 shrink-0">
+                          <span className="text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)] shrink-0">
                             {expandedChecklist.has(item.id)
                               ? <ChevronDown size={13} />
                               : <ChevronRight size={13} />}
                           </span>
                           <div className="min-w-0">
-                            <span className={cn('text-xs font-semibold block truncate', isDone ? 'text-gray-900' : 'text-gray-600')}>
+                            <span className={cn('text-xs font-semibold block truncate', isDone ? 'text-[var(--text-primary)]' : 'text-[var(--text-tertiary)]')}>
                               {item.name}
                             </span>
-                            <span className="text-[10px] text-gray-400">
+                            <span className="text-[10px] text-[var(--fg-quaternary)]">
                               {t('patientDetail.tasks', { completed: item.completedTasks, total: item.totalTasks })}
                             </span>
                           </div>
@@ -364,10 +364,10 @@ export function PatientDetailPage() {
                         <span className={cn(
                           'text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0',
                           isDone
-                            ? 'text-success-700 bg-success-50'
+                            ? 'text-[var(--text-success-primary)] bg-[var(--bg-success-primary)]'
                             : isInProgress
-                              ? 'text-brand-700 bg-brand-50'
-                              : 'text-gray-500 bg-gray-100',
+                              ? 'text-[var(--text-brand-secondary)] bg-[var(--bg-brand-primary)]'
+                              : 'text-[var(--text-quaternary)] bg-[var(--bg-tertiary)]',
                         )}>
                           {isDone ? t('checklist.done') : isInProgress ? t('checklist.inProgress') : t('checklist.pending')}
                         </span>
