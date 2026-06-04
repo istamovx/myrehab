@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useParams } from '@tanstack/react-router'
 import {
   ChevronLeft, Phone, Calendar, MoreHorizontal,
@@ -73,6 +74,7 @@ function IconBtn({ icon: Icon, onClick }: { icon: React.ElementType; onClick?: (
 }
 
 export function PatientDetailPage() {
+  const { t } = useTranslation()
   const params = useParams({ from: '/patients/$patientId' })
   const patient = PATIENTS.find(p => p.id === params.patientId) ?? PATIENTS[0]
 
@@ -109,8 +111,8 @@ export function PatientDetailPage() {
           </button>
         </Link>
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Patient information</h1>
-          <p className="text-sm text-gray-500">ID: {patient.id} · {patient.name}</p>
+          <h1 className="text-xl font-semibold text-gray-900">{t('patientDetail.title')}</h1>
+          <p className="text-sm text-gray-500">{t('patientDetail.subtitle', { id: patient.id, name: patient.name })}</p>
         </div>
       </div>
 
@@ -143,11 +145,11 @@ export function PatientDetailPage() {
               <div className="flex items-center gap-2">
                 <Button variant="primary" size="md" className="flex-1">
                   <Phone size={14} />
-                  Call
+                  {t('patientDetail.call')}
                 </Button>
                 <Button variant="secondary" size="md" className="flex-1">
                   <Calendar size={14} />
-                  Schedule
+                  {t('patientDetail.schedule')}
                 </Button>
                 <button className="size-10 rounded-lg border border-gray-300 hover:bg-gray-50 flex items-center justify-center text-gray-500 cursor-pointer transition-colors shadow-xs">
                   <MoreHorizontal size={15} />
@@ -158,15 +160,15 @@ export function PatientDetailPage() {
 
           {/* Planned procedure */}
           <Card>
-            <CardHeader title="Planned procedure">
+            <CardHeader title={t('patientDetail.plannedProcedure')}>
               <IconBtn icon={Edit} />
             </CardHeader>
             <div className="p-5 space-y-3">
               {[
-                { label: 'Procedure', value: patient.procedure + (patient.procedureCode ? ` (${patient.procedureCode})` : '') },
-                { label: 'Surgery date', value: patient.surgeryDate ? formatDate(patient.surgeryDate) : formatDate(patient.procedureDate) },
-                { label: 'Physician', value: patient.attendingPhysician },
-                { label: 'Physiotherapist', value: patient.physioTherapist ?? 'Dr. Wade Warren' },
+                { label: t('patientDetail.procedure'),       value: patient.procedure + (patient.procedureCode ? ` (${patient.procedureCode})` : '') },
+                { label: t('patientDetail.surgeryDate'),     value: patient.surgeryDate ? formatDate(patient.surgeryDate) : formatDate(patient.procedureDate) },
+                { label: t('patientDetail.physician'),       value: patient.attendingPhysician },
+                { label: t('patientDetail.physiotherapist'), value: patient.physioTherapist ?? 'Dr. Wade Warren' },
               ].map(row => (
                 <div key={row.label} className="flex items-start gap-3 text-sm">
                   <span className="text-gray-400 w-28 shrink-0 text-xs">{row.label}</span>
@@ -174,7 +176,7 @@ export function PatientDetailPage() {
                 </div>
               ))}
               <div className="flex items-center gap-3 text-sm">
-                <span className="text-gray-400 w-28 shrink-0 text-xs">Status</span>
+                <span className="text-gray-400 w-28 shrink-0 text-xs">{t('common.status')}</span>
                 <StatusBadge status={patient.status} />
               </div>
             </div>
@@ -183,7 +185,7 @@ export function PatientDetailPage() {
           {/* Alerts */}
           {patient.alerts && patient.alerts.length > 0 && (
             <Card>
-              <CardHeader title="Important alerts">
+              <CardHeader title={t('patientDetail.importantAlerts')}>
                 <IconBtn icon={Plus} />
                 <IconBtn icon={Settings2} />
               </CardHeader>
@@ -205,33 +207,33 @@ export function PatientDetailPage() {
         {/* Middle column */}
         <div className="space-y-4">
           <Card>
-            <CardHeader title="Key clinical overview">
+            <CardHeader title={t('patientDetail.clinicalOverview')}>
               <IconBtn icon={Edit} />
             </CardHeader>
             <div className="p-2">
               {[
-                { label: 'Language', value: patient.language ?? 'Native speaker' },
-                { label: 'Allergies', value: patient.allergies?.join(', ') ?? '—' },
-                { label: 'Pre-existing', value: patient.preExistingConditions?.join(', ') ?? '—' },
-                { label: 'Medications', value: patient.medications?.join(', ') ?? '—' },
-                { label: 'DNR / DNI', value: patient.dnr ? 'Active' : 'Inactive', isDnr: patient.dnr },
+                { label: t('patientDetail.language'),    value: patient.language ?? 'Native speaker' },
+                { label: t('patientDetail.allergies'),   value: patient.allergies?.join(', ') ?? '—' },
+                { label: t('patientDetail.preExisting'), value: patient.preExistingConditions?.join(', ') ?? '—' },
+                { label: t('patientDetail.medications'), value: patient.medications?.join(', ') ?? '—' },
+                { label: t('patientDetail.dnr'),         value: patient.dnr ? t('patientDetail.active') : t('patientDetail.inactive'), isDnr: patient.dnr },
                 {
-                  label: 'ASA class',
-                  value: patient.asaClassification ?? '—',
-                  sub: patient.asaUploadDate ? `Uploaded ${patient.asaUploadDate}` : undefined,
-                  isAsa: true,
+                  label:   t('patientDetail.asaClass'),
+                  value:   patient.asaClassification ?? '—',
+                  sub:     patient.asaUploadDate ? `Uploaded ${patient.asaUploadDate}` : undefined,
+                  isAsa:   true,
                   asaHigh: patient.asaClassification === 'ASA III' || patient.asaClassification === 'ASA IV',
                 },
                 {
-                  label: 'ICU need',
-                  value: patient.icuNeed ?? '—',
-                  sub: patient.icuStatus,
-                  isIcu: true,
+                  label:  t('patientDetail.icuNeed'),
+                  value:  patient.icuNeed ?? '—',
+                  sub:    patient.icuStatus,
+                  isIcu:  true,
                 },
                 {
-                  label: 'Last lab date',
+                  label: t('patientDetail.lastLabDate'),
                   value: patient.lastLabDate ?? '—',
-                  sub: patient.lastLabUpdated ? `Updated: ${patient.lastLabUpdated}` : undefined,
+                  sub:   patient.lastLabUpdated ? `Updated: ${patient.lastLabUpdated}` : undefined,
                 },
               ].map(row => (
                 <div
@@ -271,7 +273,7 @@ export function PatientDetailPage() {
         <div className="space-y-4">
           {patient.documents && (
             <Card>
-              <CardHeader title="Key documents">
+              <CardHeader title={t('patientDetail.keyDocuments')}>
                 <IconBtn icon={Edit} />
                 <IconBtn icon={Plus} />
               </CardHeader>
@@ -308,7 +310,7 @@ export function PatientDetailPage() {
                           </div>
                         ))}
                         {group.files.length === 0 && (
-                          <p className="text-xs text-gray-400 py-2 px-3">No files</p>
+                          <p className="text-xs text-gray-400 py-2 px-3">{t('patientDetail.noFiles')}</p>
                         )}
                       </div>
                     )}
@@ -320,16 +322,16 @@ export function PatientDetailPage() {
 
           {patient.checklist && (
             <Card>
-              <CardHeader title="Checklist">
+              <CardHeader title={t('patientDetail.checklist')}>
                 <IconBtn icon={Search} />
                 <IconBtn icon={Settings2} />
                 <IconBtn icon={Edit} />
               </CardHeader>
               <div className="p-4 space-y-1">
                 {patient.checklist.map((item, idx) => {
-                  const isDone = item.status === 'done'
+                  const isDone       = item.status === 'done'
                   const isInProgress = item.status === 'in-progress'
-                  const isLast = idx === patient.checklist!.length - 1
+                  const isLast       = idx === patient.checklist!.length - 1
 
                   return (
                     <div key={item.id} className="relative">
@@ -354,7 +356,7 @@ export function PatientDetailPage() {
                               {item.name}
                             </span>
                             <span className="text-[10px] text-gray-400">
-                              {item.completedTasks}/{item.totalTasks} tasks
+                              {t('patientDetail.tasks', { completed: item.completedTasks, total: item.totalTasks })}
                             </span>
                           </div>
                         </div>
@@ -367,7 +369,7 @@ export function PatientDetailPage() {
                               ? 'text-brand-700 bg-brand-50'
                               : 'text-gray-500 bg-gray-100',
                         )}>
-                          {isDone ? 'Done' : isInProgress ? 'In progress' : 'Pending'}
+                          {isDone ? t('checklist.done') : isInProgress ? t('checklist.inProgress') : t('checklist.pending')}
                         </span>
                       </div>
                     </div>

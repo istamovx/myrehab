@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Search, Plus, Phone, Mail, MoreHorizontal } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -6,41 +7,48 @@ import { Avatar } from '@/components/ui/avatar'
 import { DOCTORS } from '@/data/mock-data'
 import { cn } from '@/lib/utils'
 
-const SPECIALIZATIONS = ['All', 'Orthopedic', 'Physical Therapy', 'Radiology', 'Neurology']
-
 export function TeamPage() {
-  const [activeSpec, setActiveSpec] = useState('All')
+  const { t } = useTranslation()
+  const [activeSpec, setActiveSpec] = useState('all')
+
+  const SPECIALIZATIONS = [
+    { key: 'all',            label: t('team.allSpecializations') },
+    { key: 'Orthopedic',     label: t('team.orthopedic') },
+    { key: 'Physical Therapy', label: t('team.physicalTherapy') },
+    { key: 'Radiology',      label: t('team.radiology') },
+    { key: 'Neurology',      label: t('team.neurology') },
+  ]
 
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Team</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{DOCTORS.length} team members</p>
+          <h1 className="text-xl font-semibold text-gray-900">{t('team.title')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('team.subtitle', { count: DOCTORS.length })}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Input placeholder="Search members..." leftIcon={<Search size={14} />} className="w-52" />
+          <Input placeholder={t('team.searchPlaceholder')} leftIcon={<Search size={14} />} className="w-52" />
           <Button size="md">
             <Plus size={15} />
-            Add member
+            {t('team.addMember')}
           </Button>
         </div>
       </div>
 
       {/* Filter tabs */}
       <div className="flex items-center gap-1.5 flex-wrap">
-        {SPECIALIZATIONS.map((s) => (
+        {SPECIALIZATIONS.map(s => (
           <button
-            key={s}
-            onClick={() => setActiveSpec(s)}
+            key={s.key}
+            onClick={() => setActiveSpec(s.key)}
             className={cn(
               'px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all cursor-pointer',
-              activeSpec === s
+              activeSpec === s.key
                 ? 'bg-brand-600 text-white shadow-xs'
                 : 'bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 shadow-xs',
             )}
           >
-            {s}
+            {s.label}
           </button>
         ))}
       </div>
@@ -64,14 +72,14 @@ export function TeamPage() {
             {doc.availableFrom && (
               <div className="mt-3 flex items-center gap-1.5 text-xs text-success-700 font-medium">
                 <span className="size-1.5 rounded-full bg-success-600" />
-                Available {doc.availableFrom}–{doc.availableTo}
+                {t('team.available', { from: doc.availableFrom, to: doc.availableTo })}
               </div>
             )}
 
             <div className="mt-4 pt-4 border-t border-gray-100 flex items-center gap-2">
               <button className="flex-1 h-9 rounded-lg bg-brand-600 text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-brand-700 transition-colors cursor-pointer shadow-xs">
                 <Phone size={13} />
-                Call
+                {t('team.call')}
               </button>
               <button className="size-9 rounded-lg border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-gray-50 hover:text-gray-700 transition-colors cursor-pointer shadow-xs">
                 <Mail size={13} />
