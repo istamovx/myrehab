@@ -20,12 +20,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             className={cn(
-              'w-full h-10 bg-white border border-gray-200 rounded-xl text-sm text-navy placeholder:text-gray-400 outline-none transition-all',
-              'focus:border-primary focus:ring-2 focus:ring-primary/15',
-              'disabled:bg-gray-50 disabled:cursor-not-allowed',
+              'w-full h-10 bg-white border border-gray-300 rounded-lg text-sm text-gray-900 placeholder:text-gray-400',
+              'outline-none transition-shadow transition-colors',
+              'hover:border-gray-400',
+              'focus:border-brand-600 focus:shadow-[0_0_0_4px_rgba(21,94,239,0.12)]',
+              'disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-400',
               leftIcon ? 'pl-9' : 'pl-3.5',
               rightIcon ? 'pr-9' : 'pr-3.5',
-              error && 'border-danger focus:border-danger focus:ring-danger/15',
+              error && 'border-error-600 focus:border-error-600 focus:shadow-[0_0_0_4px_rgba(217,45,32,0.12)]',
               className,
             )}
             {...props}
@@ -36,7 +38,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             </span>
           )}
         </div>
-        {error && <p className="text-xs text-danger">{error}</p>}
+        {error && <p className="text-xs text-error-600">{error}</p>}
       </div>
     )
   },
