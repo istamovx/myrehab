@@ -1,11 +1,13 @@
 services:
   - type: web
     name: myrehab
-    runtime: static
+    runtime: node
+    plan: starter
+    region: frankfurt
     buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    pullRequestPreviewsEnabled: false
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    startCommand: npm run start
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
