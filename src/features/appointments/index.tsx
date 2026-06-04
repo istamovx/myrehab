@@ -1,20 +1,18 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Calendar, ChevronLeft, ChevronRight, Plus, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
 import { PATIENTS } from '@/data/mock-data'
 
-const DAYS   = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
 const APPOINTMENTS = [
-  { id: 1, patientId: '1001', time: '09:00', duration: 60, type: 'Physiotherapy',   room: 'Room 201', status: 'confirmed' },
-  { id: 2, patientId: '1002', time: '10:30', duration: 45, type: 'Consultation',    room: 'Room 105', status: 'confirmed' },
-  { id: 3, patientId: '1003', time: '11:30', duration: 30, type: 'Follow-up',       room: 'Room 301', status: 'pending' },
-  { id: 4, patientId: '1004', time: '13:00', duration: 60, type: 'Assessment',      room: 'Room 202', status: 'confirmed' },
-  { id: 5, patientId: '1005', time: '14:30', duration: 45, type: 'Physiotherapy',   room: 'Room 201', status: 'confirmed' },
-  { id: 6, patientId: '1006', time: '15:30', duration: 30, type: 'Review',          room: 'Room 105', status: 'cancelled' },
+  { id: 1, patientId: '1001', time: '09:00', duration: 60, type: 'physiotherapy', room: 'Room 201', status: 'confirmed' },
+  { id: 2, patientId: '1002', time: '10:30', duration: 45, type: 'consultation',  room: 'Room 105', status: 'confirmed' },
+  { id: 3, patientId: '1003', time: '11:30', duration: 30, type: 'followUp',      room: 'Room 301', status: 'pending' },
+  { id: 4, patientId: '1004', time: '13:00', duration: 60, type: 'assessment',    room: 'Room 202', status: 'confirmed' },
+  { id: 5, patientId: '1005', time: '14:30', duration: 45, type: 'physiotherapy', room: 'Room 201', status: 'confirmed' },
+  { id: 6, patientId: '1006', time: '15:30', duration: 30, type: 'review',        room: 'Room 105', status: 'cancelled' },
 ]
 
 const STATUS_STYLE: Record<string, string> = {
@@ -39,6 +37,7 @@ function getFirstDayOfMonth(year: number, month: number) {
 }
 
 export function AppointmentsPage() {
+  const { t } = useTranslation()
   const today = new Date()
   const [currentDate, setCurrentDate] = useState(today)
   const [selectedDay, setSelectedDay] = useState(today.getDate())
@@ -48,19 +47,26 @@ export function AppointmentsPage() {
   const daysInMonth = getDaysInMonth(year, month)
   const firstDay    = getFirstDayOfMonth(year, month)
 
+  const DAYS   = [t('days.mon'), t('days.tue'), t('days.wed'), t('days.thu'), t('days.fri'), t('days.sat'), t('days.sun')]
+  const MONTHS = [
+    t('months.january'), t('months.february'), t('months.march'), t('months.april'),
+    t('months.may'), t('months.june'), t('months.july'), t('months.august'),
+    t('months.september'), t('months.october'), t('months.november'), t('months.december'),
+  ]
+
   function prevMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1)) }
   function nextMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1)) }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-gray-900">Appointments</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{APPOINTMENTS.length} scheduled for today</p>
+          <h1 className="text-xl font-semibold text-gray-900">{t('appointments.title')}</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{t('appointments.subtitle', { count: APPOINTMENTS.length })}</p>
         </div>
         <Button size="md">
           <Plus size={15} />
-          New appointment
+          {t('appointments.newAppointment')}
         </Button>
       </div>
 
@@ -100,8 +106,8 @@ export function AppointmentsPage() {
           <div className="grid grid-cols-7 gap-y-0.5">
             {Array.from({ length: firstDay }).map((_, i) => <div key={`empty-${i}`} />)}
             {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day       = i + 1
-              const isToday   = day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
+              const day        = i + 1
+              const isToday    = day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
               const isSelected = day === selectedDay
 
               return (
@@ -124,9 +130,9 @@ export function AppointmentsPage() {
           {/* Legend */}
           <div className="mt-5 pt-4 border-t border-gray-100 space-y-2">
             {[
-              { color: 'bg-success-600', label: 'Confirmed' },
-              { color: 'bg-warning-600', label: 'Pending' },
-              { color: 'bg-error-600',   label: 'Cancelled' },
+              { color: 'bg-success-600', label: t('appointments.confirmed') },
+              { color: 'bg-warning-600', label: t('appointments.pending') },
+              { color: 'bg-error-600',   label: t('appointments.cancelled') },
             ].map(item => (
               <div key={item.label} className="flex items-center gap-2 text-xs text-gray-500">
                 <span className={cn('size-2 rounded-full', item.color)} />
@@ -141,13 +147,13 @@ export function AppointmentsPage() {
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
             <div>
               <h3 className="text-sm font-semibold text-gray-900">
-                {MONTHS[month]} {selectedDay} schedule
+                {t('appointments.schedule', { month: MONTHS[month], day: selectedDay })}
               </h3>
-              <p className="text-xs text-gray-500 mt-0.5">{APPOINTMENTS.length} appointments</p>
+              <p className="text-xs text-gray-500 mt-0.5">{t('appointments.totalCount', { count: APPOINTMENTS.length })}</p>
             </div>
             <span className="flex items-center gap-1.5 text-xs text-gray-500 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg">
               <Calendar size={12} />
-              Today
+              {t('common.today')}
             </span>
           </div>
 
@@ -167,7 +173,7 @@ export function AppointmentsPage() {
                     <p className="text-sm font-semibold text-gray-900">{apt.time}</p>
                     <p className="text-xs text-gray-400 flex items-center justify-center gap-0.5 mt-0.5">
                       <Clock size={9} />
-                      {apt.duration}m
+                      {t('appointments.minutes', { count: apt.duration })}
                     </p>
                   </div>
 
@@ -178,13 +184,15 @@ export function AppointmentsPage() {
                       <Avatar name={patient.name} size="sm" />
                       <div className="min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate">{patient.name}</p>
-                        <p className="text-xs text-gray-400">ID: {patient.id}</p>
+                        <p className="text-xs text-gray-400">{t('patients.id')}: {patient.id}</p>
                       </div>
                     </div>
                   )}
 
                   <div className="flex-1 min-w-0 hidden sm:block">
-                    <p className="text-sm font-medium text-gray-700">{apt.type}</p>
+                    <p className="text-sm font-medium text-gray-700">
+                      {t(`appointments.${apt.type}` as any, apt.type)}
+                    </p>
                     <p className="text-xs text-gray-400 mt-0.5">{apt.room}</p>
                   </div>
 
@@ -192,7 +200,7 @@ export function AppointmentsPage() {
                     'text-xs font-medium px-2.5 py-1 rounded-full shrink-0',
                     STATUS_STYLE[apt.status] ?? 'bg-gray-100 text-gray-600',
                   )}>
-                    {apt.status.charAt(0).toUpperCase() + apt.status.slice(1)}
+                    {t(`appointments.${apt.status}` as any, apt.status)}
                   </span>
                 </div>
               )

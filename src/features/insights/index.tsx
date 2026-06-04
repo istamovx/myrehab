@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { RefreshCw, Calendar } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -8,42 +9,6 @@ import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { INSIGHTS_BAR_DATA, PROMS_DATA, DELAY_DATA, COMPLICATIONS_HEATMAP } from '@/data/mock-data'
-
-const VIEW_OPTIONS    = [
-  { value: 'trends', label: 'Trends' },
-  { value: 'overview', label: 'Overview' },
-  { value: 'compare', label: 'Compare' },
-]
-const PERIOD_OPTIONS  = [
-  { value: '30d', label: 'Last 30 days' },
-  { value: '90d', label: 'Last 90 days' },
-  { value: '6m',  label: 'Last 6 months' },
-  { value: '1y',  label: 'Last year' },
-]
-const PROCEDURE_OPTIONS = [
-  { value: 'all',       label: 'All procedures' },
-  { value: 'knee',      label: 'Knees' },
-  { value: 'hip',       label: 'Hip' },
-  { value: 'shoulder',  label: 'Shoulder' },
-  { value: 'spine',     label: 'Spine' },
-]
-const TEAM_OPTIONS    = [
-  { value: 'all',    label: 'All teams' },
-  { value: 'team-a', label: 'Team A' },
-  { value: 'team-b', label: 'Team B' },
-  { value: 'team-c', label: 'Team C' },
-]
-const PATIENT_OPTIONS = [
-  { value: 'all',       label: 'All patients' },
-  { value: 'high-risk', label: 'High risk' },
-  { value: 'at-risk',   label: 'At-risk' },
-  { value: 'ready',     label: 'Ready' },
-]
-const DEPT_OPTIONS    = [
-  { value: 'ortho',  label: 'Orthopedics & Trauma' },
-  { value: 'neuro',  label: 'Neurology' },
-  { value: 'sports', label: 'Sports Medicine' },
-]
 
 function ChartCard({ title, children, controls }: {
   title: string
@@ -61,10 +26,10 @@ function ChartCard({ title, children, controls }: {
   )
 }
 
-function PeriodToggle({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function PeriodToggle({ options, value, onChange }: { options: string[]; value: string; onChange: (v: string) => void }) {
   return (
     <div className="flex items-center gap-0.5 p-0.5 bg-gray-100 rounded-lg">
-      {['3 days', '3 month', '1 year'].map((v) => (
+      {options.map((v) => (
         <button
           key={v}
           onClick={() => onChange(v)}
@@ -134,15 +99,58 @@ const barDisplayData = INSIGHTS_BAR_DATA.map((d) => ({
 }))
 
 export function InsightsPage() {
+  const { t } = useTranslation()
   const [view, setView] = useState('trends')
   const [period, setPeriod] = useState('30d')
   const [procedure, setProcedure] = useState('knee')
   const [team, setTeam] = useState('team-b')
   const [patients, setPatients] = useState('all')
   const [dept, setDept] = useState('ortho')
-  const [barPeriod, setBarPeriod] = useState('3 month')
-  const [promsPeriod, setPromsPeriod] = useState('3 month')
-  const [delayPeriod, setDelayPeriod] = useState('3 month')
+  const [barPeriod, setBarPeriod] = useState('')
+  const [promsPeriod, setPromsPeriod] = useState('')
+  const [delayPeriod, setDelayPeriod] = useState('')
+
+  const periodOptions = [t('insights.threeDays'), t('insights.threeMonths'), t('insights.oneYear')]
+
+  const VIEW_OPTIONS = [
+    { value: 'trends',   label: t('insights.trends') },
+    { value: 'overview', label: t('insights.overview') },
+    { value: 'compare',  label: t('insights.compare') },
+  ]
+  const PERIOD_OPTIONS = [
+    { value: '30d', label: t('insights.last30days') },
+    { value: '90d', label: t('insights.last90days') },
+    { value: '6m',  label: t('insights.last6months') },
+    { value: '1y',  label: t('insights.lastYear') },
+  ]
+  const PROCEDURE_OPTIONS = [
+    { value: 'all',      label: t('insights.allProcedures') },
+    { value: 'knee',     label: t('insights.knees') },
+    { value: 'hip',      label: t('insights.hip') },
+    { value: 'shoulder', label: t('insights.shoulder') },
+    { value: 'spine',    label: t('insights.spine') },
+  ]
+  const TEAM_OPTIONS = [
+    { value: 'all',    label: t('insights.allTeams') },
+    { value: 'team-a', label: 'Team A' },
+    { value: 'team-b', label: 'Team B' },
+    { value: 'team-c', label: 'Team C' },
+  ]
+  const PATIENT_OPTIONS = [
+    { value: 'all',       label: t('insights.allPatients') },
+    { value: 'high-risk', label: t('insights.highRisk') },
+    { value: 'at-risk',   label: t('patients.atRisk') },
+    { value: 'ready',     label: t('patients.ready') },
+  ]
+  const DEPT_OPTIONS = [
+    { value: 'ortho',  label: t('team.orthopedic') },
+    { value: 'neuro',  label: t('team.neurology') },
+    { value: 'sports', label: 'Sports Medicine' },
+  ]
+
+  const activePeriod = barPeriod || periodOptions[1]
+  const activePromsPeriod = promsPeriod || periodOptions[1]
+  const activeDelayPeriod = delayPeriod || periodOptions[1]
 
   return (
     <div className="space-y-6">
@@ -150,8 +158,8 @@ export function InsightsPage() {
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3 flex-wrap">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Insights</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Analytics and performance metrics</p>
+            <h1 className="text-xl font-semibold text-gray-900">{t('insights.title')}</h1>
+            <p className="text-sm text-gray-500 mt-0.5">{t('insights.subtitle')}</p>
           </div>
           <Select value={view} onValueChange={setView} options={VIEW_OPTIONS} />
         </div>
@@ -168,13 +176,9 @@ export function InsightsPage() {
           <Select value={team} onValueChange={setTeam} options={TEAM_OPTIONS} />
           <Select value={patients} onValueChange={setPatients} options={PATIENT_OPTIONS} />
           <Select value={dept} onValueChange={setDept} options={DEPT_OPTIONS} triggerClassName="max-w-[210px]" />
-          <Button
-            variant="secondary"
-            size="sm"
-            className="gap-1.5 text-gray-600 h-9"
-          >
+          <Button variant="secondary" size="sm" className="gap-1.5 text-gray-600 h-9">
             <RefreshCw size={13} />
-            Reset
+            {t('common.reset')}
           </Button>
         </div>
       </div>
@@ -183,27 +187,14 @@ export function InsightsPage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
         {/* Complication rate */}
         <ChartCard
-          title="Complication rate over time"
-          controls={<PeriodToggle value={barPeriod} onChange={setBarPeriod} />}
+          title={t('insights.complicationRate')}
+          controls={<PeriodToggle options={periodOptions} value={activePeriod} onChange={setBarPeriod} />}
         >
           <ResponsiveContainer width="100%" height={216}>
             <BarChart data={barDisplayData} margin={{ top: 4, right: 0, left: -20, bottom: 4 }}>
               <CartesianGrid vertical={false} stroke="#F3F4F6" />
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 11, fill: '#98A2B3' }}
-                axisLine={false}
-                tickLine={false}
-                interval={2}
-              />
-              <YAxis
-                tickFormatter={v => `${v}%`}
-                tick={{ fontSize: 11, fill: '#98A2B3' }}
-                axisLine={false}
-                tickLine={false}
-                domain={[0, 100]}
-                ticks={[0, 25, 50, 75, 100]}
-              />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#98A2B3' }} axisLine={false} tickLine={false} interval={2} />
+              <YAxis tickFormatter={v => `${v}%`} tick={{ fontSize: 11, fill: '#98A2B3' }} axisLine={false} tickLine={false} domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} />
               <Tooltip content={<CustomBarTooltip />} cursor={{ fill: '#F9FAFB', radius: 4 }} />
               <Bar dataKey="value" fill="#155EEF" radius={[4, 4, 0, 0]} maxBarSize={28} />
             </BarChart>
@@ -217,24 +208,24 @@ export function InsightsPage() {
 
         {/* Complications heatmap */}
         <ChartCard
-          title="Complications by body part"
+          title={t('insights.complicationsByPart')}
           controls={
             <div className="flex items-center gap-2 text-xs text-gray-400">
-              <span>Less</span>
+              <span>{t('insights.less')}</span>
               <div className="flex gap-0.5">
                 {[0.08, 0.25, 0.45, 0.65, 1].map((o) => (
                   <div key={o} className="w-5 h-3.5 rounded-sm" style={{ background: `rgba(21,94,239,${o})` }} />
                 ))}
               </div>
-              <span>More</span>
+              <span>{t('insights.more')}</span>
             </div>
           }
         >
           <div className="overflow-x-auto">
             <div className="min-w-[380px]">
               <div className="flex gap-2 mb-2 ml-20">
-                {COMPLICATIONS_HEATMAP.teams.map(t => (
-                  <div key={t} className="flex-1 text-center text-[11px] text-gray-400 font-medium">{t}</div>
+                {COMPLICATIONS_HEATMAP.teams.map(tm => (
+                  <div key={tm} className="flex-1 text-center text-[11px] text-gray-400 font-medium">{tm}</div>
                 ))}
               </div>
               {COMPLICATIONS_HEATMAP.bodyParts.map((part, rowIdx) => (
@@ -248,8 +239,8 @@ export function InsightsPage() {
                 </div>
               ))}
               <div className="flex gap-2 mt-2 ml-20">
-                {COMPLICATIONS_HEATMAP.teams.map(t => (
-                  <div key={t} className="flex-1 text-center text-[11px] text-gray-400">{t}</div>
+                {COMPLICATIONS_HEATMAP.teams.map(tm => (
+                  <div key={tm} className="flex-1 text-center text-[11px] text-gray-400">{tm}</div>
                 ))}
               </div>
             </div>
@@ -258,14 +249,14 @@ export function InsightsPage() {
 
         {/* PROMs trend */}
         <ChartCard
-          title="PROMs trend"
-          controls={<PeriodToggle value={promsPeriod} onChange={setPromsPeriod} />}
+          title={t('insights.promsTitle')}
+          controls={<PeriodToggle options={periodOptions} value={activePromsPeriod} onChange={setPromsPeriod} />}
         >
           <div className="flex items-center gap-4 mb-4">
             {[
-              { color: '#004EEB', label: 'Satisfaction' },
-              { color: '#155EEF', label: 'Mobility' },
-              { color: '#B2CCFF', label: 'Pain' },
+              { color: '#004EEB', label: t('insights.satisfaction') },
+              { color: '#155EEF', label: t('insights.mobility') },
+              { color: '#B2CCFF', label: t('insights.pain') },
             ].map(item => (
               <span key={item.label} className="flex items-center gap-1.5 text-xs text-gray-500">
                 <span className="size-2 rounded-full" style={{ background: item.color }} />
@@ -281,9 +272,9 @@ export function InsightsPage() {
               <YAxis tick={{ fontSize: 11, fill: '#98A2B3' }} axisLine={false} tickLine={false} domain={[0, 10]} ticks={[0, 2.5, 5, 7.5, 10]} />
               <Tooltip content={<CustomLineTooltip />} />
               <ReferenceLine x="Mar W2" stroke="#E4E7EC" strokeDasharray="4 3" />
-              <Line type="monotone" dataKey="satisfaction" stroke="#004EEB" strokeWidth={2} dot={false} name="Satisfaction" />
-              <Line type="monotone" dataKey="mobility"     stroke="#155EEF" strokeWidth={2} dot={false} name="Mobility" />
-              <Line type="monotone" dataKey="pain"         stroke="#B2CCFF" strokeWidth={2} dot={false} name="Pain" />
+              <Line type="monotone" dataKey="satisfaction" stroke="#004EEB" strokeWidth={2} dot={false} name={t('insights.satisfaction')} />
+              <Line type="monotone" dataKey="mobility"     stroke="#155EEF" strokeWidth={2} dot={false} name={t('insights.mobility')} />
+              <Line type="monotone" dataKey="pain"         stroke="#B2CCFF" strokeWidth={2} dot={false} name={t('insights.pain')} />
             </LineChart>
           </ResponsiveContainer>
 
@@ -296,13 +287,13 @@ export function InsightsPage() {
 
         {/* Delay trend */}
         <ChartCard
-          title="Procedure start delay trend"
-          controls={<PeriodToggle value={delayPeriod} onChange={setDelayPeriod} />}
+          title={t('insights.delayTitle')}
+          controls={<PeriodToggle options={periodOptions} value={activeDelayPeriod} onChange={setDelayPeriod} />}
         >
           <div className="flex items-center gap-4 mb-4">
             {[
-              { color: '#D92D20', label: 'Goal threshold', dashed: true },
-              { color: '#004EEB', label: 'Avg. delay (min)' },
+              { color: '#D92D20', label: t('insights.goalThreshold'), dashed: true },
+              { color: '#004EEB', label: t('insights.avgDelay') },
             ].map(item => (
               <span key={item.label} className="flex items-center gap-1.5 text-xs text-gray-500">
                 {item.dashed
@@ -332,7 +323,7 @@ export function InsightsPage() {
                   }
                   return <g key={props.index} />
                 }}
-                name="Avg. delay (min)"
+                name={t('insights.avgDelay')}
               />
             </LineChart>
           </ResponsiveContainer>
