@@ -1,125 +1,106 @@
-# MyRehab — Clinical Rehabilitation Platform (SaMD)
+# MyRehab — Xususiy klinikalar uchun reabilitatsiya platformasi
 
-> Telereabilitatsiya va klinik qaror qo'llab-quvvatlash platformasi.
-> Shifokorlar, klinikalar va bemorlar uchun yagona ekotizim.
+> Reabilitatsiya bo'limini boshqarish uchun klinik veb-ilova.
+> Shifokorlar, fizioterapevtlar va klinika xodimlari uchun mo'ljallangan.
 
-[![Production](https://img.shields.io/badge/app-app.myrehab.uz-blue)](https://app.myrehab.uz)
+[![Production](https://img.shields.io/badge/app-myrehab.onrender.com-blue)](https://myrehab.onrender.com)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
-
----
-
-## 📋 Mundarija
-
-- [Loyiha haqida](#loyiha-haqida)
-- [Texnologiyalar](#texnologiyalar)
-- [Arxitektura](#arxitektura)
-- [Rollar (RBAC)](#rollar-rbac)
-- [Lokal o'rnatish](#lokal-ornatish)
-- [Skriptlar](#skriptlar)
-- [Loyiha tuzilishi](#loyiha-tuzilishi)
-- [Deployment](#deployment)
-- [Testlash](#testlash)
-- [Hissa qo'shish](#hissa-qoshish)
+![Node](https://img.shields.io/badge/node-%E2%89%A520-brightgreen)
 
 ---
 
 ## Loyiha haqida
 
-MyRehab — bu reabilitatsiya jarayonini boshqarish uchun mo'ljallangan
-**SaMD (Software as a Medical Device)** platformasi. Tizim AI yordamida
-individual reabilitatsiya rejalarini yaratadi, bemor xavfsizligini
-("safety gate") nazorat qiladi va MDT (Multi-Disciplinary Team) jamoaviy
-ishini muvofiqlashtiradi.
+**MyRehab** — xususiy klinikalar uchun ortopedik va reabilitatsiya bo'limini
+raqamli boshqarish platformasi. Tizim klinika xodimlariga quyidagilarda yordam beradi:
 
-Platforma ikkita deploymentga bo'lingan:
+- **Bemorlar jarayonini kuzatish** — jarrohlikdan oldingi tayyorgarlikdan
+  tiklash tugaguncha (Pre-op → Rehab → Discharge)
+- **Klinik xavfni baholash** — ASA klassifikatsiyasi, ICU zaruriyati,
+  allergiya va dorilar to'qnashuvi bo'yicha ogohlantirishlar
+- **Jamoa koordinatsiyasi** — shifokorlar, fizioterapevtlar, hamshiralar
+  jadvalini birgalikda boshqarish
+- **Tahlil va hisobot** — PROMs ko'rsatkichlari, asoratlar darajasi,
+  protsedura kechikishi tendensiyalari
 
-| Deployment | Domen | Rollar |
-|------------|-------|--------|
-| **App** | `app.myrehab.uz` | Doctor, Clinic Admin, Patient, Nurse, Caregiver |
-| **Admin** | `admin.myrehab.uz` | Super Admin |
+Platforma faqat **klinika ichki xodimlari** (Back-office) uchun — bemorlar
+o'z hisobi orqali kirmaydi.
 
 ---
 
 ## Texnologiyalar
 
-**Core:** React 19 · TypeScript 5.9 · Vite 7 · pnpm · Node ≥22
+**Runtime:** Node ≥ 20 · npm · Vite 6
 
 | Qatlam | Texnologiya |
 |--------|-------------|
-| Routing | TanStack Router (file-based) |
-| Server state | TanStack Query |
-| Client state | Zustand |
-| Forms / Validatsiya | React Hook Form + Zod |
-| UI | Radix UI + Tailwind CSS 4 + CVA |
-| i18n | i18next (UZ / RU / EN) |
-| Real-time | WebSocket (chat, bildirishnomalar) |
-| Video | Zoom Video SDK (telekonsultatsiya) |
-| Monitoring | Sentry |
-| Testlash | Vitest + Playwright (E2E) |
+| UI framework | React 19 + TypeScript 5.8 |
+| Routing | TanStack Router v1 |
+| Server state | TanStack Query v5 |
+| Client state | Zustand v5 |
+| UI komponentlar | Base UI (`@base-ui/react`) |
+| Stillar | Tailwind CSS v4 · tailwind-merge · clsx |
+| Ikonkalar | Lucide React |
+| Diagrammalar | Recharts v3 |
+| i18n | i18next + react-i18next (UZ / EN / RU) |
+| Sana | date-fns v4 |
+| Deploy | Render (Web Service · Starter · Frankfurt) |
 
-**Backend API:** `api.myrehab.uz` (alohida repoda)
-
----
-
-## Arxitektura
-
-Loyiha **feature-based** (xususiyatga asoslangan) arxitekturada qurilgan.
-To'liq tavsif: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
-
-```
-Foydalanuvchi → app.myrehab.uz (React SPA)
-                      │
-                      ├── App Mode aniqlash (config/app-mode.ts)
-                      ├── RBAC tekshiruvi (lib/rbac)
-                      ├── TanStack Query → services/*.service.ts
-                      │                         │
-                      └─────────────────→ api.myrehab.uz (REST)
-                                              │
-                                          WebSocket (real-time)
-```
+**Dizayn tizimi:** Untitled UI — Blue (`brand-600: #155EEF`, Inter shrift)
 
 ---
 
-## Rollar (RBAC)
+## Asosiy funksiyalar
 
-Tizimda 6 ta rol mavjud. Ruxsatlar **markazlashgan permission matritsa**
-orqali boshqariladi (`src/lib/rbac/permissions.ts`). Inline rol tekshiruvlari
-**taqiqlangan** — barcha tekshiruvlar permission kalitlari orqali amalga oshiriladi.
+### 1. Bosh sahifa — Dashboard
+Bugungi ish ko'rinishi: reabilitatsiya sessiyalari soni va holati,
+xavf ostidagi bemorlar, muhim ogohlantirishlar, jamoa Gantt jadvali,
+shifokorlar mavjudligi.
 
-| Rol | Tavsif |
-|-----|--------|
-| `SUPER_ADMIN` | Tizim administratori (admin.myrehab.uz) |
-| `CLINIC_ADMIN` | Klinika administratori |
-| `DOCTOR` | Shifokor |
-| `NURSE` | Hamshira |
-| `PATIENT` | Bemor |
-| `CAREGIVER` | Vasiy / G'amxo'r |
+### 2. Bemorlar — Patients
+Klinikadagi barcha bemorlar ro'yxati. Grid va jadval ko'rinishi,
+qidiruv, holat bo'yicha filtr (Tayyor / Xavf ostida / Jarayonda /
+Ruxsat kutilmoqda). Har bir bemor kartasida klinik ma'lumotlar,
+hujjatlar, kontrol ro'yxati va ogohlantirishlar.
 
-To'liq rol×ruxsat matritsasi: [`docs/RBAC.md`](docs/RBAC.md)
+### 3. Tahlillar — Insights
+Asoratlar darajasi (vaqt bo'yicha), tana qismlari × jamoa issiqlik
+xaritasi, PROMs tendensiyasi (qoniqish / harakatchanlik / og'riq),
+protsedura kechikish grafigi. Filtr: davr, protsedura turi, jamoa, bo'lim.
+
+### 4. Uchrashuvlar — Appointments
+Oylik kalendarli va kunlik rejali ko'rinish. Uchrashuv turları:
+fizioterapiya, konsultatsiya, kuzatuv, baholash. Holat:
+Tasdiqlangan / Kutilmoqda / Bekor qilingan.
+
+### 5. Hujjatlar — Documents
+Klinik protokollar, bemorlar shakllari, tadqiqotlar va shablonlar
+ro'yxati. Kategoriya bo'yicha filtr, ko'rish va yuklab olish.
+
+### 6. Jamoa — Team
+Klinika xodimlari kartochkalari: shifokorlar, fizioterapevtlar,
+radiologlar, nevrologlar. Mutaxassislik filtri, mavjudlik vaqti,
+to'g'ridan-to'g'ri qo'ng'iroq tugmasi.
 
 ---
 
 ## Lokal o'rnatish
 
 ```bash
-# 1. Repozitoriyni klonlash
-git clone https://github.com/shakhbozbekusmonov/myrehab-darshboard.git
-cd myrehab-darshboard
+# 1. Reponi klonlash
+git clone https://github.com/istamovx/myrehab.git
+cd myrehab
 
-# 2. Bog'liqliklarni o'rnatish (pnpm talab qilinadi)
-pnpm install
+# 2. Bog'liqliklarni o'rnatish
+npm install
 
-# 3. Environment faylini sozlash
-cp .env.example .env
-# .env faylini tahrirlab API manzilini kiriting
-
-# 4. Dev serverni ishga tushirish
-pnpm dev          # app rejimi (app.myrehab.uz)
-pnpm dev:admin    # admin rejimi (admin.myrehab.uz)
+# 3. Dev serverni ishga tushirish
+npm run dev
+# Ilova http://localhost:3000 da ochiladi
 ```
 
-App `http://localhost:5173` da ochiladi. Localhost'da **barcha rollar**
-test uchun ruxsat etilgan.
+> Backend hozircha ulangan emas — barcha ma'lumotlar `src/data/mock-data.ts`
+> da. API integratsiya rejalashtirilmoqda.
 
 ---
 
@@ -127,15 +108,10 @@ test uchun ruxsat etilgan.
 
 | Buyruq | Vazifa |
 |--------|--------|
-| `pnpm dev` | Dev server (app rejimi) |
-| `pnpm dev:admin` | Dev server (admin rejimi) |
-| `pnpm build` | Production build |
-| `pnpm build:admin` | Admin production build |
-| `pnpm lint` | ESLint tekshiruvi |
-| `pnpm format` | Prettier formatlash |
-| `pnpm test` | Unit testlar (Vitest) |
-| `pnpm test:e2e` | E2E testlar (Playwright) |
-| `pnpm knip` | Ishlatilmayotgan kodni topish |
+| `npm run dev` | Dev server (port 3000) |
+| `npm run build` | Production build (`dist/`) |
+| `npm run preview` | Build natijasini lokal ko'rish |
+| `npm run start` | Production serverni ishga tushirish (`serve`) |
 
 ---
 
@@ -143,64 +119,77 @@ test uchun ruxsat etilgan.
 
 ```
 src/
-├── assets/           # Statik resurslar
-├── components/       # Umumiy UI komponentlar
-├── config/           # app-mode, fonts
-├── context/          # React context provayderlar
-├── features/         # Rolga oid modullar (asosiy logika)
-│   ├── admin/        ├── doctor/     ├── patient/
-│   ├── clinic-admin/ ├── caregiver/  ├── care/
-│   ├── mdt/          ├── auth/       └── settings/
-├── hooks/            # Umumiy React hook'lar
+├── components/
+│   ├── layout/        # AppLayout, Sidebar
+│   ├── charts/        # DonutChart (Recharts wrappers)
+│   └── ui/            # Button, Input, Badge, Avatar, Select, Checkbox
+├── data/
+│   └── mock-data.ts   # Vaqtinchalik: bemorlar, shifokorlar, tahlil ma'lumotlari
+├── features/
+│   ├── dashboard/     # Bosh sahifa
+│   ├── patients/      # Ro'yxat + tafsilot
+│   ├── insights/      # Tahlillar
+│   ├── appointments/  # Uchrashuvlar
+│   ├── team/          # Jamoa
+│   └── docs/          # Hujjatlar
+├── i18n/
+│   ├── index.ts       # i18next konfiguratsiya
+│   └── locales/       # uz.ts · en.ts · ru.ts
 ├── lib/
-│   ├── rbac/         # ⭐ Ruxsatlar tizimi (permission matritsa)
-│   ├── api/          # Axios klient
-│   └── ...           # i18n, websocket, validatsiya
-├── locales/          # UZ / RU / EN tarjimalar
-├── routes/           # TanStack Router (file-based)
-│   └── _authenticated/   # Himoyalangan route'lar
-├── services/         # API servis qatlami (*.service.ts)
-├── stores/           # Zustand store'lar
-└── styles/           # Global stillar
+│   └── utils.ts       # cn(), formatDate()
+├── store/
+│   └── lang.ts        # Til tanlash (Zustand + localStorage)
+├── styles/
+│   └── globals.css    # Tailwind + Untitled UI dizayn tokenlari
+└── router.tsx         # TanStack Router marshrut konfiguratsiyasi
 ```
 
 ---
 
 ## Deployment
 
-CI/CD **Vercel** orqali matrix strategiyasida (app + admin).
-Workflow'lar: `.github/workflows/`
+Ilova **Render Web Service** orqali deploy qilingan.
+Konfiguratsiya: `render.yaml`
 
-| Muhit | URL |
-|-------|-----|
-| Production (app) | https://app.myrehab.uz |
-| Production (admin) | https://admin.myrehab.uz |
+| Parametr | Qiymat |
+|----------|--------|
+| Runtime | Node 22 |
+| Region | Frankfurt (EU) |
+| Plan | Starter |
+| Build | `npm install && npm run build` |
+| Start | `npm run start` |
+| Health check | `/` |
 
-Monitoring sozlamalari: [`docs/monitoring.md`](docs/monitoring.md)
-Falokatdan tiklanish: [`docs/disaster-recovery.md`](docs/disaster-recovery.md)
-
----
-
-## Testlash
-
-```bash
-pnpm test            # Unit testlar
-pnpm test:coverage   # Coverage hisoboti bilan
-pnpm test:e2e        # Playwright E2E
-pnpm test:e2e:ui     # Playwright UI rejimida
-```
+Har qanday `main` branchga push qilinganida avtomatik deploy ishga tushadi.
 
 ---
 
-## Hissa qo'shish
+## Tillar (i18n)
 
-1. Branch yarating: `feat/...` yoki `fix/...`
-2. Commit'lar **Conventional Commits** formatida (`cz.yaml` ga qarang)
-3. PR yuborishdan oldin: `pnpm lint && pnpm format:check && pnpm test`
-4. PR ochilganda CI build-gate avtomatik ishlaydi
+Ilova uch tilda ishlaydi. Asosiy til — o'zbek tili.
+Sidebar quyi qismidagi **O'z / EN / РУ** tugmalari orqali almashtiriladi.
+Tanlov `localStorage` da saqlanadi.
+
+| Til | Fayl |
+|-----|------|
+| O'zbek | `src/i18n/locales/uz.ts` |
+| English | `src/i18n/locales/en.ts` |
+| Русский | `src/i18n/locales/ru.ts` |
+
+---
+
+## Keyingi bosqich (Roadmap)
+
+- [ ] Backend API integratsiyasi (`api.myrehab.uz`)
+- [ ] Autentifikatsiya (JWT / session)
+- [ ] Rol asosida ruxsatlar — RBAC (Shifokor / Klinika admini / Hamshira)
+- [ ] Bemor qo'shish / tahrirlash formasini joriy etish
+- [ ] Real-time bildirishnomalar (WebSocket)
+- [ ] Testlar (Vitest unit + Playwright E2E)
+- [ ] CI/CD pipeline (GitHub Actions)
 
 ---
 
 ## Litsenziya
 
-MIT — [`LICENSE`](LICENSE) fayliga qarang.
+MIT
