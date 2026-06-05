@@ -3,6 +3,7 @@ import {
   User, Building2, Bell, Lock, CheckCircle2, LogOut, Monitor,
   Search, ShieldCheck, Clock,
 } from 'lucide-react'
+import { useAuthStore } from '@/store/auth'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -271,21 +272,60 @@ function SecurityTab() {
   const [sessions, setSessions] = useState(SESSIONS)
   const otherCount = sessions.filter(s => !s.current).length
 
+  const changePassword = useAuthStore(s => s.changePassword)
+  const [current, setCurrent] = useState('')
+  const [next, setNext] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [msg, setMsg] = useState<{ type: 'ok' | 'error'; text: string } | null>(null)
+
+  function handleChangePassword() {
+    const res = changePassword(current, next, confirm)
+    if (res.ok) {
+      setMsg({ type: 'ok', text: "✓ Parol muvaffaqiyatli o'zgartirildi!" })
+      setCurrent(''); setNext(''); setConfirm('')
+    } else {
+      const text =
+        res.error === 'wrong_password' ? "Joriy parol noto'g'ri"
+          : res.error === 'too_short' ? "Yangi parol kamida 4 ta belgidan iborat bo'lishi kerak"
+          : res.error === 'mismatch' ? 'Parollar mos kelmadi'
+          : 'Xatolik yuz berdi'
+      setMsg({ type: 'error', text })
+    }
+    setTimeout(() => setMsg(null), 3000)
+  }
+
+  const fields = [
+    { label: 'Joriy parol', value: current, set: setCurrent },
+    { label: 'Yangi parol', value: next, set: setNext },
+    { label: 'Parolni tasdiqlang', value: confirm, set: setConfirm },
+  ]
+
   return (
     <div className="space-y-4">
       {/* Change password */}
       <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5 space-y-4">
         <h3 className="text-sm font-bold text-[var(--text-primary)]">Parol</h3>
-        {['Joriy parol', 'Yangi parol', 'Parolni tasdiqlang'].map(label => (
-          <div key={label}>
-            <label className="text-xs font-semibold text-[var(--text-secondary)]">{label}</label>
+        {msg && (
+          <p className={['text-sm font-medium', msg.type === 'ok' ? 'text-green-600' : 'text-red-500'].join(' ')}>
+            {msg.text}
+          </p>
+        )}
+        {fields.map(f => (
+          <div key={f.label}>
+            <label className="text-xs font-semibold text-[var(--text-secondary)]">{f.label}</label>
             <input
               type="password"
+              value={f.value}
+              onChange={e => f.set(e.target.value)}
               className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500"
             />
           </div>
         ))}
-        <button className="px-5 py-2.5 bg-teal-500 text-white rounded-xl text-sm font-semibold hover:bg-teal-600 transition-colors">
+        <button
+          onClick={handleChangePassword}
+          disabled={!current || !next || !confirm}
+          className="px-5 py-2.5 bg-teal-500 text-white rounded-xl text-sm font-semibold hover:bg-teal-600 transition-colors disabled:opacity-40"
+        >
           Parolni o'zgartirish
         </button>
       </div>

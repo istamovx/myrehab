@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useNavigate } from '@tanstack/react-router'
 import { Menu, Glasses, X, Search, Sun, Moon, LogOut, ChevronRight, UserCheck } from 'lucide-react'
 import { SuperAdminSidebar } from './super-admin-sidebar'
 import { useThemeStore } from '@/store/theme'
+import { useAuthStore } from '@/store/auth'
 import { ORG_USERS, ORGANIZATIONS, type OrgUser } from '@/data/super-admin-mock-data'
 import { cn } from '@/lib/utils'
 
@@ -16,6 +17,13 @@ export function SuperAdminLayout() {
   const [glassSearch, setGlassSearch] = useState('')
   const [impersonating, setImpersonating] = useState<ImpersonatingUser | null>(null)
   const { theme, toggle } = useThemeStore()
+  const navigate = useNavigate()
+  const logout = useAuthStore(s => s.logout)
+
+  function handleLogout() {
+    logout()
+    navigate({ to: '/login' })
+  }
 
   const filteredUsers = ORG_USERS.filter(u =>
     u.name.toLowerCase().includes(glassSearch.toLowerCase()) ||
@@ -134,7 +142,7 @@ export function SuperAdminLayout() {
             </button>
 
             {/* Super Admin avatar */}
-            <div className="inline-flex items-center gap-2 h-10 pl-1.5 pr-2 rounded-lg hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors">
+            <div className="inline-flex items-center gap-2 h-10 pl-1.5 pr-2 rounded-lg transition-colors">
               <div className="size-8 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white text-[12px] font-bold shrink-0">
                 SA
               </div>
@@ -143,6 +151,16 @@ export function SuperAdminLayout() {
                 <p className="text-[11px] text-indigo-500 font-semibold">Platform</p>
               </div>
             </div>
+
+            {/* Logout */}
+            <button
+              onClick={handleLogout}
+              aria-label="Chiqish"
+              title="Chiqish"
+              className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500 cursor-pointer transition-colors"
+            >
+              <LogOut size={18} />
+            </button>
           </div>
         </header>
 

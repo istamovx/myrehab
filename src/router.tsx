@@ -27,20 +27,45 @@ import { SuperAdminDashboardPage } from './features/super-admin/dashboard'
 import { SuperAdminOrganizationsPage } from './features/super-admin/organizations'
 import { SuperAdminPaymentsPage } from './features/super-admin/payments'
 import { SuperAdminSettingsPage } from './features/super-admin/settings'
+import { LoginPage } from './features/auth/login'
+import { useAuthStore, homePathForRole, type Role } from './store/auth'
 
 const rootRoute = createRootRoute({ component: Outlet })
+
+// ── Auth guards ──────────────────────────────────────────────────────────────
+function requireRole(role: Role) {
+  const user = useAuthStore.getState().user
+  if (!user) throw redirect({ to: '/login' })
+  if (user.role !== role) throw redirect({ to: homePathForRole(user.role) })
+}
+
+// ── Login (public) ────────────────────────────────────────────────────────────
+const loginRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/login',
+  beforeLoad: () => {
+    const user = useAuthStore.getState().user
+    if (user) throw redirect({ to: homePathForRole(user.role) })
+  },
+  component: LoginPage,
+})
+
+// ── Root index → route by auth state ───────────────────────────────────────────
+const rootIndexRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  beforeLoad: () => {
+    const user = useAuthStore.getState().user
+    throw redirect({ to: user ? homePathForRole(user.role) : '/login' })
+  },
+})
 
 // ── Admin layout ─────────────────────────────────────────────────────────────
 const adminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: '_admin',
+  beforeLoad: () => requireRole('doctor'),
   component: AppLayout,
-})
-
-const indexRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/',
-  beforeLoad: () => { throw redirect({ to: '/dashboard' }) },
 })
 
 const dashboardRoute = createRoute({
@@ -107,6 +132,7 @@ const teamRoute = createRoute({
 const superAdminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/super-admin',
+  beforeLoad: () => requireRole('super_admin'),
   component: SuperAdminLayout,
 })
 
@@ -144,6 +170,7 @@ const superAdminSettingsRoute = createRoute({
 const patientLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/patient',
+  beforeLoad: () => requireRole('patient'),
   component: PatientLayout,
 })
 
@@ -220,8 +247,9 @@ const patientSettingsRoute = createRoute({
 })
 
 const routeTree = rootRoute.addChildren([
+  loginRoute,
+  rootIndexRoute,
   adminLayoutRoute.addChildren([
-    indexRoute,
     dashboardRoute,
     patientsRoute,
     patientDetailRoute,
