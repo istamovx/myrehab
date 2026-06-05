@@ -102,7 +102,7 @@ export function DashboardPage() {
         actions={
           <>
             <PillSelect value={department} onValueChange={setDepartment} options={DEPARTMENTS} />
-            <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer [box-shadow:var(--shadow-xs)]">
+            <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg text-[16px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer [box-shadow:var(--shadow-xs)]">
               <Calendar size={14} className="text-[var(--fg-quaternary)]" />
               Apr 03, 2025
             </button>
@@ -125,7 +125,7 @@ export function DashboardPage() {
               <s.Icon size={16} className={s.color} />
             </div>
             <p className="text-[24px] font-bold text-[var(--text-primary)] leading-none mb-1">{s.value}</p>
-            <p className="text-[12px] text-[var(--text-tertiary)] leading-snug">{s.label}</p>
+            <p className="text-[16px] text-[var(--text-tertiary)] leading-snug">{s.label}</p>
           </div>
         ))}
       </div>
@@ -135,8 +135,8 @@ export function DashboardPage() {
         {/* Sessions card */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] text-xs font-medium">
+            <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] text-[16px] font-medium">
               <TrendingUp size={11} />
               +2
             </span>
@@ -147,20 +147,20 @@ export function DashboardPage() {
               <DonutChart percentage={70} color="#2970FF" size={120} strokeWidth={14} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-2xl font-bold text-[var(--text-primary)]">12</span>
-                <span className="text-[10px] text-[var(--fg-quaternary)] -mt-0.5">{t('dashboard.session')}</span>
+                <span className="text-[16px] text-[var(--fg-quaternary)] -mt-0.5">{t('dashboard.session')}</span>
               </div>
             </div>
 
             <div className="space-y-2.5 flex-1 min-w-0">
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-[16px]">
                 <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
                 <span className="text-[var(--text-quaternary)]">{t('dashboard.finished', { count: 8 })}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-[16px]">
                 <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
                 <span className="text-[var(--text-quaternary)]">{t('dashboard.upcoming', { count: 4 })}</span>
               </div>
-              <p className="text-xs text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
+              <p className="text-[16px] text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
                 <span className="font-semibold text-[var(--text-secondary)]">70%</span> {t('dashboard.onSchedule')}
               </p>
             </div>
@@ -170,8 +170,8 @@ export function DashboardPage() {
         {/* At-risk card */}
         <Card className="p-6">
           <div className="flex items-start justify-between mb-1">
-            <p className="text-sm font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] text-xs font-medium">
+            <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] text-[16px] font-medium">
               −3 critical
             </span>
           </div>
@@ -181,20 +181,20 @@ export function DashboardPage() {
               <DonutChart percentage={60} color="#2970FF" size={120} strokeWidth={14} />
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-2xl font-bold text-[var(--text-primary)]">8</span>
-                <span className="text-[10px] text-[var(--fg-quaternary)] -mt-0.5">{t('patients.atRisk')}</span>
+                <span className="text-[16px] text-[var(--fg-quaternary)] -mt-0.5">{t('patients.atRisk')}</span>
               </div>
             </div>
 
             <div className="space-y-2.5 flex-1 min-w-0">
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-[16px]">
                 <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
                 <span className="text-[var(--text-quaternary)]">{t('dashboard.reviewed', { count: 5 })}</span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
+              <div className="flex items-center gap-2 text-[16px]">
                 <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
                 <span className="text-[var(--text-quaternary)]">{t('dashboard.pending', { count: 3 })}</span>
               </div>
-              <p className="text-xs text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
+              <p className="text-[16px] text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
                 <span className="font-semibold text-[var(--text-secondary)]">60%</span> {t('dashboard.atRiskPct', { pct: 60 }).replace('60% ', '')}
               </p>
             </div>
@@ -204,7 +204,7 @@ export function DashboardPage() {
         {/* Alerts panel */}
         <Card className="flex flex-col">
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.alerts')}</h3>
+            <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">{t('dashboard.alerts')}</h3>
             <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
               <Settings2 size={14} />
             </button>
@@ -215,9 +215,9 @@ export function DashboardPage() {
               <div key={alert.id} className="flex items-start gap-3 px-5 py-3.5 hover:bg-[var(--bg-secondary)] transition-colors group">
                 <AlertIcon type={alert.type} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[var(--text-primary)]">{alert.title}</p>
-                  <p className="text-xs text-[var(--text-quaternary)] mt-0.5 line-clamp-2">{alert.message}</p>
-                  <p className="text-xs text-[var(--fg-quaternary)] mt-1">{alert.time}</p>
+                  <p className="text-[16px] font-medium text-[var(--text-primary)]">{alert.title}</p>
+                  <p className="text-[16px] text-[var(--text-quaternary)] mt-0.5 line-clamp-2">{alert.message}</p>
+                  <p className="text-[16px] text-[var(--fg-quaternary)] mt-1">{alert.time}</p>
                 </div>
                 <button className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)] mt-0.5">
                   <MoreHorizontal size={15} />
@@ -234,8 +234,8 @@ export function DashboardPage() {
         <Card className="xl:col-span-2">
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
             <div className="flex items-center gap-4 flex-wrap">
-              <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.teamSchedule')}</h3>
-              <div className="flex items-center gap-3 text-xs text-[var(--text-quaternary)] flex-wrap">
+              <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">{t('dashboard.teamSchedule')}</h3>
+              <div className="flex items-center gap-3 text-[16px] text-[var(--text-quaternary)] flex-wrap">
                 <span className="flex items-center gap-1.5">
                   <span className="size-2 rounded-sm bg-[var(--text-primary)]" />
                   {t('dashboard.surgery')}
@@ -268,7 +268,7 @@ export function DashboardPage() {
             <div className="min-w-[560px]">
               <div className="flex mb-3">
                 <div className="w-36 shrink-0 pr-3">
-                  <div className="flex items-center gap-1 text-xs text-[var(--fg-quaternary)]">
+                  <div className="flex items-center gap-1 text-[16px] text-[var(--fg-quaternary)]">
                     <span>{t('dashboard.doctors')}</span>
                     <button className="size-5 rounded-md bg-[var(--bg-brand-primary)] text-[var(--text-brand-primary)] flex items-center justify-center hover:bg-[var(--bg-brand-primary)] transition-colors cursor-pointer">
                       <Plus size={11} />
@@ -279,7 +279,7 @@ export function DashboardPage() {
                   {TIME_SLOTS.map((h) => (
                     <span
                       key={h}
-                      className="absolute text-[10px] text-[var(--fg-quaternary)] -translate-x-1/2"
+                      className="absolute text-[16px] text-[var(--fg-quaternary)] -translate-x-1/2"
                       style={{ left: `${((h - 8) / TOTAL_HOURS) * 100}%` }}
                     >
                       {h < 12 ? `${h}am` : h === 12 ? '12pm' : `${h - 12}pm`}
@@ -294,8 +294,8 @@ export function DashboardPage() {
                     <div className="w-36 shrink-0 pr-3 flex items-center gap-2">
                       <Avatar name={doc.name} size="xs" />
                       <div className="min-w-0">
-                        <p className="text-xs font-medium text-[var(--text-secondary)] truncate">{doc.name}</p>
-                        <p className="text-[10px] text-[var(--fg-quaternary)] truncate">{doc.role}</p>
+                        <p className="text-[16px] font-medium text-[var(--text-secondary)] truncate">{doc.name}</p>
+                        <p className="text-[16px] text-[var(--fg-quaternary)] truncate">{doc.role}</p>
                       </div>
                     </div>
                     <div className="flex-1 h-9 bg-[var(--bg-secondary)] rounded-lg relative overflow-hidden border border-[var(--border-secondary)]">
@@ -314,7 +314,7 @@ export function DashboardPage() {
                         <div
                           key={i}
                           className={cn(
-                            'absolute top-1 bottom-1 rounded-md flex items-center px-1.5 text-[11px] font-medium overflow-hidden',
+                            'absolute top-1 bottom-1 rounded-md flex items-center px-1.5 text-[16px] font-medium overflow-hidden',
                             blockColors[block.type as keyof typeof blockColors] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                           )}
                           style={{
@@ -337,7 +337,7 @@ export function DashboardPage() {
         {/* Team availability */}
         <Card>
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
-            <h3 className="text-sm font-semibold text-[var(--text-primary)]">{t('dashboard.teamAvailable')}</h3>
+            <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">{t('dashboard.teamAvailable')}</h3>
             <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
               <Settings2 size={14} />
             </button>
@@ -348,10 +348,10 @@ export function DashboardPage() {
               <div key={doc.id} className="flex items-center gap-3 px-5 py-3.5 hover:bg-[var(--bg-secondary)] transition-colors">
                 <Avatar name={doc.name} size="sm" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[var(--text-primary)] truncate">{doc.name}</p>
-                  <p className="text-xs text-[var(--fg-quaternary)] truncate">{doc.role}</p>
+                  <p className="text-[16px] font-medium text-[var(--text-primary)] truncate">{doc.name}</p>
+                  <p className="text-[16px] text-[var(--fg-quaternary)] truncate">{doc.role}</p>
                   {doc.availableFrom && (
-                    <p className="text-xs text-[var(--fg-success-primary)] flex items-center gap-1 mt-0.5">
+                    <p className="text-[16px] text-[var(--fg-success-primary)] flex items-center gap-1 mt-0.5">
                       <span className="size-1.5 rounded-full bg-[var(--fg-success-primary)]" />
                       {t('team.available', { from: doc.availableFrom, to: doc.availableTo })}
                     </p>

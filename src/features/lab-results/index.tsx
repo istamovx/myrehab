@@ -388,6 +388,7 @@ export function LabResultsPage() {
         onOpenChange={open => { if (!open) { setAddOpen(false); setAddSuccess(false) } }}
         title="Yangi tahlil buyurtmasi"
         description="Laboratoriya tahlili ma'lumotlarini kiriting"
+        side="right"
       >
         {addSuccess ? (
           <div className="flex flex-col items-center py-8 gap-3">

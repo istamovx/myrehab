@@ -9,6 +9,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog } from '@/components/ui/dialog'
+import { DatePicker } from '@/components/ui/date-picker'
 import { PageHeader } from '@/components/layout/page-header'
 import { PATIENTS, type PatientStatus } from '@/data/mock-data'
 import { formatDate, cn } from '@/lib/utils'
@@ -398,6 +399,7 @@ export function PatientsListPage() {
         onOpenChange={open => { setAddOpen(open); if (!open) { setAddSuccess(false); setForm(EMPTY_FORM) } }}
         title={t('patients.newPatient')}
         description="Yangi bemor ma'lumotlarini kiriting"
+        side="right"
       >
         {addSuccess ? (
           <div className="flex flex-col items-center py-8 gap-3">
@@ -437,11 +439,11 @@ export function PatientsListPage() {
               </div>
               <div>
                 <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Tug'ilgan sana</label>
-                <Input type="date" value={form.dateOfBirth} onChange={e => f('dateOfBirth', e.target.value)} />
+                <DatePicker value={form.dateOfBirth} onChange={v => f('dateOfBirth', v)} placeholder="kk.oo.yyyy" />
               </div>
               <div>
                 <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Protsedura sanasi</label>
-                <Input type="date" value={form.procedureDate} onChange={e => f('procedureDate', e.target.value)} />
+                <DatePicker value={form.procedureDate} onChange={v => f('procedureDate', v)} placeholder="kk.oo.yyyy" />
               </div>
             </div>
             <div className="flex gap-3 pt-2">
