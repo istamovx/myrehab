@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { Menu } from 'lucide-react'
 import { Sidebar } from './sidebar'
+import { TopBar } from './top-bar'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -14,15 +15,15 @@ export function AppLayout({ children }: AppLayoutProps) {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-20 lg:hidden"
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Sidebar — always visible on lg+, drawer on mobile */}
+      {/* Sidebar — fixed on lg+, drawer on mobile */}
       <div
         className={[
-          'fixed top-0 left-0 bottom-0 z-30 transition-transform duration-200',
+          'fixed top-0 left-0 bottom-0 z-40 transition-transform duration-200',
           mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
         ].join(' ')}
       >
@@ -30,20 +31,22 @@ export function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Main area */}
-      <div className="flex-1 lg:ml-[280px] min-h-screen flex flex-col">
-        {/* Mobile top bar */}
-        <header className="lg:hidden sticky top-0 z-10 flex items-center gap-3 h-14 px-4 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
+      <div className="flex-1 lg:ml-[272px] min-h-screen flex flex-col min-w-0">
+        {/* Mobile menu button bar (sits above TopBar on small screens) */}
+        <div className="lg:hidden flex items-center h-12 px-4 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
           <button
             onClick={() => setMobileOpen(true)}
-            className="size-9 rounded-lg flex items-center justify-center text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
+            className="size-9 -ml-2 rounded-lg flex items-center justify-center text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
           >
             <Menu size={20} />
           </button>
-          <span className="text-[16px] font-semibold text-[var(--text-primary)]">MyRehab</span>
-        </header>
+          <span className="text-[15px] font-semibold text-[var(--text-primary)] ml-1">MyRehab</span>
+        </div>
 
-        <main className="flex-1 bg-[var(--bg-page)]">
-          <div className="px-4 py-4 sm:px-6 sm:py-6">
+        <TopBar />
+
+        <main className="flex-1">
+          <div className="px-4 py-6 sm:px-6 lg:px-8 max-w-[1600px] mx-auto w-full">
             {children}
           </div>
         </main>

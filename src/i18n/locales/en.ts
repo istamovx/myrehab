@@ -204,6 +204,22 @@ const en = {
     inProgress: "In progress",
     pending:    "Pending",
   },
+  header: {
+    notifications:     "Notifications",
+    viewProfile:       "View profile",
+    settings:          "Settings",
+    logout:            "Log out",
+    noNotifications:   "No notifications",
+    searchPlaceholder: "Search patients, documents, appointments...",
+  },
+  roles: {
+    specialist: "Rehab Specialist",
+    doctor:     "Doctor",
+    admin:      "Administrator",
+  },
+  breadcrumb: {
+    home: "Home",
+  },
 } as const
 
 export default en

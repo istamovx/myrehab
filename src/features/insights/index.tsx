@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RefreshCw, Calendar } from 'lucide-react'
+import { RefreshCw } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, ReferenceLine,
 } from 'recharts'
 import { Select } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 import { INSIGHTS_BAR_DATA, PROMS_DATA, DELAY_DATA, COMPLICATIONS_HEATMAP } from '@/data/mock-data'
 
@@ -154,34 +155,25 @@ export function InsightsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
-          <div>
-            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('insights.title')}</h1>
-            <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('insights.subtitle')}</p>
-          </div>
-          <Select value={view} onValueChange={setView} options={VIEW_OPTIONS} />
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          <Select value={period} onValueChange={setPeriod} options={PERIOD_OPTIONS} />
-          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer shadow-xs">
-            <Calendar size={13} className="text-[var(--fg-quaternary)]" />
-            <span className="text-[var(--text-brand-primary)] font-semibold">
-              {PERIOD_OPTIONS.find(o => o.value === period)?.label}
-            </span>
-          </button>
-          <Select value={procedure} onValueChange={setProcedure} options={PROCEDURE_OPTIONS} />
-          <Select value={team} onValueChange={setTeam} options={TEAM_OPTIONS} />
-          <Select value={patients} onValueChange={setPatients} options={PATIENT_OPTIONS} />
-          <Select value={dept} onValueChange={setDept} options={DEPT_OPTIONS} triggerClassName="max-w-[210px]" />
-          <Button variant="secondary" size="sm" className="gap-1.5 text-[var(--text-tertiary)] h-9">
-            <RefreshCw size={13} />
-            {t('common.reset')}
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title={t('insights.title')}
+        subtitle={t('insights.subtitle')}
+        crumbs={[{ label: t('nav.insights') }]}
+        actions={
+          <>
+            <Select value={view} onValueChange={setView} options={VIEW_OPTIONS} />
+            <Select value={period} onValueChange={setPeriod} options={PERIOD_OPTIONS} />
+            <Select value={procedure} onValueChange={setProcedure} options={PROCEDURE_OPTIONS} />
+            <Select value={team} onValueChange={setTeam} options={TEAM_OPTIONS} />
+            <Select value={patients} onValueChange={setPatients} options={PATIENT_OPTIONS} />
+            <Select value={dept} onValueChange={setDept} options={DEPT_OPTIONS} triggerClassName="max-w-[210px]" />
+            <Button variant="secondary" size="sm">
+              <RefreshCw size={14} />
+              {t('common.reset')}
+            </Button>
+          </>
+        }
+      />
 
       {/* Charts */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">

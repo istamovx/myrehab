@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Calendar, ChevronLeft, ChevronRight, Plus, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
+import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 import { PATIENTS } from '@/data/mock-data'
 
@@ -59,16 +60,17 @@ export function AppointmentsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('appointments.title')}</h1>
-          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('appointments.subtitle', { count: APPOINTMENTS.length })}</p>
-        </div>
-        <Button size="md">
-          <Plus size={15} />
-          {t('appointments.newAppointment')}
-        </Button>
-      </div>
+      <PageHeader
+        title={t('appointments.title')}
+        subtitle={t('appointments.subtitle', { count: APPOINTMENTS.length })}
+        crumbs={[{ label: t('nav.appointments') }]}
+        actions={
+          <Button size="sm">
+            <Plus size={15} />
+            {t('appointments.newAppointment')}
+          </Button>
+        }
+      />
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         {/* Calendar */}
