@@ -26,7 +26,7 @@ export function PatientProgressPage() {
           { label: t('patient.recoveryScore'), value: TODAY_SUMMARY.recoveryScore, color: 'text-[var(--fg-brand-primary)]' },
           { label: t('patient.adherence'),     value: `${TODAY_SUMMARY.recoveryScore + 23}%`, color: 'text-green-500' },
           { label: t('patient.avgPain'),        value: avgPain + '/10', color: 'text-orange-500' },
-          { label: t('patient.streak'),         value: `${TODAY_SUMMARY.streak} days`, color: 'text-purple-500' },
+          { label: t('patient.streak'),         value: `${TODAY_SUMMARY.streak} kun`, color: 'text-purple-500' },
         ].map(kpi => (
           <div key={kpi.label} className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
             <p className="text-xs text-[var(--text-tertiary)] font-medium mb-1">{kpi.label}</p>

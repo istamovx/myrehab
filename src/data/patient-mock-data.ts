@@ -170,13 +170,13 @@ export const ASSIGNED_DOCTOR = {
 export const TREATMENT_PLAN = {
   id: 'plan-001',
   patient_id: 'pat-001',
-  title: 'ACL Post-Op Rehabilitation',
+  title: 'ACL operatsiyasidan keyingi reabilitatsiya',
   created_at: '2026-03-01',
   phases: [
     {
       id: 'phase-1',
       plan_id: 'plan-001',
-      name: 'Phase 1 — Acute Recovery',
+      name: "1-faza — Boshlang'ich tiklanish",
       order_index: 1,
       duration_weeks: 4,
       status: 'completed' as const,
@@ -187,7 +187,7 @@ export const TREATMENT_PLAN = {
     {
       id: 'phase-2',
       plan_id: 'plan-001',
-      name: 'Phase 2 — Strength & ROM',
+      name: '2-faza — Kuch va harakatchanlik',
       order_index: 2,
       duration_weeks: 6,
       status: 'current' as const,
@@ -198,7 +198,7 @@ export const TREATMENT_PLAN = {
     {
       id: 'phase-3',
       plan_id: 'plan-001',
-      name: 'Phase 3 — Functional Training',
+      name: '3-faza — Funksional mashqlar',
       order_index: 3,
       duration_weeks: 6,
       status: 'locked' as const,
@@ -209,7 +209,7 @@ export const TREATMENT_PLAN = {
     {
       id: 'phase-4',
       plan_id: 'plan-001',
-      name: 'Phase 4 — Return to Activity',
+      name: '4-faza — Faoliyatga qaytish',
       order_index: 4,
       duration_weeks: 4,
       status: 'locked' as const,
@@ -224,22 +224,22 @@ export const TREATMENT_PLAN = {
 
 export const EXERCISE_LIBRARY: Exercise[] = [
   // Strength (3)
-  { id: 'ex-001', title: 'Quad Sets', category: 'strength', default_sets: 3, default_reps: 15 },
-  { id: 'ex-002', title: 'Straight Leg Raises', category: 'strength', default_sets: 3, default_reps: 12 },
-  { id: 'ex-003', title: 'Mini Squats', category: 'strength', default_sets: 3, default_reps: 10 },
+  { id: 'ex-001', title: 'Son mushagini taranglashtirish', category: 'strength', default_sets: 3, default_reps: 15 },
+  { id: 'ex-002', title: "To'g'ri oyoqni ko'tarish", category: 'strength', default_sets: 3, default_reps: 12 },
+  { id: 'ex-003', title: "Yarim cho'kkalash", category: 'strength', default_sets: 3, default_reps: 10 },
   // Mobility (3)
-  { id: 'ex-004', title: 'Heel Slides', category: 'mobility', default_sets: 2, default_reps: 20 },
-  { id: 'ex-005', title: 'Knee Flexion Stretch', category: 'mobility', default_sets: 2, default_reps: 15 },
-  { id: 'ex-006', title: 'Prone Knee Bend', category: 'mobility', default_sets: 2, default_reps: 10 },
+  { id: 'ex-004', title: 'Tovonni sirpantirish', category: 'mobility', default_sets: 2, default_reps: 20 },
+  { id: 'ex-005', title: "Tizzani bukib cho'zish", category: 'mobility', default_sets: 2, default_reps: 15 },
+  { id: 'ex-006', title: 'Qorinda yotib tizzani bukish', category: 'mobility', default_sets: 2, default_reps: 10 },
   // Balance (2)
-  { id: 'ex-007', title: 'Single Leg Stance', category: 'balance', default_sets: 3, default_reps: 30 },
-  { id: 'ex-008', title: 'Wobble Board Balance', category: 'balance', default_sets: 2, default_reps: 60 },
+  { id: 'ex-007', title: 'Bir oyoqda turish', category: 'balance', default_sets: 3, default_reps: 30 },
+  { id: 'ex-008', title: 'Muvozanat taxtasi mashqi', category: 'balance', default_sets: 2, default_reps: 60 },
   // Circulation (2)
-  { id: 'ex-009', title: 'Ankle Pumps', category: 'circulation', default_sets: 3, default_reps: 20 },
-  { id: 'ex-010', title: 'Calf Raises', category: 'circulation', default_sets: 3, default_reps: 15 },
+  { id: 'ex-009', title: 'Oyoq panjasi mashqi', category: 'circulation', default_sets: 3, default_reps: 20 },
+  { id: 'ex-010', title: "Boldirni ko'tarish", category: 'circulation', default_sets: 3, default_reps: 15 },
   // Other (2)
-  { id: 'ex-011', title: 'Ice Application', category: 'other', default_sets: 1, default_reps: 1 },
-  { id: 'ex-012', title: 'Breathing & Relaxation', category: 'other', default_sets: 1, default_reps: 1 },
+  { id: 'ex-011', title: "Muz qo'yish", category: 'other', default_sets: 1, default_reps: 1 },
+  { id: 'ex-012', title: "Nafas olish va bo'shashish", category: 'other', default_sets: 1, default_reps: 1 },
 ]
 
 // ─── Today's Exercises ────────────────────────────────────────────────────────
@@ -251,8 +251,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[0],
     sets: 3,
     reps: 15,
-    frequency: 'Daily',
-    notes: 'Tighten quad, hold 5 sec',
+    frequency: 'Har kuni',
+    notes: "Son mushagini tarang qiling, 5 soniya ushlab turing",
     completedToday: true,
   },
   {
@@ -261,8 +261,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[1],
     sets: 3,
     reps: 12,
-    frequency: 'Daily',
-    notes: 'Raise to 45°, hold 2 sec',
+    frequency: 'Har kuni',
+    notes: "45° ga ko'taring, 2 soniya ushlab turing",
     completedToday: true,
   },
   {
@@ -271,8 +271,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[3],
     sets: 2,
     reps: 20,
-    frequency: 'Daily',
-    notes: 'Slow and controlled motion',
+    frequency: 'Har kuni',
+    notes: 'Sekin va nazoratli harakat',
     completedToday: true,
   },
   {
@@ -281,8 +281,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[6],
     sets: 3,
     reps: 30,
-    frequency: 'Daily',
-    notes: 'Hold for 30 seconds each set',
+    frequency: 'Har kuni',
+    notes: 'Har bir takrorda 30 soniya ushlab turing',
     completedToday: false,
   },
   {
@@ -291,8 +291,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[8],
     sets: 3,
     reps: 20,
-    frequency: 'Daily',
-    notes: 'Flex and point slowly',
+    frequency: 'Har kuni',
+    notes: 'Oyoq panjasini sekin bukib-yozing',
     completedToday: false,
   },
   {
@@ -301,8 +301,8 @@ export const TODAY_EXERCISES: PlanExercise[] = [
     exercise: EXERCISE_LIBRARY[4],
     sets: 2,
     reps: 15,
-    frequency: 'Daily',
-    notes: 'Bend until mild tension, hold 20s',
+    frequency: 'Har kuni',
+    notes: "Yengil tortishish sezilguncha buking, 20 soniya ushlang",
     completedToday: false,
   },
 ]
@@ -381,16 +381,16 @@ export const LATEST_VITAL: VitalReading = VITAL_HISTORY[VITAL_HISTORY.length - 1
 // ─── Symptom Logs ─────────────────────────────────────────────────────────────
 
 export const SYMPTOM_LOGS: SymptomLog[] = [
-  { id: 'sym-01', type: 'pain',      severity: 'moderate', intensity: 6, location: 'Left knee',       note: 'Sharp pain during flexion',            recorded_at: '2026-05-26T09:00:00' },
-  { id: 'sym-02', type: 'swelling',  severity: 'mild',     intensity: 3, location: 'Left knee',       note: 'Minor puffiness in the morning',       recorded_at: '2026-05-27T08:30:00' },
-  { id: 'sym-03', type: 'stiffness', severity: 'moderate', intensity: 5, location: 'Left knee joint', note: 'Hard to bend in the morning',           recorded_at: '2026-05-28T07:45:00' },
-  { id: 'sym-04', type: 'fatigue',   severity: 'mild',     intensity: 4, location: 'General',         note: 'Tired after exercise session',          recorded_at: '2026-05-29T17:00:00' },
-  { id: 'sym-05', type: 'pain',      severity: 'severe',   intensity: 8, location: 'Left knee',       note: 'Strong pain during single leg stance',  recorded_at: '2026-05-30T10:15:00' },
-  { id: 'sym-06', type: 'numbness',  severity: 'mild',     intensity: 2, location: 'Lower leg',       note: 'Tingling after rest',                  recorded_at: '2026-05-31T06:50:00' },
-  { id: 'sym-07', type: 'swelling',  severity: 'moderate', intensity: 5, location: 'Left knee',       note: 'Visible swelling after exercises',      recorded_at: '2026-06-01T12:00:00' },
-  { id: 'sym-08', type: 'pain',      severity: 'mild',     intensity: 3, location: 'Left knee',       note: 'Dull ache at rest',                    recorded_at: '2026-06-02T14:30:00' },
-  { id: 'sym-09', type: 'stiffness', severity: 'mild',     intensity: 3, location: 'Left knee joint', note: 'Slight stiffness after sitting long',   recorded_at: '2026-06-03T09:10:00' },
-  { id: 'sym-10', type: 'pain',      severity: 'mild',     intensity: 3, location: 'Left knee',       note: 'Mild pain during heel slides',          recorded_at: '2026-06-04T10:00:00' },
+  { id: 'sym-01', type: 'pain',      severity: 'moderate', intensity: 6, location: 'Chap tizza',        note: "Bukilganda o'tkir og'riq",             recorded_at: '2026-05-26T09:00:00' },
+  { id: 'sym-02', type: 'swelling',  severity: 'mild',     intensity: 3, location: 'Chap tizza',        note: 'Ertalab yengil shish',                 recorded_at: '2026-05-27T08:30:00' },
+  { id: 'sym-03', type: 'stiffness', severity: 'moderate', intensity: 5, location: "Chap tizza bo'g'imi", note: 'Ertalab bukish qiyin',                recorded_at: '2026-05-28T07:45:00' },
+  { id: 'sym-04', type: 'fatigue',   severity: 'mild',     intensity: 4, location: 'Umumiy',            note: "Mashqdan keyin charchoq",              recorded_at: '2026-05-29T17:00:00' },
+  { id: 'sym-05', type: 'pain',      severity: 'severe',   intensity: 8, location: 'Chap tizza',        note: "Bir oyoqda turganda kuchli og'riq",    recorded_at: '2026-05-30T10:15:00' },
+  { id: 'sym-06', type: 'numbness',  severity: 'mild',     intensity: 2, location: 'Boldir',            note: "Dam olgandan keyin uvishish",          recorded_at: '2026-05-31T06:50:00' },
+  { id: 'sym-07', type: 'swelling',  severity: 'moderate', intensity: 5, location: 'Chap tizza',        note: "Mashqlardan keyin ko'rinarli shish",   recorded_at: '2026-06-01T12:00:00' },
+  { id: 'sym-08', type: 'pain',      severity: 'mild',     intensity: 3, location: 'Chap tizza',        note: "Dam olishda zaif og'riq",              recorded_at: '2026-06-02T14:30:00' },
+  { id: 'sym-09', type: 'stiffness', severity: 'mild',     intensity: 3, location: "Chap tizza bo'g'imi", note: "Uzoq o'tirgandan keyin qotishlik",    recorded_at: '2026-06-03T09:10:00' },
+  { id: 'sym-10', type: 'pain',      severity: 'mild',     intensity: 3, location: 'Chap tizza',        note: "Tovon sirpantirganda yengil og'riq",   recorded_at: '2026-06-04T10:00:00' },
 ]
 
 // ─── Nutrition Plan ───────────────────────────────────────────────────────────
@@ -403,38 +403,38 @@ export const NUTRITION_PLAN: NutritionPlan = {
   daily_water_l: 2.5,
   recommended_foods: [
     {
-      category: 'Protein Sources',
-      items: ['Chicken breast', 'Eggs', 'Greek yogurt', 'Salmon', 'Lentils'],
+      category: 'Oqsil manbalari',
+      items: ["Tovuq ko'kragi", 'Tuxum', 'Yunon yogurti', 'Losos', 'Yasmiq'],
     },
     {
-      category: 'Anti-Inflammatory',
-      items: ['Blueberries', 'Turmeric', 'Walnuts', 'Olive oil', 'Spinach'],
+      category: 'Yallig\'lanishga qarshi',
+      items: ['Ko\'k qulupnay', 'Zarchava', 'Yong\'oq', 'Zaytun moyi', 'Ismaloq'],
     },
     {
-      category: 'Bone Health',
-      items: ['Milk', 'Cheese', 'Fortified orange juice', 'Broccoli', 'Almonds'],
+      category: 'Suyak salomatligi',
+      items: ['Sut', 'Pishloq', 'Apelsin sharbati', 'Brokkoli', 'Bodom'],
     },
   ],
   restricted_foods: [
-    'Alcohol',
-    'High-sodium processed foods',
-    'Sugary beverages',
-    'Fried fast food',
-    'Grapefruit (interacts with Perindopril)',
+    'Spirtli ichimliklar',
+    'Tuz miqdori yuqori tayyor mahsulotlar',
+    'Shakarli ichimliklar',
+    'Qovurilgan fast-food',
+    'Greypfrut (Perindopril bilan ta\'sirlashadi)',
   ],
   supplements: [
-    { name: 'Calcium + D3',  dose: '500 mg / 400 IU', timing: 'With lunch'   },
-    { name: 'Omega-3',       dose: '1000 mg',          timing: 'With dinner'  },
-    { name: 'Vitamin C',     dose: '500 mg',           timing: 'With breakfast' },
+    { name: 'Kalsiy + D3',   dose: '500 mg / 400 IU', timing: 'Tushlik bilan'   },
+    { name: 'Omega-3',       dose: '1000 mg',          timing: 'Kechki ovqat bilan'  },
+    { name: 'Vitamin C',     dose: '500 mg',           timing: 'Nonushta bilan' },
   ],
   drug_food_warnings: [
     {
       drug: 'Perindopril',
-      warning: 'Avoid grapefruit and grapefruit juice — may increase drug concentration in blood.',
+      warning: "Greypfrut va uning sharbatidan saqlaning — qondagi dori miqdorini oshirishi mumkin.",
     },
     {
       drug: 'Ibuprofen',
-      warning: 'Take with food or milk. Avoid alcohol — increases risk of stomach bleeding.',
+      warning: "Ovqat yoki sut bilan iching. Spirtli ichimliklardan saqlaning — oshqozon qonashi xavfini oshiradi.",
     },
   ],
 }
@@ -445,8 +445,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-01',
     category: 'condition',
-    title: 'Understanding ACL Reconstruction',
-    body: 'ACL reconstruction surgery replaces the torn anterior cruciate ligament with a graft. The graft takes 9–12 months to fully mature. During rehabilitation, it is important to follow your physiotherapist\'s instructions carefully to ensure the graft integrates properly and you regain full strength and stability.',
+    title: 'ACL tiklash operatsiyasi haqida',
+    body: "ACL tiklash operatsiyasida yirtilgan oldingi xochsimon boylam transplantat bilan almashtiriladi. Transplantat to'liq mustahkamlanishi uchun 9–12 oy kerak bo'ladi. Reabilitatsiya davrida transplantat to'g'ri birikishi hamda kuch va barqarorlikni tiklash uchun fizioterapevt ko'rsatmalariga qat'iy amal qilish muhim.",
     source: 'Orthopaedic Journal of Sports Medicine',
     icon: '🦴',
     is_read: true,
@@ -454,8 +454,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-02',
     category: 'exercises',
-    title: 'Why Quad Sets Matter in Early Recovery',
-    body: 'Quadriceps sets are isometric contractions that activate your quad muscles without bending the knee. They are the foundation of Phase 1 and Phase 2 rehab because they prevent muscle atrophy while protecting the healing graft from stress.',
+    title: "Boshlang'ich bosqichda son mushaklari mashqi nega muhim",
+    body: "Son mushaklarini taranglashtirish — tizzani bukmasdan son mushaklarini ishga soluvchi izometrik mashqdir. Bu 1- va 2-faza reabilitatsiyasining asosi hisoblanadi, chunki u mushak atrofiyasining oldini oladi va ayni paytda bitayotgan transplantatni zo'riqishdan himoya qiladi.",
     source: 'Physical Therapy Journal',
     icon: '💪',
     is_read: true,
@@ -463,8 +463,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-03',
     category: 'medications',
-    title: 'Using Ibuprofen Safely After Surgery',
-    body: 'NSAIDs like Ibuprofen help manage post-operative inflammation and pain. Always take with food to protect your stomach lining. Do not exceed the prescribed dose. Long-term use should be discussed with your doctor, as it may affect kidney function and bone healing.',
+    title: 'Operatsiyadan keyin Ibuprofenni xavfsiz qabul qilish',
+    body: "Ibuprofen kabi nosteroid yallig'lanishga qarshi dorilar operatsiyadan keyingi yallig'lanish va og'riqni kamaytiradi. Oshqozon shilliq qavatini himoya qilish uchun doimo ovqat bilan iching. Belgilangan dozadan oshirmang. Uzoq muddatli qabul qilishni shifokor bilan maslahatlashing, chunki u buyrak faoliyati va suyak bitishiga ta'sir qilishi mumkin.",
     source: 'Pharmacist Review',
     icon: '💊',
     is_read: false,
@@ -472,8 +472,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-04',
     category: 'warning_signs',
-    title: 'Red Flags: When to Contact Your Doctor',
-    body: 'Contact your doctor immediately if you experience sudden increased swelling, redness with warmth around the knee, fever above 38.5°C, wound discharge, severe pain not relieved by medication, or numbness/tingling extending down the leg. These may indicate infection or deep vein thrombosis.',
+    title: 'Xavfli belgilar: qachon shifokorga murojaat qilish kerak',
+    body: "Agar to'satdan shish kuchaysa, tizza atrofida qizarish va issiqlik bo'lsa, harorat 38.5°C dan oshsa, yaradan suyuqlik chiqsa, dori yordam bermaydigan kuchli og'riq yoki oyoq bo'ylab tarqaladigan uvishish sezsangiz, darhol shifokorga murojaat qiling. Bular infeksiya yoki chuqur vena trombozi belgisi bo'lishi mumkin.",
     source: 'Post-Surgical Care Guidelines',
     icon: '⚠️',
     is_read: false,
@@ -481,8 +481,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-05',
     category: 'mental_health',
-    title: 'Staying Motivated During Long Recovery',
-    body: 'Recovering from ACL surgery is a marathon, not a sprint. It is normal to feel frustrated, especially when progress feels slow. Setting small weekly goals, celebrating milestones, and talking to others who have been through similar recoveries can help you stay mentally strong.',
+    title: "Uzoq tiklanish davrida motivatsiyani saqlash",
+    body: "ACL operatsiyasidan tiklanish — bu sprint emas, marafon. Ayniqsa, jarayon sekin ketayotgandek tuyulganda, hafsalasi pir bo'lish tabiiy holat. Kichik haftalik maqsadlar qo'yish, erishilgan natijalarni nishonlash va shunday yo'lni bosib o'tgan boshqalar bilan suhbatlashish ruhiy jihatdan kuchli bo'lib qolishga yordam beradi.",
     source: 'Sports Psychology Today',
     icon: '🧠',
     is_read: false,
@@ -490,8 +490,8 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
   {
     id: 'art-06',
     category: 'motivation',
-    title: 'Your Recovery Journey: Week by Week',
-    body: 'Every week of consistent effort brings you closer to returning to full activity. By Week 8, most patients report significantly reduced pain. By Week 16, strength often approaches pre-injury levels. Keep logging your exercises and vitals — the data shows your progress even when it does not feel like it.',
+    title: "Tiklanish yo'lingiz: haftama-hafta",
+    body: "Har bir izchil mehnat haftasi sizni to'liq faoliyatga qaytishga yaqinlashtiradi. 8-haftaga kelib ko'pchilik bemorlar og'riq sezilarli kamayganini qayd etadi. 16-haftaga kelib kuch ko'pincha jarohatdan oldingi darajaga yaqinlashadi. Mashqlar va sog'liq ko'rsatkichlarini qayd etishda davom eting — ma'lumotlar siz sezmasangiz ham o'sishingizni ko'rsatadi.",
     source: 'MyRehab Health Team',
     icon: '🏆',
     is_read: true,
@@ -501,21 +501,21 @@ export const KNOWLEDGE_ARTICLES: KnowledgeArticle[] = [
 // ─── Messages ─────────────────────────────────────────────────────────────────
 
 export const MESSAGES: Message[] = [
-  { id: 'msg-01', sender_role: 'doctor',  body: 'Good morning Murod! How is the knee feeling today?',                                                         is_read: true,  created_at: '2026-06-03T09:00:00' },
-  { id: 'msg-02', sender_role: 'patient', body: 'Morning Doctor! A bit stiff when I woke up but better after the heel slides.',                               is_read: true,  created_at: '2026-06-03T09:15:00' },
-  { id: 'msg-03', sender_role: 'doctor',  body: 'That morning stiffness is completely normal at this stage. Keep doing the heel slides before getting out of bed.', is_read: true,  created_at: '2026-06-03T09:22:00' },
-  { id: 'msg-04', sender_role: 'patient', body: 'Understood. Should I skip the mini squats today? My knee feels a bit tender.',                                is_read: true,  created_at: '2026-06-03T09:30:00' },
-  { id: 'msg-05', sender_role: 'doctor',  body: 'Yes, skip the squats today and do extra sets of ankle pumps instead. Ice for 15 min after.',                 is_read: true,  created_at: '2026-06-03T09:45:00' },
-  { id: 'msg-06', sender_role: 'patient', body: 'Thank you! Will do. I also noticed some swelling after the balance exercises yesterday.',                     is_read: true,  created_at: '2026-06-03T18:00:00' },
-  { id: 'msg-07', sender_role: 'doctor',  body: 'Swelling after balance work is expected at week 6. Apply ice and elevate the leg for 20 minutes.',            is_read: true,  created_at: '2026-06-03T18:30:00' },
-  { id: 'msg-08', sender_role: 'patient', body: 'Got it. Pain intensity was 3/10 today, much better than last week!',                                         is_read: true,  created_at: '2026-06-04T08:00:00' },
-  { id: 'msg-09', sender_role: 'doctor',  body: 'Excellent progress Murod! The pain trend is very encouraging. Keep it up.',                                   is_read: true,  created_at: '2026-06-04T08:30:00' },
-  { id: 'msg-10', sender_role: 'patient', body: 'Should I start the single leg stance today? I feel ready.',                                                   is_read: true,  created_at: '2026-06-04T09:00:00' },
-  { id: 'msg-11', sender_role: 'doctor',  body: 'Yes! Try 3 sets of 20 seconds each. Stand near a wall for safety and stop if you feel any sharp pain.',       is_read: true,  created_at: '2026-06-04T09:15:00' },
-  { id: 'msg-12', sender_role: 'patient', body: 'Completed all exercises today! The single leg stance was challenging but I managed 25 seconds.',              is_read: true,  created_at: '2026-06-04T17:00:00' },
-  { id: 'msg-13', sender_role: 'doctor',  body: 'That is fantastic! You are progressing ahead of schedule. I will review your progress at Thursday\'s appointment.', is_read: true,  created_at: '2026-06-04T17:30:00' },
-  { id: 'msg-14', sender_role: 'patient', body: 'Looking forward to it! My recovery score hit 72 today according to the app.',                                 is_read: true,  created_at: '2026-06-05T08:00:00' },
-  { id: 'msg-15', sender_role: 'doctor',  body: 'Great work! 72 is a solid score for week 6. Keep following the plan and we will reassess your phase progress on Thursday.', is_read: false, created_at: '2026-06-05T08:45:00' },
+  { id: 'msg-01', sender_role: 'doctor',  body: "Xayrli tong, Murod! Bugun tizzangiz qanday?",                                                                is_read: true,  created_at: '2026-06-03T09:00:00' },
+  { id: 'msg-02', sender_role: 'patient', body: "Xayrli tong, doktor! Uyg'onganimda biroz qotgan edi, lekin tovon sirpantirish mashqidan keyin yaxshi bo'ldi.",   is_read: true,  created_at: '2026-06-03T09:15:00' },
+  { id: 'msg-03', sender_role: 'doctor',  body: "Ertalabki qotishlik bu bosqichda mutlaqo normal holat. To'shakdan turishdan oldin tovon sirpantirishni davom eting.", is_read: true,  created_at: '2026-06-03T09:22:00' },
+  { id: 'msg-04', sender_role: 'patient', body: "Tushunarli. Bugun yarim cho'kkalashni o'tkazib yuborsam bo'ladimi? Tizzam biroz og'riyapti.",                  is_read: true,  created_at: '2026-06-03T09:30:00' },
+  { id: 'msg-05', sender_role: 'doctor',  body: "Ha, bugun cho'kkalashni o'tkazib yuboring va o'rniga oyoq panjasi mashqini qo'shimcha bajaring. Keyin 15 daqiqa muz qo'ying.", is_read: true,  created_at: '2026-06-03T09:45:00' },
+  { id: 'msg-06', sender_role: 'patient', body: "Rahmat! Shunday qilaman. Kecha muvozanat mashqlaridan keyin biroz shish borligini ham sezdim.",                is_read: true,  created_at: '2026-06-03T18:00:00' },
+  { id: 'msg-07', sender_role: 'doctor',  body: "Muvozanat mashqidan keyin 6-haftada shish bo'lishi kutilgan holat. Muz qo'ying va oyoqni 20 daqiqa baland qo'ying.", is_read: true,  created_at: '2026-06-03T18:30:00' },
+  { id: 'msg-08', sender_role: 'patient', body: "Tushundim. Bugun og'riq darajasi 3/10 bo'ldi, o'tgan haftadan ancha yaxshi!",                                 is_read: true,  created_at: '2026-06-04T08:00:00' },
+  { id: 'msg-09', sender_role: 'doctor',  body: "Ajoyib natija, Murod! Og'riq dinamikasi juda quvonarli. Shu zaylda davom eting.",                              is_read: true,  created_at: '2026-06-04T08:30:00' },
+  { id: 'msg-10', sender_role: 'patient', body: "Bugun bir oyoqda turish mashqini boshlasam bo'ladimi? O'zimni tayyor his qilyapman.",                         is_read: true,  created_at: '2026-06-04T09:00:00' },
+  { id: 'msg-11', sender_role: 'doctor',  body: "Ha! Har biri 20 soniyadan 3 marta bajarib ko'ring. Xavfsizlik uchun devor yonida turing va o'tkir og'riq sezsangiz to'xtang.", is_read: true,  created_at: '2026-06-04T09:15:00' },
+  { id: 'msg-12', sender_role: 'patient', body: "Bugun barcha mashqlarni bajardim! Bir oyoqda turish qiyin bo'ldi, lekin 25 soniya ushlab turdim.",            is_read: true,  created_at: '2026-06-04T17:00:00' },
+  { id: 'msg-13', sender_role: 'doctor',  body: "Bu ajoyib! Siz rejadan oldinda ketyapsiz. Payshanba kungi qabulda o'sishingizni ko'rib chiqaman.",            is_read: true,  created_at: '2026-06-04T17:30:00' },
+  { id: 'msg-14', sender_role: 'patient', body: "Intizorlik bilan kutaman! Ilovaga ko'ra bugun tiklanish balim 72 ga yetdi.",                                  is_read: true,  created_at: '2026-06-05T08:00:00' },
+  { id: 'msg-15', sender_role: 'doctor',  body: "Zo'r ish! 72 — 6-hafta uchun yaxshi ko'rsatkich. Rejaga amal qilishda davom eting, payshanba kuni faza o'sishini qayta baholaymiz.", is_read: false, created_at: '2026-06-05T08:45:00' },
 ]
 
 // ─── Appointments ─────────────────────────────────────────────────────────────
@@ -526,49 +526,49 @@ export const APPOINTMENTS: Appointment[] = [
     type: 'in_person',
     scheduled_at: '2026-06-08T10:00:00',
     status: 'scheduled',
-    notes: 'Phase 2 progress assessment and gait analysis',
+    notes: "2-faza o'sishini baholash va yurish tahlili",
   },
   {
     id: 'apt-02',
     type: 'teleconsult',
     scheduled_at: '2026-06-15T14:00:00',
     status: 'scheduled',
-    notes: 'Medication review and exercise plan update',
+    notes: "Dorilarni ko'rib chiqish va mashqlar rejasini yangilash",
   },
   {
     id: 'apt-03',
     type: 'in_person',
     scheduled_at: '2026-06-22T11:00:00',
     status: 'scheduled',
-    notes: 'Phase 2 completion evaluation and Phase 3 planning',
+    notes: "2-faza yakunini baholash va 3-fazani rejalashtirish",
   },
   {
     id: 'apt-04',
     type: 'in_person',
     scheduled_at: '2026-05-15T10:00:00',
     status: 'completed',
-    notes: 'Phase 1 completion check — cleared for Phase 2',
+    notes: "1-faza yakunini tekshirish — 2-fazaga ruxsat berildi",
   },
   {
     id: 'apt-05',
     type: 'teleconsult',
     scheduled_at: '2026-05-28T14:00:00',
     status: 'completed',
-    notes: 'Mid Phase 2 check-in, swelling discussed, icing protocol adjusted',
+    notes: "2-faza o'rtasidagi nazorat, shish muhokama qilindi, muz qo'yish tartibi sozlandi",
   },
 ]
 
 // ─── Weekly Adherence ─────────────────────────────────────────────────────────
 
 export const WEEKLY_ADHERENCE: WeeklyAdherence[] = [
-  { week: 1, adherence_pct: 60, label: 'Wk 1' },
-  { week: 2, adherence_pct: 68, label: 'Wk 2' },
-  { week: 3, adherence_pct: 72, label: 'Wk 3' },
-  { week: 4, adherence_pct: 75, label: 'Wk 4' },
-  { week: 5, adherence_pct: 80, label: 'Wk 5' },
-  { week: 6, adherence_pct: 85, label: 'Wk 6' },
-  { week: 7, adherence_pct: 88, label: 'Wk 7' },
-  { week: 8, adherence_pct: 92, label: 'Wk 8' },
+  { week: 1, adherence_pct: 60, label: '1-h' },
+  { week: 2, adherence_pct: 68, label: '2-h' },
+  { week: 3, adherence_pct: 72, label: '3-h' },
+  { week: 4, adherence_pct: 75, label: '4-h' },
+  { week: 5, adherence_pct: 80, label: '5-h' },
+  { week: 6, adherence_pct: 85, label: '6-h' },
+  { week: 7, adherence_pct: 88, label: '7-h' },
+  { week: 8, adherence_pct: 92, label: '8-h' },
 ]
 
 // ─── Pain History ─────────────────────────────────────────────────────────────
