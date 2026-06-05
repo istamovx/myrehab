@@ -4,7 +4,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import {
   ChevronLeft, Phone, Calendar, MessageSquare, MoreHorizontal,
   Edit, Plus, Eye, Download, ChevronRight, ChevronDown, FileText, FileType,
-  AlertTriangle, Info, Activity, ClipboardCheck, CalendarClock, ShieldAlert,
+  AlertTriangle, Info, ClipboardCheck, CalendarClock, ShieldAlert,
   MapPin, Cake, Globe, Pill, HeartPulse, Stethoscope, BadgeAlert,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -176,21 +176,11 @@ export function PatientDetailPage() {
       />
 
       {/* ── Hero header ─────────────────────────────────────────────── */}
-      <Card className="overflow-hidden">
-        <div className="h-28 bg-gradient-to-r from-[var(--fg-brand-primary)] via-[#4f6ef7] to-[#7c6cf5] relative">
-          <div className="absolute -top-8 -right-6 size-40 rounded-full bg-white/10" />
-          <div className="absolute top-10 right-28 size-24 rounded-full bg-white/10" />
-          <div className="absolute bottom-3 right-5 flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur text-white text-[13px] font-semibold">
-              <Activity size={13} /> {progress}% {t('patient.progress', 'jarayon')}
-            </span>
-          </div>
-        </div>
-
-        <div className="px-6 pb-6 -mt-12">
-          <div className="flex flex-col sm:flex-row sm:items-end gap-4">
-            <Avatar name={patient.name} size="xl" className="rounded-2xl ring-4 ring-[var(--bg-primary)] shrink-0 size-24 text-[28px]" />
-            <div className="flex-1 min-w-0 sm:pb-1">
+      <Card>
+        <div className="px-6 py-5">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <Avatar name={patient.name} size="xl" className="rounded-2xl shrink-0 size-20 text-[26px]" />
+            <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h2 className="text-[22px] font-bold text-[var(--text-primary)]">{patient.name}</h2>
                 <span className="text-[13px] font-semibold text-[var(--text-brand-primary)] bg-[var(--bg-brand-primary)] px-2.5 py-0.5 rounded-full">#{patient.id}</span>

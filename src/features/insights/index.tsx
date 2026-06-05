@@ -192,9 +192,9 @@ export function InsightsPage() {
             </BarChart>
           </ResponsiveContainer>
           <div className="flex justify-around mt-2 text-xs text-[var(--fg-quaternary)]">
-            <span>February</span>
-            <span>March</span>
-            <span>April</span>
+            <span>Fevral</span>
+            <span>Mart</span>
+            <span>Aprel</span>
           </div>
         </ChartCard>
 
@@ -271,9 +271,9 @@ export function InsightsPage() {
           </ResponsiveContainer>
 
           <div className="flex justify-around mt-2 text-xs text-[var(--fg-quaternary)]">
-            <span>February</span>
-            <span>March</span>
-            <span>April</span>
+            <span>Fevral</span>
+            <span>Mart</span>
+            <span>Aprel</span>
           </div>
         </ChartCard>
 
@@ -321,9 +321,9 @@ export function InsightsPage() {
           </ResponsiveContainer>
 
           <div className="flex justify-around mt-2 text-xs text-[var(--fg-quaternary)]">
-            <span>February</span>
-            <span>March</span>
-            <span>April</span>
+            <span>Fevral</span>
+            <span>Mart</span>
+            <span>Aprel</span>
           </div>
         </ChartCard>
       </div>
