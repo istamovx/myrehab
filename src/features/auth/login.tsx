@@ -380,8 +380,8 @@ export function LoginPage() {
                       <acct.icon size={17} style={{ color: acct.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-white">{acct.label}</p>
-                      <p className="text-xs font-mono" style={{ color: 'rgba(248,250,252,0.45)' }}>
+                      <p className="text-sm font-bold" style={{ color: rp.textPrimary }}>{acct.label}</p>
+                      <p className="text-xs font-mono" style={{ color: rp.textMuted }}>
                         {acct.username} · {acct.password}
                       </p>
                     </div>
