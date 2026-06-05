@@ -292,6 +292,67 @@ const en = {
   breadcrumb: {
     home: "Home",
   },
+  patient: {
+    // Navigation
+    today: "Today's Tasks", exercises: "Exercises", myPlan: "My Plan",
+    myProgress: "My Progress", vitals: "Vitals", symptoms: "Symptom Log",
+    nutrition: "Nutrition", healthKnowledge: "Health Knowledge", messages: "Messages",
+    patientAppointments: "Appointments", patientSettings: "Settings",
+    // Today
+    greeting: "Hello", remainingTasks: "{{count}} tasks remaining",
+    recoveryScore: "Recovery Score", streak: "{{count}} day streak", tasksDone: "{{done}}/{{total}}",
+    todayMeds: "Today's Medications", nextAppointment: "Next Appointment",
+    take: "Take", skip: "Skip",
+    taken: "Taken", skipped: "Skipped", pending: "Pending",
+    assignedDoctor: "Assigned Doctor", noNextAppointment: "No appointment scheduled",
+    todayExercises: "Today's Exercises", noMedsToday: "No medications today",
+    logMood: "Log Mood", mood: "Mood",
+    happy: "Happy", neutral: "Neutral", tired: "Tired", sad: "Sad",
+    // Exercises
+    allCategories: "All", strength: "Strength", mobility: "Mobility",
+    balance: "Balance", circulation: "Circulation", other: "Other",
+    setsReps: "{{sets}} sets × {{reps}} reps", frequency: "Frequency",
+    markDone: "Mark Done ✓", markUndone: "Undo", doneToday: "Done today",
+    noExercises: "No exercises found",
+    // Plan
+    currentPhase: "Current Phase", phases: "Phases", phaseProgress: "{{pct}}% complete",
+    locked: "Locked", current: "Current", completed: "Completed",
+    diagnosis: "Diagnosis", startDate: "Start Date", endDate: "End Date",
+    durationWeeks: "{{n}} weeks",
+    // Progress
+    adherence: "Plan Adherence", avgPain: "Avg. Pain", weeklyAdherence: "Weekly Adherence (%)",
+    painTrend: "Pain Trend", trendGood: "Positive trend", trendBad: "Negative trend",
+    // Vitals
+    bloodPressure: "Blood Pressure", heartRate: "Heart Rate", weight: "Weight",
+    temperature: "Temperature", spo2: "SpO₂", newReading: "New Reading",
+    systolic: "Systolic (mmHg)", diastolic: "Diastolic (mmHg)", bpm: "bpm",
+    normalRange: "Normal: {{min}}–{{max}}", vitalMin: "Min", vitalMax: "Max",
+    trend: "Trend", vitalHistory: "Reading History", normal: "Normal", high: "High", low: "Low",
+    // Symptoms
+    logSymptom: "Log Symptom", symptomType: "Symptom Type",
+    pain: "Pain", swelling: "Swelling", stiffness: "Stiffness",
+    fatigue: "Fatigue", numbness: "Numbness",
+    severity: "Severity", mild: "Mild", moderate: "Moderate", severe: "Severe",
+    intensity: "Intensity (1–10)", location: "Location", note: "Note",
+    emergencyBanner: "⚠️ Contact your doctor — severe symptom detected",
+    noSymptoms: "No symptoms logged",
+    // Nutrition
+    dailyNorms: "Daily Targets", calories: "Calories", protein: "Protein (g)",
+    calcium: "Calcium (mg)", vitaminD: "Vitamin D (mcg)", water: "Water (L)",
+    recommended: "Recommended", restricted: "Restricted", supplements: "Supplements",
+    drugFoodWarning: "Drug–Food Warnings",
+    // Knowledge
+    unread: "Unread", read: "Read", source: "Source",
+    mental_health: "Mental Health", medications: "Medications",
+    warning_signs: "Warning Signs", motivation: "Motivation",
+    condition: "My Condition", exercisesCategory: "Exercises", markRead: "Mark as read",
+    // Messages
+    typeMessage: "Type a message...", send: "Send", you: "You",
+    // Appointments
+    scheduled: "Upcoming", past: "Past", bookAppointment: "Book Appointment",
+    inPerson: "In-Person", teleconsult: "Teleconsult",
+    noAppointments: "No appointments",
+  },
 } as const
 
 export default en

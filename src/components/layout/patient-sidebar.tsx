@@ -1,0 +1,109 @@
+import { Link, useRouterState } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import {
+  CalendarDays, CheckSquare, Dumbbell, FlaskConical, Heart,
+  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X
+} from 'lucide-react'
+import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
+
+interface NavItem {
+  to:    string
+  icon:  React.ElementType
+  label: string
+}
+
+function PatientNavItem({ to, icon: Icon, label }: NavItem) {
+  const { pathname } = useRouterState({ select: s => s.location })
+  const active = pathname === to || pathname.startsWith(to + '/')
+
+  return (
+    <Link
+      to={to}
+      className={[
+        'flex items-center gap-[11px] px-[10px] py-[9px] rounded-[10px]',
+        'text-[13.5px] font-semibold transition-colors',
+        active
+          ? 'bg-[var(--fg-brand-primary)] text-white'
+          : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]',
+      ].join(' ')}
+    >
+      <Icon size={16} className="shrink-0" />
+      <span className="truncate">{label}</span>
+    </Link>
+  )
+}
+
+interface Props {
+  mobileOpen: boolean
+  onClose:    () => void
+}
+
+export function PatientSidebar({ mobileOpen, onClose }: Props) {
+  const { t } = useTranslation()
+
+  const navItems: NavItem[] = [
+    { to: '/patient/today',        icon: CheckSquare, label: t('patient.today')              },
+    { to: '/patient/exercises',    icon: Dumbbell,    label: t('patient.exercises')           },
+    { to: '/patient/plan',         icon: Activity,    label: t('patient.myPlan')              },
+    { to: '/patient/progress',     icon: FlaskConical,label: t('patient.myProgress')          },
+    { to: '/patient/vitals',       icon: Heart,       label: t('patient.vitals')              },
+    { to: '/patient/symptoms',     icon: Stethoscope, label: t('patient.symptoms')            },
+    { to: '/patient/nutrition',    icon: Apple,       label: t('patient.nutrition')           },
+    { to: '/patient/knowledge',    icon: BookOpen,    label: t('patient.healthKnowledge')     },
+    { to: '/patient/messages',     icon: MessageSquare,label: t('patient.messages')           },
+    { to: '/patient/appointments', icon: CalendarDays,label: t('patient.patientAppointments') },
+    { to: '/patient/settings',     icon: Settings,    label: t('patient.patientSettings')     },
+  ]
+
+  const sidebar = (
+    <aside className="flex flex-col h-full w-[260px] bg-[var(--bg-primary)] border-r border-[var(--border-secondary)]">
+      {/* Brand */}
+      <div className="flex items-center justify-between h-[72px] px-5 border-b border-[var(--border-secondary)] shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
+            style={{ background: 'linear-gradient(135deg,#2970FF,#6941C6)' }}>
+            R
+          </div>
+          <span className="text-[13.5px] font-semibold text-[var(--text-primary)]">MyRehab</span>
+        </div>
+        <button onClick={onClose} className="lg:hidden p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* Patient profile card */}
+      <div className="mx-3 mt-3 mb-1 p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-secondary)]">
+        <p className="text-[12px] font-semibold text-[var(--text-primary)] truncate">{PATIENT_PROFILE.name}</p>
+        <p className="text-[11px] text-[var(--text-tertiary)] truncate mt-0.5">{PATIENT_PROFILE.diagnosis}</p>
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
+        {navItems.map(item => (
+          <PatientNavItem key={item.to} {...item} />
+        ))}
+      </nav>
+
+      {/* Doctor card */}
+      <div className="mx-3 mb-3 p-3 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white">
+        <p className="text-[11px] opacity-80 font-medium">{t('patient.assignedDoctor')}</p>
+        <p className="text-[13px] font-semibold mt-0.5 truncate">{ASSIGNED_DOCTOR.name}</p>
+        <p className="text-[11px] opacity-80 truncate">{ASSIGNED_DOCTOR.specialization}</p>
+      </div>
+    </aside>
+  )
+
+  return (
+    <>
+      {/* Desktop */}
+      <div className="hidden lg:flex fixed inset-y-0 left-0 z-30">{sidebar}</div>
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 flex">
+          <div className="fixed inset-0 bg-black/40" onClick={onClose} />
+          <div className="relative z-50">{sidebar}</div>
+        </div>
+      )}
+    </>
+  )
+}

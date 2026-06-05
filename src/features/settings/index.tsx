@@ -1,197 +1,400 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { User, Building2, Lock, Monitor, Smartphone, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { PageHeader } from '@/components/layout/page-header'
-import { cn } from '@/lib/utils'
+import {
+  User, Building2, Bell, Lock, CheckCircle2, LogOut, Monitor,
+  Search, ShieldCheck, Clock,
+} from 'lucide-react'
 
-const ACTIVE_SESSIONS = [
-  { id: 's1', device: 'Chrome / Windows 11', location: 'Toshkent, UZ', lastActive: '5 daqiqa oldin', current: true,  Icon: Monitor },
-  { id: 's2', device: 'Safari / iPhone 15',  location: 'Toshkent, UZ', lastActive: '2 soat oldin',  current: false, Icon: Smartphone },
-  { id: 's3', device: 'Chrome / macOS',       location: 'Andijon, UZ',  lastActive: '1 kun oldin',   current: false, Icon: Monitor },
+// ── Types ────────────────────────────────────────────────────────────────────
+
+type Tab = 'profile' | 'clinics' | 'notifications' | 'security'
+
+// ── Mock data ─────────────────────────────────────────────────────────────────
+
+const DOCTOR = {
+  name:           'Muhrim Devonov',
+  specialization: 'Orthopedics',
+  phone:          '998900010101',
+  clinic:         'MyRehab Medical',
+  initials:       'MD',
+}
+
+const MY_REQUESTS = [
+  { id: 1, clinic: 'Darmon Med', initials: 'DM', sentAt: '23.05.2026', status: 'pending' },
+]
+
+const SESSIONS = [
+  { id: 1,  device: 'Chrome · Windows', method: 'Parol', ip: '172.18.0.6', last: 'hozir',         current: true  },
+  { id: 2,  device: 'Chrome · Android', method: 'Parol', ip: '172.18.0.6', last: '11 soat oldin', current: false },
+  { id: 3,  device: 'Browser · Desktop',method: 'Parol', ip: '172.18.0.6', last: '19 soat oldin', current: false },
+  { id: 4,  device: 'Browser · Desktop',method: 'Parol', ip: '172.18.0.6', last: '19 soat oldin', current: false },
+  { id: 5,  device: 'Chrome · Windows', method: 'Parol', ip: '172.18.0.6', last: '18 soat oldin', current: false },
+  { id: 6,  device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '20 soat oldin', current: false },
+  { id: 7,  device: 'Chrome · Windows', method: 'Parol', ip: '172.18.0.6', last: '1 kun oldin',   current: false },
+  { id: 8,  device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '1 kun oldin',   current: false },
+  { id: 9,  device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '2 kun oldin',   current: false },
+  { id: 10, device: 'Chrome · Windows', method: 'Parol', ip: '172.18.0.6', last: '3 kun oldin',   current: false },
+  { id: 11, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '3 kun oldin',   current: false },
+  { id: 12, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '3 kun oldin',   current: false },
+  { id: 13, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '10 kun oldin',  current: false },
+  { id: 14, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '12 kun oldin',  current: false },
+  { id: 15, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '13 kun oldin',  current: false },
+  { id: 16, device: 'Chrome · Linux',   method: 'Parol', ip: '172.18.0.6', last: '15 kun oldin',  current: false },
+]
+
+// ── Toggle switch ─────────────────────────────────────────────────────────────
+
+function ToggleSwitch({ on, onChange }: { on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      onClick={() => onChange(!on)}
+      className={[
+        'relative w-10 h-6 rounded-full transition-colors shrink-0',
+        on ? 'bg-teal-500' : 'bg-[var(--bg-tertiary)]',
+      ].join(' ')}
+    >
+      <span className={[
+        'absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform',
+        on ? 'translate-x-4' : 'translate-x-0.5',
+      ].join(' ')} />
+    </button>
+  )
+}
+
+// ── Tab: Profile ─────────────────────────────────────────────────────────────
+
+function ProfileTab() {
+  const [name, setName] = useState(DOCTOR.name)
+  const [saved, setSaved] = useState(false)
+  const dirty = name !== DOCTOR.name
+
+  function handleSave() {
+    setSaved(true)
+    setTimeout(() => setSaved(false), 2000)
+  }
+
+  return (
+    <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-6 space-y-6">
+      <h2 className="text-base font-bold text-[var(--text-primary)]">Shifokor profili</h2>
+
+      {/* Avatar + verified */}
+      <div className="flex items-center gap-4">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
+          {DOCTOR.initials}
+        </div>
+        <div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="text-base font-bold text-[var(--text-primary)]">Dr. {name}</p>
+            <span className="flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+              Tasdiqlangan
+            </span>
+          </div>
+          <p className="text-sm text-[var(--text-tertiary)] mt-0.5">{DOCTOR.specialization} · {DOCTOR.clinic}</p>
+        </div>
+      </div>
+
+      {saved && (
+        <p className="text-green-600 text-sm font-medium">✓ O'zgarishlar saqlandi!</p>
+      )}
+
+      {/* Form fields */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="text-xs font-semibold text-[var(--text-secondary)]">To'liq ism</label>
+          <input
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500 transition-colors"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-[var(--text-secondary)]">Mutaxassislik</label>
+          <input
+            value={DOCTOR.specialization}
+            disabled
+            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-tertiary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-tertiary)] cursor-not-allowed"
+          />
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-[var(--text-secondary)]">Telefon</label>
+          <div className="relative mt-1.5">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-quaternary)] text-xs">📞</span>
+            <input
+              value={DOCTOR.phone}
+              disabled
+              className="w-full pl-7 pr-3 py-2.5 bg-[var(--bg-tertiary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-tertiary)] cursor-not-allowed"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="text-xs font-semibold text-[var(--text-secondary)]">Klinika</label>
+          <input
+            value={DOCTOR.clinic}
+            disabled
+            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-tertiary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-tertiary)] cursor-not-allowed"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={!dirty}
+          className={[
+            'px-5 py-2.5 rounded-xl text-sm font-semibold transition-all',
+            dirty
+              ? 'bg-teal-500 text-white hover:bg-teal-600'
+              : 'bg-[var(--bg-tertiary)] text-[var(--text-quaternary)] cursor-not-allowed',
+          ].join(' ')}
+        >
+          Saqlash
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Clinics ──────────────────────────────────────────────────────────────
+
+function ClinicsTab() {
+  const [search, setSearch] = useState('')
+
+  return (
+    <div className="space-y-4">
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <h3 className="text-sm font-bold text-[var(--text-primary)] mb-3">Klinika takliflari</h3>
+        <p className="text-sm text-[var(--text-tertiary)]">Faol takliflar yo'q.</p>
+      </div>
+
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <h3 className="text-sm font-bold text-[var(--text-primary)] mb-3">Mening so'rovlarim</h3>
+        <div className="space-y-2">
+          {MY_REQUESTS.map(r => (
+            <div key={r.id} className="flex items-center justify-between p-3 bg-[var(--bg-secondary)] rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  {r.initials}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-[var(--text-primary)]">{r.clinic}</p>
+                  <p className="text-xs text-[var(--text-tertiary)]">Yuborilgan {r.sentAt}</p>
+                </div>
+              </div>
+              <span className="flex items-center gap-1 text-xs font-semibold text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0" />
+                Kutilmoqda
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-[var(--text-primary)]">Mavjud klinikalar</h3>
+          <div className="relative">
+            <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-quaternary)]" />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Klinika, shahar qidiring"
+              className="pl-7 pr-3 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs text-[var(--text-primary)] outline-none focus:border-teal-500 w-48"
+            />
+          </div>
+        </div>
+        <p className="text-sm text-[var(--text-tertiary)]">Hozircha klinikalar mavjud emas.</p>
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Notifications ────────────────────────────────────────────────────────
+
+function NotifRow({ label, on, onChange }: { label: string; on: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-[var(--border-secondary)] last:border-0">
+      <span className="text-sm text-[var(--text-primary)]">{label}</span>
+      <ToggleSwitch on={on} onChange={onChange} />
+    </div>
+  )
+}
+
+function NotificationsTab() {
+  const [workAlerts,    setWorkAlerts]    = useState(true)
+  const [planReminders, setPlanReminders] = useState(true)
+  const [docReminders,  setDocReminders]  = useState(true)
+  const [evidenceNews,  setEvidenceNews]  = useState(true)
+  const [medNews,       setMedNews]       = useState(true)
+  const [clinicalCases, setClinicalCases] = useState(true)
+
+  return (
+    <div className="space-y-4">
+      {/* Critical — always on */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <ShieldCheck size={18} className="text-red-500 shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-semibold text-[var(--text-primary)]">Kritik bemor xavfsizligi</p>
+              <p className="text-xs text-[var(--text-tertiary)] mt-0.5">Vital ko'rsatkichlar · Shoshilinch · Og'ir salbiy holatlar</p>
+            </div>
+          </div>
+          <span className="flex items-center gap-1 text-xs font-semibold text-red-600 bg-red-50 dark:bg-red-900/20 px-2.5 py-1 rounded-full shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+            Doim yoqilgan
+          </span>
+        </div>
+      </div>
+
+      {/* Work alerts */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Kundalik ish ogohlantirishlari</h3>
+        <NotifRow label="Ish ogohlantirishlarini olish" on={workAlerts} onChange={setWorkAlerts} />
+      </div>
+
+      {/* Digest items */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <h3 className="text-sm font-bold text-[var(--text-primary)] mb-1">Kundalik dayjest tarkibi</h3>
+        <NotifRow label="Reja muddati eslatmalari"  on={planReminders}  onChange={setPlanReminders}  />
+        <NotifRow label="Hujjat eslatmalari"        on={docReminders}   onChange={setDocReminders}   />
+        <NotifRow label="Dalil asosida yangiliklar" on={evidenceNews}   onChange={setEvidenceNews}   />
+        <NotifRow label="Tibbiyot yangiliklari"     on={medNews}        onChange={setMedNews}        />
+        <NotifRow label="Klinik holatlar"           on={clinicalCases}  onChange={setClinicalCases}  />
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Security ─────────────────────────────────────────────────────────────
+
+function SecurityTab() {
+  const [sessions, setSessions] = useState(SESSIONS)
+  const otherCount = sessions.filter(s => !s.current).length
+
+  return (
+    <div className="space-y-4">
+      {/* Change password */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5 space-y-4">
+        <h3 className="text-sm font-bold text-[var(--text-primary)]">Parol</h3>
+        {['Joriy parol', 'Yangi parol', 'Parolni tasdiqlang'].map(label => (
+          <div key={label}>
+            <label className="text-xs font-semibold text-[var(--text-secondary)]">{label}</label>
+            <input
+              type="password"
+              className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500"
+            />
+          </div>
+        ))}
+        <button className="px-5 py-2.5 bg-teal-500 text-white rounded-xl text-sm font-semibold hover:bg-teal-600 transition-colors">
+          Parolni o'zgartirish
+        </button>
+      </div>
+
+      {/* Sessions */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="text-sm font-bold text-[var(--text-primary)]">Faol seanslar</h3>
+          {otherCount > 0 && (
+            <button
+              onClick={() => setSessions(prev => prev.filter(s => s.current))}
+              className="text-xs font-semibold text-red-600 hover:underline"
+            >
+              Boshqa qurilmalardan chiqish ({otherCount})
+            </button>
+          )}
+        </div>
+        <p className="text-xs text-[var(--text-tertiary)] mb-4">
+          Hozir kirgan qurilmalar. Notanish bo'lsa bekor qiling.
+        </p>
+        <div className="space-y-2">
+          {sessions.map(s => (
+            <div key={s.id} className="flex items-start justify-between gap-3 p-3 bg-[var(--bg-secondary)] rounded-xl">
+              <div className="flex items-start gap-3">
+                <Monitor size={15} className="text-[var(--text-tertiary)] mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-[var(--text-primary)]">{s.device}</p>
+                  <div className="flex items-center gap-1.5 mt-0.5 flex-wrap text-[var(--text-tertiary)]">
+                    <span className="text-xs">{s.method}</span>
+                    <span className="text-xs">·</span>
+                    <span className="text-xs">{s.ip}</span>
+                    <span className="text-xs">·</span>
+                    <span className="flex items-center gap-1 text-xs">
+                      <Clock size={10} />
+                      {s.last}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {s.current
+                ? (
+                  <span className="shrink-0 flex items-center gap-1 text-xs font-semibold text-teal-600 bg-teal-50 dark:bg-teal-900/20 px-2.5 py-1 rounded-full">
+                    <CheckCircle2 size={11} />
+                    Joriy
+                  </span>
+                )
+                : (
+                  <button
+                    onClick={() => setSessions(prev => prev.filter(x => x.id !== s.id))}
+                    className="shrink-0 flex items-center gap-1 text-xs font-semibold text-[var(--text-tertiary)] hover:text-red-600 transition-colors"
+                  >
+                    <LogOut size={12} />
+                    Bekor qilish
+                  </button>
+                )
+              }
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main Settings page ────────────────────────────────────────────────────────
+
+const TABS: { key: Tab; icon: React.ElementType; label: string }[] = [
+  { key: 'profile',       icon: User,      label: 'Profil'          },
+  { key: 'clinics',       icon: Building2, label: 'Klinikalar'      },
+  { key: 'notifications', icon: Bell,      label: 'Bildirishnomalar'},
+  { key: 'security',      icon: Lock,      label: 'Xavfsizlik'      },
 ]
 
 export function SettingsPage() {
-  const { t } = useTranslation()
-  const [activeTab, setActiveTab] = useState<'account' | 'clinic' | 'security'>('account')
-  const [sessions, setSessions]   = useState(ACTIVE_SESSIONS)
-
-  const [accountForm, setAccountForm] = useState({
-    name:  'Alisher Nazarov',
-    phone: '+998901234567',
-    role:  'Klinika Administratori',
-  })
-
-  const [clinicForm, setClinicForm] = useState({
-    name:        'Toshkent Klinikasi',
-    phone:       '+998712345678',
-    city:        'Toshkent',
-    email:       'info@toshkentklinika.uz',
-    website:     'toshkentklinika.uz',
-    foundedYear: '2018',
-    address:     "Mirzo Ulug'bek tumani, Buyuk Ipak Yo'li ko'chasi, 45",
-  })
-
-  const [passForm, setPassForm] = useState({ current: '', newPass: '', confirm: '' })
-
-  const tabs = [
-    { id: 'account'  as const, label: t('settings.account'),    Icon: User },
-    { id: 'clinic'   as const, label: t('settings.clinicInfo'), Icon: Building2 },
-    { id: 'security' as const, label: t('settings.security'),   Icon: Lock },
-  ]
+  const [tab, setTab] = useState<Tab>('profile')
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title={t('settings.title')}
-        crumbs={[{ label: t('nav.settings') }]}
-      />
+      <h1 className="text-2xl font-bold text-[var(--text-primary)]">Sozlamalar</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6">
-        {/* Tab list */}
-        <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] p-2 h-fit">
-          {tabs.map(tab => (
+      <div className="flex flex-col sm:flex-row gap-6">
+        {/* Left tab sidebar */}
+        <nav className="flex flex-row sm:flex-col gap-1 sm:w-52 shrink-0">
+          {TABS.map(({ key, icon: Icon, label }) => (
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[14px] font-semibold transition-colors text-left cursor-pointer',
-                activeTab === tab.id
-                  ? 'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)]'
-                  : 'text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)]',
-              )}
+              key={key}
+              onClick={() => setTab(key)}
+              className={[
+                'flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all',
+                tab === key
+                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400'
+                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]',
+              ].join(' ')}
             >
-              <tab.Icon size={17} />
-              {tab.label}
+              <Icon
+                size={16}
+                className={tab === key ? 'text-teal-500' : 'text-[var(--text-quaternary)]'}
+              />
+              <span className="hidden sm:block">{label}</span>
             </button>
           ))}
-        </div>
+        </nav>
 
-        {/* Panel */}
-        <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] p-6 min-h-[400px]">
-
-          {/* Account */}
-          {activeTab === 'account' && (
-            <div className="space-y-5">
-              <h2 className="text-[18px] font-bold text-[var(--text-primary)]">{t('settings.account')}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('doctors.fullName')}</label>
-                  <Input value={accountForm.name}  onChange={e => setAccountForm(f => ({ ...f, name: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('doctors.phone')}</label>
-                  <Input value={accountForm.phone} onChange={e => setAccountForm(f => ({ ...f, phone: e.target.value }))} />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('common.status')}</label>
-                  <Input value={accountForm.role} disabled />
-                </div>
-              </div>
-              <div className="flex justify-end pt-2 border-t border-[var(--border-secondary)]">
-                <Button size="sm">{t('settings.saveChanges')}</Button>
-              </div>
-            </div>
-          )}
-
-          {/* Clinic Info */}
-          {activeTab === 'clinic' && (
-            <div className="space-y-5">
-              <h2 className="text-[18px] font-bold text-[var(--text-primary)]">{t('settings.clinicInfo')}</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.clinicName')}</label>
-                  <Input value={clinicForm.name} onChange={e => setClinicForm(f => ({ ...f, name: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('doctors.phone')}</label>
-                  <Input value={clinicForm.phone} onChange={e => setClinicForm(f => ({ ...f, phone: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.city')}</label>
-                  <Input value={clinicForm.city} onChange={e => setClinicForm(f => ({ ...f, city: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('common.email')}</label>
-                  <Input value={clinicForm.email} onChange={e => setClinicForm(f => ({ ...f, email: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.website')}</label>
-                  <Input value={clinicForm.website} onChange={e => setClinicForm(f => ({ ...f, website: e.target.value }))} />
-                </div>
-                <div>
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.foundedYear')}</label>
-                  <Input value={clinicForm.foundedYear} onChange={e => setClinicForm(f => ({ ...f, foundedYear: e.target.value }))} />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.address')}</label>
-                  <Input value={clinicForm.address} onChange={e => setClinicForm(f => ({ ...f, address: e.target.value }))} />
-                </div>
-              </div>
-              <div className="flex justify-end pt-2 border-t border-[var(--border-secondary)]">
-                <Button size="sm">{t('settings.saveChanges')}</Button>
-              </div>
-            </div>
-          )}
-
-          {/* Security */}
-          {activeTab === 'security' && (
-            <div className="space-y-6">
-              {/* Change password */}
-              <div>
-                <h2 className="text-[18px] font-bold text-[var(--text-primary)] mb-4">{t('settings.changePassword')}</h2>
-                <div className="space-y-4 max-w-md">
-                  <div>
-                    <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.currentPassword')}</label>
-                    <Input type="password" value={passForm.current} onChange={e => setPassForm(f => ({ ...f, current: e.target.value }))} />
-                  </div>
-                  <div>
-                    <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.newPassword')}</label>
-                    <Input type="password" value={passForm.newPass} onChange={e => setPassForm(f => ({ ...f, newPass: e.target.value }))} />
-                  </div>
-                  <div>
-                    <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('settings.confirmPassword')}</label>
-                    <Input type="password" value={passForm.confirm} onChange={e => setPassForm(f => ({ ...f, confirm: e.target.value }))} />
-                  </div>
-                  <Button size="sm">{t('settings.changePassword')}</Button>
-                </div>
-              </div>
-
-              {/* Active sessions */}
-              <div className="border-t border-[var(--border-secondary)] pt-6">
-                <h3 className="text-[16px] font-bold text-[var(--text-primary)] mb-4">{t('settings.activeSessions')}</h3>
-                <div className="space-y-3">
-                  {sessions.map(session => (
-                    <div key={session.id} className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border-secondary)] bg-[var(--bg-secondary)]">
-                      <div className="size-10 rounded-lg bg-[var(--bg-primary)] border border-[var(--border-secondary)] flex items-center justify-center text-[var(--text-tertiary)] shrink-0">
-                        <session.Icon size={18} />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <p className="text-[14px] font-semibold text-[var(--text-primary)]">{session.device}</p>
-                          {session.current && (
-                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)]">
-                              {t('settings.current')}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5">
-                          {session.location} · {session.lastActive}
-                        </p>
-                      </div>
-                      {!session.current && (
-                        <Button size="sm" variant="secondary" onClick={() => setSessions(s => s.filter(x => x.id !== session.id))}>
-                          <LogOut size={14} />
-                          {t('settings.logoutSession')}
-                        </Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {tab === 'profile'       && <ProfileTab />}
+          {tab === 'clinics'       && <ClinicsTab />}
+          {tab === 'notifications' && <NotificationsTab />}
+          {tab === 'security'      && <SecurityTab />}
         </div>
       </div>
     </div>

@@ -1,13 +1,10 @@
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
+import { Outlet } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { Sidebar } from './sidebar'
 import { TopBar } from './top-bar'
 
-interface AppLayoutProps {
-  children: ReactNode
-}
-
-export function AppLayout({ children }: AppLayoutProps) {
+export function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
@@ -47,7 +44,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         <main className="flex-1">
           <div className="px-4 py-6 sm:px-6 lg:px-8 w-full">
-            {children}
+            <Outlet />
           </div>
         </main>
       </div>
