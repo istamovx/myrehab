@@ -11,3 +11,15 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
+      # Qiymatlarni Render dashboard → Environment'da kiriting (sync: false).
+      # DIQQAT: VITE_ o'zgaruvchilari build paytida bundle ichiga yoziladi,
+      # ya'ni brauzerda ochiq ko'rinadi. Faqat ochiq bo'lsa zarari yo'q
+      # qiymatlarni shu yerga qo'ying.
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+      - key: VITE_TELEGRAM_BOT_USERNAME
+        sync: false
+      # VITE_DMED_API_KEY shu yerga QO'YILMAYDI — maxfiy davlat kaliti.
+      # U keyinroq Supabase Edge Function secret sifatida server tomonda saqlanadi.
