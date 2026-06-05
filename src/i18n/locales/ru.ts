@@ -305,7 +305,7 @@ const ru = {
     patientAppointments: "Приёмы", patientSettings: "Настройки",
     // Today
     greeting: "Здравствуйте", remainingTasks: "Осталось задач: {{count}}",
-    recoveryScore: "Балл восстановления", streak: "{{count}} дней подряд", tasksDone: "{{done}}/{{total}}",
+    recoveryScore: "Балл восстановления", streak: "Дней подряд", tasksDone: "{{done}}/{{total}}",
     todayMeds: "Лекарства на сегодня", nextAppointment: "Следующий приём",
     take: "Принять", skip: "Пропустить",
     taken: "Принято", skipped: "Пропущено", pending: "Ожидает",
@@ -321,11 +321,14 @@ const ru = {
     noExercises: "Упражнения не найдены",
     // Plan
     currentPhase: "Текущая фаза", phases: "Фазы", phaseProgress: "{{pct}}% завершено",
+    phaseNumber: "Фаза {{n}}", phasesCount: "{{n}} фаз",
+    phaseStatusSummary: "{{done}} завершено · {{active}} активна · {{locked}} заблокировано",
     locked: "Заблокировано", current: "Текущая", completed: "Завершено",
     diagnosis: "Диагноз", startDate: "Начало", endDate: "Окончание",
     durationWeeks: "{{n}} нед.",
     // Progress
     adherence: "Соблюдение плана", avgPain: "Ср. боль", weeklyAdherence: "Еженедельное соблюдение (%)",
+    adherenceLabel: "Соблюдение", painLabel: "Боль",
     painTrend: "Динамика боли", trendGood: "Положительная тенденция", trendBad: "Отрицательная тенденция",
     // Vitals
     bloodPressure: "Артериальное давление", heartRate: "Пульс", weight: "Вес",

@@ -25,7 +25,7 @@ function PhaseCard({ phase }: { phase: PlanPhase }) {
           {PHASE_ICON[phase.status]}
           <div>
             <p className="text-xs font-semibold text-[var(--text-tertiary)]">
-              {t('patient.currentPhase').replace('Current ', `Phase ${phase.order_index} – `)}
+              {t(`patient.${phase.status}`)}
             </p>
             <h3 className="font-semibold text-[var(--text-primary)] text-sm">{phase.name}</h3>
           </div>
@@ -63,6 +63,11 @@ function PhaseCard({ phase }: { phase: PlanPhase }) {
 export function PatientPlanPage() {
   const { t } = useTranslation()
 
+  const phases = TREATMENT_PLAN.phases
+  const doneCount   = phases.filter(p => p.status === 'completed').length
+  const activeCount = phases.filter(p => p.status === 'current').length
+  const lockedCount = phases.filter(p => p.status === 'locked').length
+
   return (
     <div className="space-y-5 max-w-3xl mx-auto">
       <div>
@@ -79,7 +84,7 @@ export function PatientPlanPage() {
           </div>
           <div>
             <p className="text-xs text-[var(--text-tertiary)] font-medium">{t('patient.phases')}</p>
-            <p className="text-sm font-semibold text-[var(--text-primary)] mt-0.5">{TREATMENT_PLAN.phases.length} phases</p>
+            <p className="text-sm font-semibold text-[var(--text-primary)] mt-0.5">{t('patient.phasesCount', { n: TREATMENT_PLAN.phases.length })}</p>
           </div>
           <div>
             <p className="text-xs text-[var(--text-tertiary)] font-medium">{t('patient.currentPhase')}</p>
@@ -100,7 +105,7 @@ export function PatientPlanPage() {
           <div className="h-full bg-gradient-to-r from-[var(--fg-brand-primary)] to-purple-500 rounded-full" style={{ width: '40%' }} />
         </div>
         <div className="flex justify-between text-xs text-[var(--text-tertiary)] mt-1.5">
-          <span>1 completed · 1 active · 2 locked</span>
+          <span>{t('patient.phaseStatusSummary', { done: doneCount, active: activeCount, locked: lockedCount })}</span>
         </div>
       </div>
 

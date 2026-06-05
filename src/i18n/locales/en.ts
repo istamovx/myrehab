@@ -305,7 +305,7 @@ const en = {
     patientAppointments: "Appointments", patientSettings: "Settings",
     // Today
     greeting: "Hello", remainingTasks: "{{count}} tasks remaining",
-    recoveryScore: "Recovery Score", streak: "{{count}} day streak", tasksDone: "{{done}}/{{total}}",
+    recoveryScore: "Recovery Score", streak: "Day streak", tasksDone: "{{done}}/{{total}}",
     todayMeds: "Today's Medications", nextAppointment: "Next Appointment",
     take: "Take", skip: "Skip",
     taken: "Taken", skipped: "Skipped", pending: "Pending",
@@ -321,11 +321,14 @@ const en = {
     noExercises: "No exercises found",
     // Plan
     currentPhase: "Current Phase", phases: "Phases", phaseProgress: "{{pct}}% complete",
+    phaseNumber: "Phase {{n}}", phasesCount: "{{n}} phases",
+    phaseStatusSummary: "{{done}} completed · {{active}} active · {{locked}} locked",
     locked: "Locked", current: "Current", completed: "Completed",
     diagnosis: "Diagnosis", startDate: "Start Date", endDate: "End Date",
     durationWeeks: "{{n}} weeks",
     // Progress
     adherence: "Plan Adherence", avgPain: "Avg. Pain", weeklyAdherence: "Weekly Adherence (%)",
+    adherenceLabel: "Adherence", painLabel: "Pain",
     painTrend: "Pain Trend", trendGood: "Positive trend", trendBad: "Negative trend",
     // Vitals
     bloodPressure: "Blood Pressure", heartRate: "Heart Rate", weight: "Weight",
