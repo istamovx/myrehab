@@ -1,16 +1,39 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Calendar, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp, Users, Activity, Stethoscope, UserX, Clock, FileText } from 'lucide-react'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line, ReferenceLine,
+} from 'recharts'
 import { PillSelect } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { Avatar } from '@/components/ui/avatar'
-import { DonutChart } from '@/components/charts/donut-chart'
 import { DOCTORS, DASHBOARD_ALERTS, type Doctor, type ScheduleBlock } from '@/data/mock-data'
 import { CLINIC_STATS } from '@/data/clinic-mock-data'
 import { cn } from '@/lib/utils'
 import { SUPABASE_ENABLED } from '@/lib/supabase'
 import { getOrganizationStats } from '@/services/analytics.service'
 import { useAuthStore } from '@/store/auth'
+
+const SESSION_DATA = [
+  { kun: 'Du', soni: 8 },
+  { kun: 'Se', soni: 11 },
+  { kun: 'Ch', soni: 7 },
+  { kun: 'Pa', soni: 14 },
+  { kun: 'Ju', soni: 12 },
+  { kun: 'Sh', soni: 5 },
+  { kun: 'Ya', soni: 3 },
+]
+
+const ATRISK_DATA = [
+  { hafta: '1-h', soni: 5 },
+  { hafta: '2-h', soni: 7 },
+  { hafta: '3-h', soni: 6 },
+  { hafta: '4-h', soni: 9 },
+  { hafta: '5-h', soni: 8 },
+  { hafta: '6-h', soni: 11 },
+  { hafta: '7-h', soni: 8 },
+]
 
 const TIME_SLOTS = [8, 9, 10, 11, 12, 13, 14, 15]
 const TOTAL_HOURS = 7
@@ -159,72 +182,66 @@ export function DashboardPage() {
 
       {/* Stats row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Sessions card */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-1">
-            <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] text-[16px] font-medium">
+        {/* Sessions — BarChart */}
+        <Card className="p-5">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
+              <p className="text-[28px] font-bold text-[var(--text-primary)] leading-tight">12</p>
+            </div>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-success-primary)] text-[var(--text-success-primary)] text-[13px] font-semibold">
               <TrendingUp size={11} />
               +2
             </span>
           </div>
-
-          <div className="flex items-center gap-6 mt-4">
-            <div className="relative shrink-0">
-              <DonutChart percentage={70} color="#2970FF" size={120} strokeWidth={14} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-[var(--text-primary)]">12</span>
-                <span className="text-[16px] text-[var(--fg-quaternary)] -mt-0.5">{t('dashboard.session')}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 flex-1 min-w-0">
-              <div className="flex items-center gap-2 text-[16px]">
-                <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
-                <span className="text-[var(--text-quaternary)]">{t('dashboard.finished', { count: 8 })}</span>
-              </div>
-              <div className="flex items-center gap-2 text-[16px]">
-                <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
-                <span className="text-[var(--text-quaternary)]">{t('dashboard.upcoming', { count: 4 })}</span>
-              </div>
-              <p className="text-[16px] text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
-                <span className="font-semibold text-[var(--text-secondary)]">70%</span> {t('dashboard.onSchedule')}
-              </p>
-            </div>
+          <ResponsiveContainer width="100%" height={110}>
+            <BarChart data={SESSION_DATA} margin={{ top: 0, right: 0, left: -28, bottom: 0 }} barSize={18}>
+              <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
+              <XAxis dataKey="kun" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+              <Tooltip
+                cursor={{ fill: 'var(--bg-secondary)', radius: 4 }}
+                contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
+                formatter={(v) => [`${v} seans`, '']}
+              />
+              <Bar dataKey="soni" fill="#2970FF" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-secondary)] text-[13px] text-[var(--text-quaternary)]">
+            <span><span className="font-semibold text-[var(--text-secondary)]">8</span> {t('dashboard.finished', { count: 8 }).replace('8 ta ', '')}</span>
+            <span><span className="font-semibold text-[var(--text-secondary)]">4</span> {t('dashboard.upcoming', { count: 4 }).replace('4 ta ', '')}</span>
+            <span><span className="font-semibold text-[var(--text-secondary)]">70%</span> {t('dashboard.onSchedule')}</span>
           </div>
         </Card>
 
-        {/* At-risk card */}
-        <Card className="p-6">
-          <div className="flex items-start justify-between mb-1">
-            <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] text-[16px] font-medium">
+        {/* At-risk — LineChart */}
+        <Card className="p-5">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
+              <p className="text-[28px] font-bold text-[var(--text-primary)] leading-tight">8</p>
+            </div>
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[var(--bg-error-primary)] text-[var(--text-error-primary)] text-[13px] font-semibold">
               −3 kritik
             </span>
           </div>
-
-          <div className="flex items-center gap-6 mt-4">
-            <div className="relative shrink-0">
-              <DonutChart percentage={60} color="#2970FF" size={120} strokeWidth={14} />
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-[var(--text-primary)]">8</span>
-                <span className="text-[16px] text-[var(--fg-quaternary)] -mt-0.5">{t('patients.atRisk')}</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 flex-1 min-w-0">
-              <div className="flex items-center gap-2 text-[16px]">
-                <span className="size-2 rounded-full bg-[var(--fg-brand-primary)] shrink-0" />
-                <span className="text-[var(--text-quaternary)]">{t('dashboard.reviewed', { count: 5 })}</span>
-              </div>
-              <div className="flex items-center gap-2 text-[16px]">
-                <span className="size-2 rounded-full bg-[var(--bg-tertiary)] shrink-0" />
-                <span className="text-[var(--text-quaternary)]">{t('dashboard.pending', { count: 3 })}</span>
-              </div>
-              <p className="text-[16px] text-[var(--fg-quaternary)] pt-1 border-t border-[var(--border-secondary)]">
-                <span className="font-semibold text-[var(--text-secondary)]">60%</span> {t('dashboard.atRiskPct', { pct: 60 }).replace('60% ', '')}
-              </p>
-            </div>
+          <ResponsiveContainer width="100%" height={110}>
+            <LineChart data={ATRISK_DATA} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
+              <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
+              <XAxis dataKey="hafta" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
+                formatter={(v) => [`${v} bemor`, '']}
+              />
+              <ReferenceLine y={10} stroke="#D92D20" strokeDasharray="4 3" strokeWidth={1.5} />
+              <Line type="monotone" dataKey="soni" stroke="#2970FF" strokeWidth={2} dot={{ r: 3, fill: '#2970FF' }} activeDot={{ r: 5 }} />
+            </LineChart>
+          </ResponsiveContainer>
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-secondary)] text-[13px] text-[var(--text-quaternary)]">
+            <span><span className="font-semibold text-[var(--text-secondary)]">5</span> {t('dashboard.reviewed', { count: 5 }).replace('5 ta ', '')}</span>
+            <span><span className="font-semibold text-[var(--text-secondary)]">3</span> {t('dashboard.pending', { count: 3 }).replace('3 ta ', '')}</span>
+            <span><span className="font-semibold text-[var(--text-secondary)]">60%</span> ko'rib chiqildi</span>
           </div>
         </Card>
 

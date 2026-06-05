@@ -16,12 +16,12 @@ import { useAuthStore } from '@/store/auth'
 import type { Appointment } from '@/types/database.types'
 
 const MOCK_APPOINTMENTS = [
-  { id: '1', patient_id: '1001', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Physiotherapy', organization_id: '', doctor_id: '' },
-  { id: '2', patient_id: '1002', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Consultation',  organization_id: '', doctor_id: '' },
-  { id: '3', patient_id: '1003', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'in_person', status: 'scheduled' as const, reason: 'Follow-up',     organization_id: '', doctor_id: '' },
-  { id: '4', patient_id: '1004', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Assessment',    organization_id: '', doctor_id: '' },
-  { id: '5', patient_id: '1005', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Physiotherapy', organization_id: '', doctor_id: '' },
-  { id: '6', patient_id: '1006', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'phone',     status: 'cancelled' as const, reason: 'Review',        organization_id: '', doctor_id: '' },
+  { id: '1', patient_id: '1001', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Fizioterapiya',  organization_id: '', doctor_id: '' },
+  { id: '2', patient_id: '1002', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Konsultatsiya', organization_id: '', doctor_id: '' },
+  { id: '3', patient_id: '1003', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'in_person', status: 'scheduled' as const, reason: 'Kuzatuv',        organization_id: '', doctor_id: '' },
+  { id: '4', patient_id: '1004', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Baholash',       organization_id: '', doctor_id: '' },
+  { id: '5', patient_id: '1005', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Fizioterapiya',  organization_id: '', doctor_id: '' },
+  { id: '6', patient_id: '1006', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'phone',     status: 'cancelled' as const, reason: "Ko'rib chiqish", organization_id: '', doctor_id: '' },
 ]
 
 type AptStatus = 'confirmed' | 'scheduled' | 'cancelled'
@@ -60,9 +60,9 @@ function aptStatus(raw: string): AptStatus {
 
 function aptTypeLabel(type: string) {
   const labels: Record<string, string> = {
-    in_person: 'In-person',
-    video: 'Video',
-    phone: 'Telefon',
+    in_person: 'Klinikada',
+    video:     "Video qo'ng'iroq",
+    phone:     'Telefon',
     home_visit: 'Uyga tashrif',
   }
   return labels[type] ?? type
@@ -113,25 +113,22 @@ export function AppointmentsPage() {
 
   const [currentDate, setCurrentDate] = useState(today)
   const [selectedDay, setSelectedDay] = useState(today.getDate())
-  const [allApts, setAllApts] = useState<DisplayApt[]>(
-    SUPABASE_ENABLED ? [] : MOCK_APPOINTMENTS.map(toMockDisplayApt),
-  )
-  const [loading, setLoading] = useState(SUPABASE_ENABLED)
+  const [allApts, setAllApts] = useState<DisplayApt[]>(MOCK_APPOINTMENTS.map(toMockDisplayApt))
+  const [loading, setLoading] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
   const [addSuccess, setAddSuccess] = useState(false)
   const [aptForm, setAptForm] = useState({ patientId: '', type: 'in_person', time: '', duration: '60' })
 
   useEffect(() => {
-    if (!SUPABASE_ENABLED || !orgId) {
-      setLoading(false)
-      return
-    }
+    if (!SUPABASE_ENABLED || !orgId) return
     setLoading(true)
     getAppointments(orgId)
       .then(async data => {
-        const patientIds = [...new Set(data.map(a => a.patient_id))]
-        const nameMap = await getProfilesByIds(patientIds)
-        setAllApts(data.map(a => toDisplayApt(a, nameMap)))
+        if (data.length > 0) {
+          const patientIds = [...new Set(data.map(a => a.patient_id))]
+          const nm = await getProfilesByIds(patientIds)
+          setAllApts(data.map(a => toDisplayApt(a, nm)))
+        }
       })
       .catch(console.error)
       .finally(() => setLoading(false))
@@ -158,24 +155,12 @@ export function AppointmentsPage() {
   const [rawApts, setRawApts] = useState<Appointment[]>([])
   const [nameMap, setNameMap] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    if (!SUPABASE_ENABLED || !orgId) return
-    getAppointments(orgId)
-      .then(async data => {
-        const patientIds = [...new Set(data.map(a => a.patient_id))]
-        const nm = await getProfilesByIds(patientIds)
-        setRawApts(data)
-        setNameMap(nm)
-      })
-      .catch(console.error)
-  }, [orgId])
-
   function prevMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1)) }
   function nextMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1)) }
 
   const selectedDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
 
-  const displayApts: DisplayApt[] = SUPABASE_ENABLED
+  const displayApts: DisplayApt[] = rawApts.length > 0
     ? rawApts
         .filter(a => {
           const d = new Date(a.scheduled_at)
@@ -391,8 +376,8 @@ export function AppointmentsPage() {
                 value={aptForm.type}
                 onValueChange={v => setAptForm(f => ({ ...f, type: v }))}
                 options={[
-                  { value: 'in_person', label: 'In-person' },
-                  { value: 'video',     label: 'Video' },
+                  { value: 'in_person', label: 'Klinikada' },
+                  { value: 'video',     label: "Video qo'ng'iroq" },
                   { value: 'phone',     label: 'Telefon' },
                 ]}
                 triggerClassName="w-full"

@@ -165,10 +165,8 @@ export function PatientsListPage() {
   const { t } = useTranslation()
   const orgId = useAuthStore(s => s.user?.organizationId)
 
-  const [rows, setRows] = useState<PatientDisplay[]>(
-    SUPABASE_ENABLED ? [] : PATIENTS.map(fromMock),
-  )
-  const [loading, setLoading] = useState(SUPABASE_ENABLED)
+  const [rows, setRows] = useState<PatientDisplay[]>(PATIENTS.map(fromMock))
+  const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [filterBy, setFilterBy] = useState('all')
@@ -179,16 +177,15 @@ export function PatientsListPage() {
   const [form, setForm] = useState(EMPTY_FORM)
 
   useEffect(() => {
-    if (!SUPABASE_ENABLED || !orgId) {
-      setLoading(false)
-      return
-    }
+    if (!SUPABASE_ENABLED || !orgId) return
     setLoading(true)
     getPatients(orgId)
       .then(async data => {
-        const doctorIds = [...new Set(data.map(p => p.assigned_doctor_id).filter(Boolean) as string[])]
-        const doctorMap = await getDoctorProfiles(doctorIds)
-        setRows(data.map(p => fromSupabase(p, doctorMap)))
+        if (data.length > 0) {
+          const doctorIds = [...new Set(data.map(p => p.assigned_doctor_id).filter(Boolean) as string[])]
+          const doctorMap = await getDoctorProfiles(doctorIds)
+          setRows(data.map(p => fromSupabase(p, doctorMap)))
+        }
       })
       .catch(console.error)
       .finally(() => setLoading(false))

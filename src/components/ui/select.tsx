@@ -33,19 +33,25 @@ export function Select({
   triggerClassName,
   disabled,
 }: SelectProps) {
+  const selectedLabel = options.find(o => o.value === value)?.label
+
   return (
     <BaseSelect.Root value={value} onValueChange={v => onValueChange?.(v as string)} disabled={disabled}>
       <BaseSelect.Trigger
         className={cn(
-          'inline-flex items-center gap-2 px-3 h-9 bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg text-[13px] font-medium text-[var(--text-secondary)] cursor-pointer select-none',
+          'inline-flex items-center justify-between gap-2 px-3 h-9 min-w-[8rem]',
+          'bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg',
+          'text-[13px] font-medium cursor-pointer select-none',
           'hover:bg-[var(--bg-secondary)] transition-colors outline-none [box-shadow:var(--shadow-xs)]',
           'focus-visible:border-[var(--fg-brand-primary)]',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           triggerClassName,
         )}
       >
-        <BaseSelect.Value placeholder={placeholder} />
-        <BaseSelect.Icon className="text-[var(--fg-quaternary)] ml-1">
+        <span className={cn('truncate', !selectedLabel ? 'text-[var(--fg-quaternary)]' : 'text-[var(--text-secondary)]')}>
+          {selectedLabel ?? placeholder}
+        </span>
+        <BaseSelect.Icon className="text-[var(--fg-quaternary)] shrink-0">
           <ChevronDown size={14} />
         </BaseSelect.Icon>
       </BaseSelect.Trigger>
