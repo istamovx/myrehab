@@ -8,8 +8,9 @@ import { StatusBadge, TagBadge } from '@/components/ui/badge'
 import { Avatar } from '@/components/ui/avatar'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog } from '@/components/ui/dialog'
 import { PageHeader } from '@/components/layout/page-header'
-import { PATIENTS } from '@/data/mock-data'
+import { PATIENTS, type Patient, type PatientStatus } from '@/data/mock-data'
 import { formatDate, cn } from '@/lib/utils'
 
 function PatientCard({ patient, selected, onSelect }: {
@@ -126,13 +127,42 @@ function PatientRow({ patient, selected, onSelect }: {
   )
 }
 
+const EMPTY_FORM = { name: '', gender: 'Male' as const, procedure: '', status: 'In Progress' as PatientStatus, attendingPhysician: '', procedureDate: '', dateOfBirth: '', location: '' }
+
 export function PatientsListPage() {
   const { t } = useTranslation()
+  const [patients, setPatients] = useState<Patient[]>(PATIENTS)
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [filterBy, setFilterBy] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list')
   const [selected, setSelected] = useState<Set<string>>(new Set())
+  const [addOpen, setAddOpen] = useState(false)
+  const [addSuccess, setAddSuccess] = useState(false)
+  const [form, setForm] = useState(EMPTY_FORM)
+
+  function handleAddPatient() {
+    if (!form.name || !form.procedure || !form.attendingPhysician) return
+    const newPatient: Patient = {
+      id: `P-${String(patients.length + 1).padStart(3, '0')}`,
+      name: form.name,
+      gender: form.gender,
+      dateOfBirth: form.dateOfBirth || '1990-01-01',
+      location: form.location || 'Toshkent',
+      procedure: form.procedure,
+      status: form.status,
+      procedureDate: form.procedureDate || new Date().toISOString().slice(0, 10),
+      attendingPhysician: form.attendingPhysician,
+      tags: [],
+    }
+    setPatients(prev => [newPatient, ...prev])
+    setAddSuccess(true)
+    setTimeout(() => {
+      setAddSuccess(false)
+      setAddOpen(false)
+      setForm(EMPTY_FORM)
+    }, 1500)
+  }
 
   const SORT_OPTIONS = [
     { value: 'name',   label: t('patients.sortByName') },
@@ -148,7 +178,7 @@ export function PatientsListPage() {
     { value: 'in-progress', label: t('patients.inProgress') },
   ]
 
-  const filtered = PATIENTS.filter(p => {
+  const filtered = patients.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.id.includes(search) ||
       p.procedure.toLowerCase().includes(search.toLowerCase())
@@ -170,6 +200,10 @@ export function PatientsListPage() {
 
   const allSelected = filtered.length > 0 && filtered.every(p => selected.has(p.id))
 
+  function f(key: string, value: string) {
+    setForm(prev => ({ ...prev, [key]: value }))
+  }
+
   function toggleAll() {
     setSelected(allSelected ? new Set() : new Set(filtered.map(p => p.id)))
   }
@@ -178,7 +212,7 @@ export function PatientsListPage() {
     <div>
       <PageHeader
         title={t('patients.title')}
-        subtitle={t('patients.subtitle', { count: PATIENTS.length })}
+        subtitle={t('patients.subtitle', { count: patients.length })}
         crumbs={[{ label: t('nav.patients') }]}
         actions={
           <>
@@ -220,7 +254,7 @@ export function PatientsListPage() {
               <span className="hidden sm:inline">{t('common.export')}</span>
             </Button>
 
-            <Button size="sm">
+            <Button size="sm" onClick={() => setAddOpen(true)}>
               <Plus size={15} />
               {t('patients.newPatient')}
             </Button>
@@ -292,12 +326,78 @@ export function PatientsListPage() {
           {filtered.length > 0 && (
             <div className="px-5 py-3.5 border-t border-[var(--border-secondary)] flex items-center justify-between bg-[var(--bg-secondary-subtle)]">
               <p className="text-[13px] text-[var(--text-tertiary)]">
-                {t('patients.showingOf', { count: filtered.length, total: PATIENTS.length })}
+                {t('patients.showingOf', { count: filtered.length, total: patients.length })}
               </p>
             </div>
           )}
         </div>
       )}
+
+      {/* Add Patient Dialog */}
+      <Dialog
+        open={addOpen}
+        onOpenChange={open => { setAddOpen(open); if (!open) { setAddSuccess(false); setForm(EMPTY_FORM) } }}
+        title={t('patients.newPatient')}
+        description="Yangi bemor ma'lumotlarini kiriting"
+      >
+        {addSuccess ? (
+          <div className="flex flex-col items-center py-8 gap-3">
+            <div className="size-14 rounded-full bg-[var(--bg-success-primary)] flex items-center justify-center">
+              <Plus size={26} className="text-[var(--fg-success-primary)]" />
+            </div>
+            <p className="text-[16px] font-semibold text-[var(--text-primary)]">Bemor qo'shildi!</p>
+            <p className="text-[13px] text-[var(--text-tertiary)]">{form.name}</p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="col-span-2">
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('common.name')} *</label>
+                <Input value={form.name} onChange={e => f('name', e.target.value)} placeholder="Jasur Mirzayev" />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Jinsi</label>
+                <Select value={form.gender} onValueChange={v => f('gender', v)} options={[{ value: 'Male', label: 'Erkak' }, { value: 'Female', label: 'Ayol' }]} triggerClassName="w-full" />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Holat</label>
+                <Select value={form.status} onValueChange={v => f('status', v)} options={[
+                  { value: 'In Progress', label: t('patients.inProgress') },
+                  { value: 'At-Risk', label: t('patients.atRisk') },
+                  { value: 'Ready', label: t('patients.ready') },
+                  { value: 'Awaiting clearance', label: t('patients.awaitingClearance') },
+                ]} triggerClassName="w-full" />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Protsedura *</label>
+                <Input value={form.procedure} onChange={e => f('procedure', e.target.value)} placeholder="ACL Reconstruction" />
+              </div>
+              <div className="col-span-2">
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">{t('patientDetail.physician')} *</label>
+                <Input value={form.attendingPhysician} onChange={e => f('attendingPhysician', e.target.value)} placeholder="Dr. Aziz Karimov" />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Tug'ilgan sana</label>
+                <Input type="date" value={form.dateOfBirth} onChange={e => f('dateOfBirth', e.target.value)} />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Protsedura sanasi</label>
+                <Input type="date" value={form.procedureDate} onChange={e => f('procedureDate', e.target.value)} />
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button variant="secondary" className="flex-1" onClick={() => setAddOpen(false)}>{t('common.cancel')}</Button>
+              <Button
+                className="flex-1"
+                onClick={handleAddPatient}
+                disabled={!form.name || !form.procedure || !form.attendingPhysician}
+              >
+                {t('common.add')}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   )
 }

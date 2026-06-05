@@ -90,9 +90,6 @@ export function PatientExercisesPage() {
                 }
               </button>
             </div>
-            {ex.description && (
-              <p className="text-xs text-[var(--text-tertiary)] mb-3 line-clamp-2">{ex.description}</p>
-            )}
             <div className="flex gap-4 text-xs text-[var(--text-secondary)]">
               <span className="font-medium">{t('patient.setsReps', { sets: ex.default_sets, reps: ex.default_reps })}</span>
             </div>

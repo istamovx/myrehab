@@ -25,6 +25,15 @@ const CAT_BADGE: Record<string, string> = {
 export function DocsPage() {
   const { t } = useTranslation()
   const [activeCat, setActiveCat] = useState('all')
+  const [uploadOpen, setUploadOpen] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
+  const [uploadFile, setUploadFile] = useState<File | null>(null)
+
+  function handleUpload() {
+    if (!uploadFile) return
+    setUploadSuccess(true)
+    setTimeout(() => { setUploadSuccess(false); setUploadOpen(false); setUploadFile(null) }, 1500)
+  }
 
   const CATEGORIES = [
     { key: 'all',       label: t('documents.allCategories') },
@@ -47,7 +56,7 @@ export function DocsPage() {
             <div className="w-44 sm:w-56">
               <Input placeholder={t('documents.searchPlaceholder')} leftIcon={<Search />} uiSize="sm" />
             </div>
-            <Button size="sm">
+            <Button size="sm" onClick={() => setUploadOpen(true)}>
               <Plus size={15} />
               {t('documents.upload')}
             </Button>
@@ -128,6 +137,57 @@ export function DocsPage() {
           </p>
         </div>
       </div>
+
+      {/* Upload Modal */}
+      {uploadOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/40" onClick={() => setUploadOpen(false)} />
+          <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{t('documents.upload')}</h3>
+              <button onClick={() => setUploadOpen(false)} className="text-[var(--text-tertiary)]">
+                <Plus size={18} className="rotate-45" />
+              </button>
+            </div>
+            {uploadSuccess ? (
+              <div className="text-center py-6">
+                <p className="text-green-600 text-[16px] font-semibold">✓ Fayl yuklandi!</p>
+                <p className="text-[13px] text-[var(--text-tertiary)] mt-1">{uploadFile?.name}</p>
+              </div>
+            ) : (
+              <>
+                <div
+                  className="border-2 border-dashed border-[var(--border-secondary)] rounded-xl p-8 text-center cursor-pointer hover:border-[var(--fg-brand-primary)] transition-colors"
+                  onClick={() => document.getElementById('file-input')?.click()}
+                >
+                  <Plus size={32} className="mx-auto mb-2 text-[var(--text-quaternary)] rotate-0" />
+                  <p className="text-[14px] font-medium text-[var(--text-secondary)]">
+                    {uploadFile ? uploadFile.name : 'Fayl tanlash yoki bu yerga tashlang'}
+                  </p>
+                  <p className="text-[12px] text-[var(--text-quaternary)] mt-1">PDF, DOCX, XLSX — max 10MB</p>
+                  <input
+                    id="file-input"
+                    type="file"
+                    className="hidden"
+                    accept=".pdf,.doc,.docx,.xlsx,.xls"
+                    onChange={e => setUploadFile(e.target.files?.[0] ?? null)}
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button onClick={() => setUploadOpen(false)} className="flex-1 py-2.5 rounded-lg border border-[var(--border-secondary)] text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors">
+                    {t('common.cancel')}
+                  </button>
+                  <button onClick={handleUpload} disabled={!uploadFile}
+                    className="flex-1 py-2.5 rounded-lg bg-[var(--fg-brand-primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40"
+                  >
+                    Yuklash
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

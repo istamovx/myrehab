@@ -76,7 +76,7 @@ function IconBtn({ icon: Icon, onClick }: { icon: React.ElementType; onClick?: (
 
 export function PatientDetailPage() {
   const { t } = useTranslation()
-  const params = useParams({ from: '/patients/$patientId' })
+  const params = useParams({ from: '/_admin/patients/$patientId' })
   const patient = PATIENTS.find(p => p.id === params.patientId) ?? PATIENTS[0]
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(

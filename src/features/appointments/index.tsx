@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, ChevronLeft, ChevronRight, Plus, Clock } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Plus, Clock, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
+import { Select } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 import { PATIENTS } from '@/data/mock-data'
@@ -42,6 +43,15 @@ export function AppointmentsPage() {
   const today = new Date()
   const [currentDate, setCurrentDate] = useState(today)
   const [selectedDay, setSelectedDay] = useState(today.getDate())
+  const [addOpen, setAddOpen] = useState(false)
+  const [addSuccess, setAddSuccess] = useState(false)
+  const [aptForm, setAptForm] = useState({ patientId: '', type: 'physiotherapy', time: '', duration: '60', room: '' })
+
+  function handleAddApt() {
+    if (!aptForm.patientId || !aptForm.time) return
+    setAddSuccess(true)
+    setTimeout(() => { setAddSuccess(false); setAddOpen(false); setAptForm({ patientId: '', type: 'physiotherapy', time: '', duration: '60', room: '' }) }, 1500)
+  }
 
   const year  = currentDate.getFullYear()
   const month = currentDate.getMonth()
@@ -65,7 +75,7 @@ export function AppointmentsPage() {
         subtitle={t('appointments.subtitle', { count: APPOINTMENTS.length })}
         crumbs={[{ label: t('nav.appointments') }]}
         actions={
-          <Button size="sm">
+          <Button size="sm" onClick={() => setAddOpen(true)}>
             <Plus size={15} />
             {t('appointments.newAppointment')}
           </Button>
@@ -210,6 +220,84 @@ export function AppointmentsPage() {
           </div>
         </div>
       </div>
+
+      {/* New Appointment Modal */}
+      {addOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-black/40" onClick={() => setAddOpen(false)} />
+          <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{t('appointments.newAppointment')}</h3>
+              </div>
+              <button onClick={() => setAddOpen(false)} className="text-[var(--text-tertiary)]"><X size={18} /></button>
+            </div>
+
+            {addSuccess ? (
+              <div className="text-center py-6">
+                <p className="text-green-600 text-[16px] font-semibold">✓ Uchrashuv qo'shildi!</p>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Bemor *</label>
+                  <Select
+                    value={aptForm.patientId}
+                    onValueChange={v => setAptForm(f => ({ ...f, patientId: v }))}
+                    options={PATIENTS.map(p => ({ value: p.id, label: p.name }))}
+                    placeholder="Bemorni tanlang"
+                    triggerClassName="w-full mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Tur</label>
+                  <Select
+                    value={aptForm.type}
+                    onValueChange={v => setAptForm(f => ({ ...f, type: v }))}
+                    options={[
+                      { value: 'physiotherapy', label: t('appointments.physiotherapy') },
+                      { value: 'consultation',  label: t('appointments.consultation') },
+                      { value: 'followUp',      label: t('appointments.followUp') },
+                      { value: 'assessment',    label: t('appointments.assessment') },
+                    ]}
+                    triggerClassName="w-full mt-1"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Vaqt *</label>
+                    <input type="time" value={aptForm.time} onChange={e => setAptForm(f => ({ ...f, time: e.target.value }))}
+                      className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Davomiyligi (min)</label>
+                    <input type="number" value={aptForm.duration} onChange={e => setAptForm(f => ({ ...f, duration: e.target.value }))} min={15} step={15}
+                      className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Xona</label>
+                  <input type="text" value={aptForm.room} onChange={e => setAptForm(f => ({ ...f, room: e.target.value }))} placeholder="Room 201"
+                    className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
+                  />
+                </div>
+                <div className="flex gap-3 pt-1">
+                  <button onClick={() => setAddOpen(false)} className="flex-1 py-2.5 rounded-lg border border-[var(--border-secondary)] text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors">
+                    {t('common.cancel')}
+                  </button>
+                  <button onClick={handleAddApt} disabled={!aptForm.patientId || !aptForm.time}
+                    className="flex-1 py-2.5 rounded-lg bg-[var(--fg-brand-primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40"
+                  >
+                    {t('common.add')}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
