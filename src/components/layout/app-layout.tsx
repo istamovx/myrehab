@@ -46,7 +46,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <TopBar />
 
         <main className="flex-1">
-          <div className="px-4 py-6 sm:px-6 lg:px-8 max-w-[1600px] mx-auto w-full">
+          <div className="px-4 py-6 sm:px-6 lg:px-8 w-full">
             {children}
           </div>
         </main>

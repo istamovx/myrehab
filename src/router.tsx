@@ -3,6 +3,9 @@ import { AppLayout } from './components/layout/app-layout'
 import { DashboardPage } from './features/dashboard'
 import { PatientsListPage } from './features/patients/list'
 import { PatientDetailPage } from './features/patients/detail'
+import { DoctorsPage } from './features/doctors'
+import { MembershipRequestsPage } from './features/membership'
+import { SettingsPage } from './features/settings'
 import { InsightsPage } from './features/insights'
 import { AppointmentsPage } from './features/appointments'
 import { DocsPage } from './features/docs'
@@ -19,9 +22,7 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  beforeLoad: () => {
-    throw redirect({ to: '/dashboard' })
-  },
+  beforeLoad: () => { throw redirect({ to: '/dashboard' }) },
 })
 
 const dashboardRoute = createRoute({
@@ -40,6 +41,24 @@ const patientDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/patients/$patientId',
   component: PatientDetailPage,
+})
+
+const doctorsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/doctors',
+  component: DoctorsPage,
+})
+
+const membershipRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/membership-requests',
+  component: MembershipRequestsPage,
+})
+
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings',
+  component: SettingsPage,
 })
 
 const insightsRoute = createRoute({
@@ -71,6 +90,9 @@ const routeTree = rootRoute.addChildren([
   dashboardRoute,
   patientsRoute,
   patientDetailRoute,
+  doctorsRoute,
+  membershipRoute,
+  settingsRoute,
   insightsRoute,
   appointmentsRoute,
   docsRoute,
