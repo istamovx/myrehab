@@ -2,6 +2,7 @@ import { create } from 'zustand'
 
 type Theme = 'light' | 'dark'
 export type Accent = 'blue' | 'violet' | 'emerald' | 'orange'
+export type LayoutMode = 'default' | 'mini' | 'hover' | 'hidden'
 
 interface AccentVars {
   fg: string
@@ -44,10 +45,15 @@ export const ACCENTS: Record<Accent, { label: string; swatch: string; light: Acc
 interface ThemeStore {
   theme: Theme
   accent: Accent
+  layout: LayoutMode
   toggle: () => void
   setTheme: (t: Theme) => void
   setAccent: (a: Accent) => void
+  setLayout: (l: LayoutMode) => void
+  reset: () => void
 }
+
+const DEFAULTS = { theme: 'light' as Theme, accent: 'blue' as Accent, layout: 'default' as LayoutMode }
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement
@@ -67,14 +73,16 @@ function applyAccent(accent: Accent, theme: Theme) {
   root.style.setProperty('--blue-200', v.tint200)
 }
 
-const initialTheme: Theme = (localStorage.getItem('theme') as Theme) ?? 'light'
-const initialAccent: Accent = (localStorage.getItem('accent') as Accent) ?? 'blue'
+const initialTheme: Theme = (localStorage.getItem('theme') as Theme) ?? DEFAULTS.theme
+const initialAccent: Accent = (localStorage.getItem('accent') as Accent) ?? DEFAULTS.accent
+const initialLayout: LayoutMode = (localStorage.getItem('layout') as LayoutMode) ?? DEFAULTS.layout
 applyTheme(initialTheme)
 applyAccent(initialAccent, initialTheme)
 
 export const useThemeStore = create<ThemeStore>((set, get) => ({
   theme: initialTheme,
   accent: initialAccent,
+  layout: initialLayout,
   setTheme: (theme) => {
     localStorage.setItem('theme', theme)
     applyTheme(theme)
@@ -86,5 +94,17 @@ export const useThemeStore = create<ThemeStore>((set, get) => ({
     localStorage.setItem('accent', accent)
     applyAccent(accent, get().theme)
     set({ accent })
+  },
+  setLayout: (layout) => {
+    localStorage.setItem('layout', layout)
+    set({ layout })
+  },
+  reset: () => {
+    localStorage.setItem('theme', DEFAULTS.theme)
+    localStorage.setItem('accent', DEFAULTS.accent)
+    localStorage.setItem('layout', DEFAULTS.layout)
+    applyTheme(DEFAULTS.theme)
+    applyAccent(DEFAULTS.accent, DEFAULTS.theme)
+    set({ ...DEFAULTS })
   },
 }))
