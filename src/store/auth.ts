@@ -1,5 +1,10 @@
 import { create } from 'zustand'
+import { supabase, SUPABASE_ENABLED } from '@/lib/supabase'
+import type { Profile } from '@/types/database.types'
 
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 export type Role = 'super_admin' | 'doctor' | 'patient'
 
 export interface SessionUser {
@@ -27,7 +32,9 @@ const DEFAULT_ACCOUNTS: StoredAccount[] = [
 const ACCOUNTS_KEY = 'myrehab_accounts'
 const SESSION_KEY  = 'myrehab_session'
 
-// Merge saved passwords over the defaults so changed credentials survive refresh.
+// ---------------------------------------------------------------------------
+// Local storage helpers (demo mode)
+// ---------------------------------------------------------------------------
 function loadAccounts(): StoredAccount[] {
   try {
     const raw = localStorage.getItem(ACCOUNTS_KEY)
@@ -55,53 +62,189 @@ function loadSession(): SessionUser | null {
   return null
 }
 
+// Derive initials from a display name ("Dr. John Doe" => "JD")
+function initialsFromName(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .map(n => n[0] ?? '')
+    .slice(0, 2)
+    .join('')
+    .toUpperCase()
+}
+
+// ---------------------------------------------------------------------------
+// Error types
+// ---------------------------------------------------------------------------
 export type LoginError = 'empty' | 'not_found' | 'wrong_password'
 export type ChangePasswordError = 'not_logged_in' | 'wrong_password' | 'too_short' | 'mismatch'
 
+// ---------------------------------------------------------------------------
+// Store interface
+// ---------------------------------------------------------------------------
 interface AuthStore {
   accounts: StoredAccount[]
   user: SessionUser | null
-  login: (username: string, password: string) => { ok: boolean; role?: Role; error?: LoginError }
+  isLoading: boolean
+  login: (username: string, password: string) => Promise<{ ok: boolean; role?: Role; error?: LoginError }>
   logout: () => void
   changePassword: (current: string, next: string, confirm: string) => { ok: boolean; error?: ChangePasswordError }
 }
 
-export const useAuthStore = create<AuthStore>((set, get) => ({
-  accounts: loadAccounts(),
-  user: loadSession(),
+// ---------------------------------------------------------------------------
+// Demo-mode login helper (pure synchronous check)
+// ---------------------------------------------------------------------------
+function demoLogin(
+  accounts: StoredAccount[],
+  username: string,
+  password: string,
+): { ok: boolean; role?: Role; error?: LoginError; user?: SessionUser } {
+  const u = username.trim().toLowerCase()
+  if (!u || !password) return { ok: false, error: 'empty' }
+  const acct = accounts.find(a => a.username === u)
+  if (!acct) return { ok: false, error: 'not_found' }
+  if (acct.password !== password) return { ok: false, error: 'wrong_password' }
+  const user: SessionUser = {
+    username: acct.username,
+    role: acct.role,
+    name: acct.name,
+    initials: acct.initials,
+  }
+  return { ok: true, role: acct.role, user }
+}
 
-  login: (username, password) => {
-    const u = username.trim().toLowerCase()
-    if (!u || !password) return { ok: false, error: 'empty' }
-    const acct = get().accounts.find(a => a.username === u)
-    if (!acct) return { ok: false, error: 'not_found' }
-    if (acct.password !== password) return { ok: false, error: 'wrong_password' }
-    const user: SessionUser = { username: acct.username, role: acct.role, name: acct.name, initials: acct.initials }
-    localStorage.setItem(SESSION_KEY, JSON.stringify(user))
-    set({ user })
-    return { ok: true, role: acct.role }
-  },
+// ---------------------------------------------------------------------------
+// Store
+// ---------------------------------------------------------------------------
+export const useAuthStore = create<AuthStore>((set, get) => {
+  // On initialization, if Supabase is enabled, attempt to restore an existing
+  // session asynchronously.  Runs once when the module is first imported.
+  if (SUPABASE_ENABLED && supabase) {
+    // Capture the non-null reference so closures below retain the type.
+    const sb = supabase
+    void sb.auth.getSession().then(async ({ data }) => {
+      if (!data.session) return
+      const sbUser = data.session.user
+      const { data: profileData } = await sb
+        .from('profiles')
+        .select('name, role')
+        .eq('id', sbUser.id)
+        .single()
+      const profile = profileData as Pick<Profile, 'name' | 'role'> | null
+      if (profile) {
+        const user: SessionUser = {
+          username: sbUser.email?.replace('@myrehab.demo', '') ?? sbUser.id,
+          role: profile.role as Role,
+          name: profile.name,
+          initials: initialsFromName(profile.name),
+        }
+        localStorage.setItem(SESSION_KEY, JSON.stringify(user))
+        set({ user, isLoading: false })
+      } else {
+        set({ isLoading: false })
+      }
+    }).catch(() => set({ isLoading: false }))
+  }
 
-  logout: () => {
-    localStorage.removeItem(SESSION_KEY)
-    set({ user: null })
-  },
+  return {
+    accounts: loadAccounts(),
+    user: loadSession(),
+    isLoading: false,
 
-  changePassword: (current, next, confirm) => {
-    const { user, accounts } = get()
-    if (!user) return { ok: false, error: 'not_logged_in' }
-    const acct = accounts.find(a => a.username === user.username)
-    if (!acct) return { ok: false, error: 'not_logged_in' }
-    if (acct.password !== current) return { ok: false, error: 'wrong_password' }
-    if (!next || next.length < 4) return { ok: false, error: 'too_short' }
-    if (next !== confirm) return { ok: false, error: 'mismatch' }
-    const updated = accounts.map(a => a.username === user.username ? { ...a, password: next } : a)
-    persistAccounts(updated)
-    set({ accounts: updated })
-    return { ok: true }
-  },
-}))
+    // -----------------------------------------------------------------------
+    // login
+    // -----------------------------------------------------------------------
+    login: async (username: string, password: string) => {
+      set({ isLoading: true })
 
+      // -- Supabase path --
+      if (SUPABASE_ENABLED && supabase) {
+        const sb = supabase
+        const email = username.trim().toLowerCase() + '@myrehab.demo'
+        const { data: sbData, error: sbError } = await sb.auth.signInWithPassword({
+          email,
+          password,
+        })
+
+        if (!sbError && sbData.session) {
+          const { data: profileData } = await sb
+            .from('profiles')
+            .select('name, role')
+            .eq('id', sbData.session.user.id)
+            .single()
+          const profile = profileData as Pick<Profile, 'name' | 'role'> | null
+
+          if (profile) {
+            const user: SessionUser = {
+              username: username.trim().toLowerCase(),
+              role: profile.role as Role,
+              name: profile.name,
+              initials: initialsFromName(profile.name),
+            }
+            localStorage.setItem(SESSION_KEY, JSON.stringify(user))
+            set({ user, isLoading: false })
+            return { ok: true, role: user.role }
+          }
+        }
+
+        // Supabase sign-in failed — fall back to demo account check
+        const demo = demoLogin(get().accounts, username, password)
+        if (demo.ok && demo.user) {
+          localStorage.setItem(SESSION_KEY, JSON.stringify(demo.user))
+          set({ user: demo.user, isLoading: false })
+          return { ok: true, role: demo.role }
+        }
+        set({ isLoading: false })
+        return { ok: false, error: demo.error }
+      }
+
+      // -- Demo-only path (SUPABASE_ENABLED === false) --
+      const result = demoLogin(get().accounts, username, password)
+      if (result.ok && result.user) {
+        localStorage.setItem(SESSION_KEY, JSON.stringify(result.user))
+        set({ user: result.user, isLoading: false })
+        return { ok: true, role: result.role }
+      }
+      set({ isLoading: false })
+      return { ok: false, error: result.error }
+    },
+
+    // -----------------------------------------------------------------------
+    // logout
+    // -----------------------------------------------------------------------
+    logout: () => {
+      localStorage.removeItem(SESSION_KEY)
+      set({ user: null })
+      if (SUPABASE_ENABLED && supabase) {
+        void supabase.auth.signOut()
+      }
+    },
+
+    // -----------------------------------------------------------------------
+    // changePassword  (operates on demo accounts only; Supabase users manage
+    // passwords through Supabase's own auth flows)
+    // -----------------------------------------------------------------------
+    changePassword: (current: string, next: string, confirm: string) => {
+      const { user, accounts } = get()
+      if (!user) return { ok: false, error: 'not_logged_in' }
+      const acct = accounts.find(a => a.username === user.username)
+      if (!acct) return { ok: false, error: 'not_logged_in' }
+      if (acct.password !== current) return { ok: false, error: 'wrong_password' }
+      if (!next || next.length < 4) return { ok: false, error: 'too_short' }
+      if (next !== confirm) return { ok: false, error: 'mismatch' }
+      const updated = accounts.map(a =>
+        a.username === user.username ? { ...a, password: next } : a,
+      )
+      persistAccounts(updated)
+      set({ accounts: updated })
+      return { ok: true }
+    },
+  }
+})
+
+// ---------------------------------------------------------------------------
+// Helper
+// ---------------------------------------------------------------------------
 export function homePathForRole(role: Role): string {
   if (role === 'patient') return '/patient/today'
   if (role === 'super_admin') return '/super-admin/dashboard'
