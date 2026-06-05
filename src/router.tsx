@@ -1,5 +1,6 @@
 import { createRouter, createRoute, createRootRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AppLayout } from './components/layout/app-layout'
+import { PatientLayout } from './components/layout/patient-layout'
 import { DashboardPage } from './features/dashboard'
 import { PatientsListPage } from './features/patients/list'
 import { PatientDetailPage } from './features/patients/detail'
@@ -10,93 +11,200 @@ import { InsightsPage } from './features/insights'
 import { AppointmentsPage } from './features/appointments'
 import { DocsPage } from './features/docs'
 import { TeamPage } from './features/team'
+import { PatientTodayPage } from './features/patient/today'
+import { PatientExercisesPage } from './features/patient/exercises'
+import { PatientPlanPage } from './features/patient/plan'
+import { PatientProgressPage } from './features/patient/progress'
+import { PatientVitalsPage } from './features/patient/vitals'
+import { PatientSymptomsPage } from './features/patient/symptoms'
+import { PatientNutritionPage } from './features/patient/nutrition'
+import { PatientKnowledgePage } from './features/patient/knowledge'
+import { PatientMessagesPage } from './features/patient/messages'
+import { PatientAppointmentsPage } from './features/patient/appointments'
+import { PatientSettingsPage } from './features/patient/settings'
 
-const rootRoute = createRootRoute({
-  component: () => (
-    <AppLayout>
-      <Outlet />
-    </AppLayout>
-  ),
+const rootRoute = createRootRoute({ component: Outlet })
+
+// ── Admin layout ─────────────────────────────────────────────────────────────
+const adminLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: '_admin',
+  component: AppLayout,
 })
 
 const indexRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/',
   beforeLoad: () => { throw redirect({ to: '/dashboard' }) },
 })
 
 const dashboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/dashboard',
   component: DashboardPage,
 })
 
 const patientsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/patients',
   component: PatientsListPage,
 })
 
 const patientDetailRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/patients/$patientId',
   component: PatientDetailPage,
 })
 
 const doctorsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/doctors',
   component: DoctorsPage,
 })
 
 const membershipRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/membership-requests',
   component: MembershipRequestsPage,
 })
 
 const settingsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/settings',
   component: SettingsPage,
 })
 
 const insightsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/insights',
   component: InsightsPage,
 })
 
 const appointmentsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/appointments',
   component: AppointmentsPage,
 })
 
 const docsRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/docs',
   component: DocsPage,
 })
 
 const teamRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => adminLayoutRoute,
   path: '/team',
   component: TeamPage,
 })
 
+// ── Patient layout ────────────────────────────────────────────────────────────
+const patientLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/patient',
+  component: PatientLayout,
+})
+
+const patientIndexRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/',
+  beforeLoad: () => { throw redirect({ to: '/patient/today' }) },
+})
+
+const patientTodayRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/today',
+  component: PatientTodayPage,
+})
+
+const patientExercisesRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/exercises',
+  component: PatientExercisesPage,
+})
+
+const patientPlanRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/plan',
+  component: PatientPlanPage,
+})
+
+const patientProgressRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/progress',
+  component: PatientProgressPage,
+})
+
+const patientVitalsRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/vitals',
+  component: PatientVitalsPage,
+})
+
+const patientSymptomsRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/symptoms',
+  component: PatientSymptomsPage,
+})
+
+const patientNutritionRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/nutrition',
+  component: PatientNutritionPage,
+})
+
+const patientKnowledgeRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/knowledge',
+  component: PatientKnowledgePage,
+})
+
+const patientMessagesRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/messages',
+  component: PatientMessagesPage,
+})
+
+const patientAppointmentsRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/appointments',
+  component: PatientAppointmentsPage,
+})
+
+const patientSettingsRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/settings',
+  component: PatientSettingsPage,
+})
+
 const routeTree = rootRoute.addChildren([
-  indexRoute,
-  dashboardRoute,
-  patientsRoute,
-  patientDetailRoute,
-  doctorsRoute,
-  membershipRoute,
-  settingsRoute,
-  insightsRoute,
-  appointmentsRoute,
-  docsRoute,
-  teamRoute,
+  adminLayoutRoute.addChildren([
+    indexRoute,
+    dashboardRoute,
+    patientsRoute,
+    patientDetailRoute,
+    doctorsRoute,
+    membershipRoute,
+    settingsRoute,
+    insightsRoute,
+    appointmentsRoute,
+    docsRoute,
+    teamRoute,
+  ]),
+  patientLayoutRoute.addChildren([
+    patientIndexRoute,
+    patientTodayRoute,
+    patientExercisesRoute,
+    patientPlanRoute,
+    patientProgressRoute,
+    patientVitalsRoute,
+    patientSymptomsRoute,
+    patientNutritionRoute,
+    patientKnowledgeRoute,
+    patientMessagesRoute,
+    patientAppointmentsRoute,
+    patientSettingsRoute,
+  ]),
 ])
 
 export const router = createRouter({ routeTree })

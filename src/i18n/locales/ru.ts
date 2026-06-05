@@ -292,6 +292,67 @@ const ru = {
   breadcrumb: {
     home: "Главная",
   },
+  patient: {
+    // Navigation
+    today: "Задачи на сегодня", exercises: "Упражнения", myPlan: "Мой план",
+    myProgress: "Мой прогресс", vitals: "Показатели здоровья", symptoms: "Журнал симптомов",
+    nutrition: "Питание", healthKnowledge: "О моей болезни", messages: "Сообщения",
+    patientAppointments: "Приёмы", patientSettings: "Настройки",
+    // Today
+    greeting: "Здравствуйте", remainingTasks: "Осталось задач: {{count}}",
+    recoveryScore: "Балл восстановления", streak: "{{count}} дней подряд", tasksDone: "{{done}}/{{total}}",
+    todayMeds: "Лекарства на сегодня", nextAppointment: "Следующий приём",
+    take: "Принять", skip: "Пропустить",
+    taken: "Принято", skipped: "Пропущено", pending: "Ожидает",
+    assignedDoctor: "Лечащий врач", noNextAppointment: "Приём не запланирован",
+    todayExercises: "Упражнения на сегодня", noMedsToday: "Сегодня нет лекарств",
+    logMood: "Отметить настроение", mood: "Настроение",
+    happy: "Хорошо", neutral: "Обычно", tired: "Устал", sad: "Грустно",
+    // Exercises
+    allCategories: "Все", strength: "Сила", mobility: "Мобильность",
+    balance: "Баланс", circulation: "Кровообращение", other: "Другое",
+    setsReps: "{{sets}} подх. × {{reps}} раз", frequency: "Частота",
+    markDone: "Выполнено ✓", markUndone: "Отменить", doneToday: "Выполнено сегодня",
+    noExercises: "Упражнения не найдены",
+    // Plan
+    currentPhase: "Текущая фаза", phases: "Фазы", phaseProgress: "{{pct}}% завершено",
+    locked: "Заблокировано", current: "Текущая", completed: "Завершено",
+    diagnosis: "Диагноз", startDate: "Начало", endDate: "Окончание",
+    durationWeeks: "{{n}} нед.",
+    // Progress
+    adherence: "Соблюдение плана", avgPain: "Ср. боль", weeklyAdherence: "Еженедельное соблюдение (%)",
+    painTrend: "Динамика боли", trendGood: "Положительная тенденция", trendBad: "Отрицательная тенденция",
+    // Vitals
+    bloodPressure: "Артериальное давление", heartRate: "Пульс", weight: "Вес",
+    temperature: "Температура", spo2: "SpO₂", newReading: "Новое измерение",
+    systolic: "Систолическое (мм рт. ст.)", diastolic: "Диастолическое (мм рт. ст.)", bpm: "уд/мин",
+    normalRange: "Норма: {{min}}–{{max}}", vitalMin: "Мин", vitalMax: "Макс",
+    trend: "Тренд", vitalHistory: "История измерений", normal: "Норма", high: "Высокое", low: "Низкое",
+    // Symptoms
+    logSymptom: "Записать симптом", symptomType: "Тип симптома",
+    pain: "Боль", swelling: "Отёк", stiffness: "Скованность",
+    fatigue: "Усталость", numbness: "Онемение",
+    severity: "Тяжесть", mild: "Лёгкая", moderate: "Умеренная", severe: "Тяжёлая",
+    intensity: "Интенсивность (1–10)", location: "Локализация", note: "Примечание",
+    emergencyBanner: "⚠️ Обратитесь к врачу — обнаружен тяжёлый симптом",
+    noSymptoms: "Симптомы не зафиксированы",
+    // Nutrition
+    dailyNorms: "Суточные нормы", calories: "Калории", protein: "Белок (г)",
+    calcium: "Кальций (мг)", vitaminD: "Витамин D (мкг)", water: "Вода (л)",
+    recommended: "Рекомендуется", restricted: "Ограничено", supplements: "Добавки",
+    drugFoodWarning: "Предупреждения: препарат–продукт",
+    // Knowledge
+    unread: "Не прочитано", read: "Прочитано", source: "Источник",
+    mental_health: "Психическое здоровье", medications: "Лекарства",
+    warning_signs: "Тревожные признаки", motivation: "Мотивация",
+    condition: "Моё заболевание", exercisesCategory: "Упражнения", markRead: "Отметить прочитанным",
+    // Messages
+    typeMessage: "Напишите сообщение...", send: "Отправить", you: "Вы",
+    // Appointments
+    scheduled: "Предстоящие", past: "Прошедшие", bookAppointment: "Записаться на приём",
+    inPerson: "Очный приём", teleconsult: "Онлайн-консультация",
+    noAppointments: "Приёмов нет",
+  },
 } as const
 
 export default ru
