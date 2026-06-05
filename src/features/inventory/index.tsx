@@ -436,6 +436,7 @@ export function InventoryPage() {
         title={editItem ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot qo\'shish'}
         description="Mahsulot ma'lumotlarini to'ldiring"
         className="max-w-xl"
+        side="right"
       >
         {addSuccess ? (
           <div className="flex flex-col items-center py-8 gap-3">

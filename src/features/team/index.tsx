@@ -109,6 +109,7 @@ export function TeamPage() {
         onOpenChange={open => { setAddOpen(open); if (!open) { setAddSuccess(false); setForm({ name: '', role: '', phone: '', specialization: '' }) } }}
         title={t('team.addMember')}
         description="Yangi jamoa a'zosini qo'shing"
+        side="right"
       >
         {addSuccess ? (
           <div className="flex flex-col items-center py-8 gap-3">

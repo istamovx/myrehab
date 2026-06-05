@@ -133,9 +133,9 @@ export function InsightsPage() {
   ]
   const TEAM_OPTIONS = [
     { value: 'all',    label: t('insights.allTeams') },
-    { value: 'team-a', label: 'Team A' },
-    { value: 'team-b', label: 'Team B' },
-    { value: 'team-c', label: 'Team C' },
+    { value: 'team-a', label: 'A jamoa' },
+    { value: 'team-b', label: 'B jamoa' },
+    { value: 'team-c', label: 'C jamoa' },
   ]
   const PATIENT_OPTIONS = [
     { value: 'all',       label: t('insights.allPatients') },
@@ -146,7 +146,7 @@ export function InsightsPage() {
   const DEPT_OPTIONS = [
     { value: 'ortho',  label: t('team.orthopedic') },
     { value: 'neuro',  label: t('team.neurology') },
-    { value: 'sports', label: 'Sports Medicine' },
+    { value: 'sports', label: 'Sport tibbiyoti' },
   ]
 
   const activePeriod = barPeriod || periodOptions[1]

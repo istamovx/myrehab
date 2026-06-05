@@ -183,6 +183,7 @@ export function DoctorsPage() {
         onOpenChange={open => { setAddOpen(open); if (!open) { setInviteSent(false); setForm({ name: '', phone: '+998', specialization: '' }) } }}
         title={t('doctors.addDoctor')}
         description={t('doctors.smsExpires')}
+        side="right"
       >
         {inviteSent ? (
           <div className="flex flex-col items-center py-8 gap-3">

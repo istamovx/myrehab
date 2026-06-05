@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, ChevronLeft, ChevronRight, Plus, Clock, X } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Plus, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Avatar } from '@/components/ui/avatar'
 import { Select } from '@/components/ui/select'
+import { Dialog } from '@/components/ui/dialog'
+import { TimePicker } from '@/components/ui/time-picker'
 import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 import { PATIENTS } from '@/data/mock-data'
@@ -351,78 +354,69 @@ export function AppointmentsPage() {
         </div>
       </div>
 
-      {/* New Appointment Modal */}
-      {addOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40" onClick={() => setAddOpen(false)} />
-          <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{t('appointments.newAppointment')}</h3>
-              <button onClick={() => setAddOpen(false)} className="text-[var(--text-tertiary)]"><X size={18} /></button>
+      {/* New Appointment — right side sheet */}
+      <Dialog
+        open={addOpen}
+        onOpenChange={open => { setAddOpen(open); if (!open) { setAddSuccess(false); setAptForm({ patientId: '', type: 'in_person', time: '', duration: '60' }) } }}
+        title={t('appointments.newAppointment')}
+        description="Yangi qabul ma'lumotlarini kiriting"
+        side="right"
+      >
+        {addSuccess ? (
+          <div className="flex flex-col items-center py-8 gap-3">
+            <div className="size-14 rounded-full bg-[var(--bg-success-primary)] flex items-center justify-center">
+              <Plus size={26} className="text-[var(--fg-success-primary)]" />
             </div>
-
-            {addSuccess ? (
-              <div className="text-center py-6">
-                <p className="text-green-600 text-[16px] font-semibold">✓ Uchrashuv qo'shildi!</p>
-              </div>
-            ) : (
-              <>
-                <div>
-                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Bemor *</label>
-                  <Select
-                    value={aptForm.patientId}
-                    onValueChange={v => setAptForm(f => ({ ...f, patientId: v }))}
-                    options={
-                      SUPABASE_ENABLED
-                        ? allApts.map(a => ({ value: a.patientId, label: a.patientName }))
-                        : PATIENTS.map(p => ({ value: p.id, label: p.name }))
-                    }
-                    placeholder="Bemorni tanlang"
-                    triggerClassName="w-full mt-1"
-                  />
-                </div>
-                <div>
-                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Tur</label>
-                  <Select
-                    value={aptForm.type}
-                    onValueChange={v => setAptForm(f => ({ ...f, type: v }))}
-                    options={[
-                      { value: 'in_person', label: 'In-person' },
-                      { value: 'video',     label: 'Video' },
-                      { value: 'phone',     label: 'Telefon' },
-                    ]}
-                    triggerClassName="w-full mt-1"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Vaqt *</label>
-                    <input type="time" value={aptForm.time} onChange={e => setAptForm(f => ({ ...f, time: e.target.value }))}
-                      className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Davomiyligi (min)</label>
-                    <input type="number" value={aptForm.duration} onChange={e => setAptForm(f => ({ ...f, duration: e.target.value }))} min={15} step={15}
-                      className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
-                    />
-                  </div>
-                </div>
-                <div className="flex gap-3 pt-1">
-                  <button onClick={() => setAddOpen(false)} className="flex-1 py-2.5 rounded-lg border border-[var(--border-secondary)] text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors">
-                    {t('common.cancel')}
-                  </button>
-                  <button onClick={handleAddApt} disabled={!aptForm.patientId || !aptForm.time}
-                    className="flex-1 py-2.5 rounded-lg bg-[var(--fg-brand-primary)] text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40"
-                  >
-                    {t('common.add')}
-                  </button>
-                </div>
-              </>
-            )}
+            <p className="text-[16px] font-semibold text-[var(--text-primary)]">Qabul qo'shildi!</p>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="space-y-4">
+            <div>
+              <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Bemor *</label>
+              <Select
+                value={aptForm.patientId}
+                onValueChange={v => setAptForm(f => ({ ...f, patientId: v }))}
+                options={
+                  SUPABASE_ENABLED
+                    ? allApts.map(a => ({ value: a.patientId, label: a.patientName }))
+                    : PATIENTS.map(p => ({ value: p.id, label: p.name }))
+                }
+                placeholder="Bemorni tanlang"
+                triggerClassName="w-full"
+              />
+            </div>
+            <div>
+              <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Tur</label>
+              <Select
+                value={aptForm.type}
+                onValueChange={v => setAptForm(f => ({ ...f, type: v }))}
+                options={[
+                  { value: 'in_person', label: 'In-person' },
+                  { value: 'video',     label: 'Video' },
+                  { value: 'phone',     label: 'Telefon' },
+                ]}
+                triggerClassName="w-full"
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Vaqt *</label>
+                <TimePicker value={aptForm.time} onChange={v => setAptForm(f => ({ ...f, time: v }))} />
+              </div>
+              <div>
+                <label className="text-[13px] font-semibold text-[var(--text-secondary)] block mb-1.5">Davomiyligi (min)</label>
+                <Input type="number" value={aptForm.duration} onChange={e => setAptForm(f => ({ ...f, duration: e.target.value }))} min={15} step={15} />
+              </div>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button variant="secondary" className="flex-1" onClick={() => setAddOpen(false)}>{t('common.cancel')}</Button>
+              <Button className="flex-1" onClick={handleAddApt} disabled={!aptForm.patientId || !aptForm.time}>
+                {t('common.add')}
+              </Button>
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   )
 }

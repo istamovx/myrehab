@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { useTranslation } from 'react-i18next'
 import {
   X, ClipboardList, Users, FilePlus, Activity, MessageSquare, Bell,
   Video, UsersRound, Dumbbell, Newspaper, TrendingUp, History, Settings,
@@ -82,8 +81,6 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) {
-  const { t } = useTranslation()
-
   return (
     <aside
       className={cn(
@@ -109,10 +106,7 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
           <>
             <div className="flex items-center gap-[9px]">
               <img src="/logo.svg" alt="" className="size-7 shrink-0" />
-              <div>
-                <span className="font-extrabold text-[15px] tracking-[-0.3px] text-[var(--text-primary)] block leading-none">MyRehab</span>
-                <span className="text-[10px] text-[var(--text-quaternary)] font-medium">{t('nav.clinicalPlatform')}</span>
-              </div>
+              <span className="font-extrabold text-[17px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
             </div>
             <div className="flex items-center gap-1">
               {onClose && (
