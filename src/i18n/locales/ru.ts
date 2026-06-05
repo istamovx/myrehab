@@ -204,6 +204,22 @@ const ru = {
     inProgress: "В процессе",
     pending:    "Ожидает",
   },
+  header: {
+    notifications:     "Уведомления",
+    viewProfile:       "Профиль",
+    settings:          "Настройки",
+    logout:            "Выход",
+    noNotifications:   "Нет уведомлений",
+    searchPlaceholder: "Поиск пациентов, документов, приёмов...",
+  },
+  roles: {
+    specialist: "Реабилитолог",
+    doctor:     "Врач",
+    admin:      "Администратор",
+  },
+  breadcrumb: {
+    home: "Главная",
+  },
 } as const
 
 export default ru

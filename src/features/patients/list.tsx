@@ -8,6 +8,7 @@ import { StatusBadge, TagBadge } from '@/components/ui/badge'
 import { Avatar } from '@/components/ui/avatar'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { PageHeader } from '@/components/layout/page-header'
 import { PATIENTS } from '@/data/mock-data'
 import { formatDate, cn } from '@/lib/utils'
 
@@ -85,31 +86,31 @@ function PatientRow({ patient, selected, onSelect }: {
 }) {
   const { t } = useTranslation()
   return (
-    <tr className="border-b border-[var(--border-secondary)] hover:bg-[var(--bg-secondary)] transition-colors group">
-      <td className="pl-4 py-3">
+    <tr className="border-b border-[var(--border-secondary)] last:border-0 hover:bg-[var(--bg-secondary-subtle)] transition-colors group">
+      <td className="pl-5 py-4">
         <Checkbox checked={selected} onCheckedChange={() => onSelect(patient.id)} />
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4">
         <Link to="/patients/$patientId" params={{ patientId: patient.id }}>
           <div className="flex items-center gap-3 cursor-pointer">
             <Avatar name={patient.name} size="sm" />
             <div>
-              <p className="text-[11px] text-[var(--text-brand-primary)] font-medium uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
-              <p className="text-sm font-medium text-[var(--text-primary)]">{patient.name}</p>
+              <p className="text-[11px] text-[var(--text-brand-primary)] font-semibold uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
+              <p className="text-[14px] font-semibold text-[var(--text-primary)]">{patient.name}</p>
             </div>
           </div>
         </Link>
       </td>
-      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)] max-w-[180px] truncate">{patient.procedure}</td>
-      <td className="px-4 py-3"><StatusBadge status={patient.status} /></td>
-      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)]">{formatDate(patient.procedureDate)}</td>
-      <td className="px-4 py-3 text-sm text-[var(--text-tertiary)]">{patient.attendingPhysician}</td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4 text-[14px] text-[var(--text-tertiary)] max-w-[180px] truncate">{patient.procedure}</td>
+      <td className="px-5 py-4"><StatusBadge status={patient.status} /></td>
+      <td className="px-5 py-4 text-[14px] text-[var(--text-tertiary)]">{formatDate(patient.procedureDate)}</td>
+      <td className="px-5 py-4 text-[14px] text-[var(--text-tertiary)]">{patient.attendingPhysician}</td>
+      <td className="px-5 py-4">
         <div className="flex flex-wrap gap-1">
           {patient.tags.slice(0, 2).map(tag => <TagBadge key={tag} tag={tag} />)}
         </div>
       </td>
-      <td className="pr-4 py-3">
+      <td className="pr-5 py-4">
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <Link to="/patients/$patientId" params={{ patientId: patient.id }}>
             <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] transition-colors cursor-pointer">
@@ -174,57 +175,58 @@ export function PatientsListPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('patients.title')}</h1>
-          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('patients.subtitle', { count: PATIENTS.length })}</p>
-        </div>
+    <div>
+      <PageHeader
+        title={t('patients.title')}
+        subtitle={t('patients.subtitle', { count: PATIENTS.length })}
+        crumbs={[{ label: t('nav.patients') }]}
+        actions={
+          <>
+            <div className="w-44 sm:w-56">
+              <Input
+                placeholder={t('patients.searchPlaceholder')}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                leftIcon={<Search />}
+                uiSize="sm"
+              />
+            </div>
+            <Select value={filterBy} onValueChange={setFilterBy} options={FILTER_OPTIONS} placeholder={t('common.filter')} />
+            <Select value={sortBy} onValueChange={setSortBy} options={SORT_OPTIONS} placeholder={t('common.sortBy')} />
 
-        <div className="flex items-center gap-2 flex-wrap">
-          <Input
-            placeholder={t('patients.searchPlaceholder')}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            leftIcon={<Search size={14} />}
-            className="w-52"
-          />
-          <Select value={filterBy} onValueChange={setFilterBy} options={FILTER_OPTIONS} placeholder={t('common.filter')} />
-          <Select value={sortBy} onValueChange={setSortBy} options={SORT_OPTIONS} placeholder={t('common.sortBy')} />
+            <div className="flex items-center h-9 bg-[var(--bg-tertiary)] rounded-lg p-0.5 gap-0.5">
+              <button
+                onClick={() => setViewMode('list')}
+                className={cn(
+                  'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
+                  viewMode === 'list' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] [box-shadow:var(--shadow-xs)]' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
+                )}
+              >
+                <List size={15} />
+              </button>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={cn(
+                  'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
+                  viewMode === 'grid' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] [box-shadow:var(--shadow-xs)]' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
+                )}
+              >
+                <LayoutGrid size={15} />
+              </button>
+            </div>
 
-          <div className="flex items-center h-9 bg-[var(--bg-tertiary)] rounded-lg p-0.5 gap-0.5">
-            <button
-              onClick={() => setViewMode('list')}
-              className={cn(
-                'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
-                viewMode === 'list' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-xs' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
-              )}
-            >
-              <List size={14} />
-            </button>
-            <button
-              onClick={() => setViewMode('grid')}
-              className={cn(
-                'h-8 w-8 rounded-md flex items-center justify-center transition-all cursor-pointer',
-                viewMode === 'grid' ? 'bg-[var(--bg-primary)] text-[var(--text-primary)] shadow-xs' : 'text-[var(--fg-quaternary)] hover:text-[var(--text-tertiary)]',
-              )}
-            >
-              <LayoutGrid size={14} />
-            </button>
-          </div>
+            <Button variant="secondary" size="sm">
+              <Download size={15} />
+              <span className="hidden sm:inline">{t('common.export')}</span>
+            </Button>
 
-          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer shadow-xs">
-            <Download size={14} className="text-[var(--fg-quaternary)]" />
-            {t('common.export')}
-          </button>
-
-          <Button size="sm" className="h-9 px-4">
-            <Plus size={14} />
-            {t('patients.newPatient')}
-          </Button>
-        </div>
-      </div>
+            <Button size="sm">
+              <Plus size={15} />
+              {t('patients.newPatient')}
+            </Button>
+          </>
+        }
+      />
 
       {/* Content */}
       {viewMode === 'grid' ? (
@@ -244,19 +246,19 @@ export function PatientsListPage() {
           )}
         </div>
       ) : (
-        <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] overflow-hidden">
+        <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] [box-shadow:var(--shadow-xs)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-secondary)]">
-                  <th className="pl-4 py-3 w-10">
+                <tr className="bg-[var(--bg-secondary-subtle)] border-b border-[var(--border-secondary)]">
+                  <th className="pl-5 py-3 w-10">
                     <Checkbox
                       checked={allSelected ? true : selected.size > 0 ? 'indeterminate' : false}
                       onCheckedChange={toggleAll}
                     />
                   </th>
                   {[t('common.name'), t('patients.procedure'), t('common.status'), t('common.date'), t('patients.physician'), t('patients.tags'), ''].map((h, i) => (
-                    <th key={i} className="px-4 py-3 text-left text-xs font-medium text-[var(--text-quaternary)]">
+                    <th key={i} className="px-5 py-3 text-left text-[12px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)] whitespace-nowrap">
                       {h && (
                         <span className="flex items-center gap-1">
                           {h}
@@ -288,8 +290,8 @@ export function PatientsListPage() {
           </div>
 
           {filtered.length > 0 && (
-            <div className="px-4 py-3 border-t border-[var(--border-secondary)] flex items-center justify-between">
-              <p className="text-sm text-[var(--text-quaternary)]">
+            <div className="px-5 py-3.5 border-t border-[var(--border-secondary)] flex items-center justify-between bg-[var(--bg-secondary-subtle)]">
+              <p className="text-[13px] text-[var(--text-tertiary)]">
                 {t('patients.showingOf', { count: filtered.length, total: PATIENTS.length })}
               </p>
             </div>

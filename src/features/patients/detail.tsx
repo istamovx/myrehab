@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/badge'
 import { Avatar } from '@/components/ui/avatar'
 import { CircleCheck } from '@/components/ui/checkbox'
+import { PageHeader } from '@/components/layout/page-header'
 import { PATIENTS } from '@/data/mock-data'
 import { formatDate, cn } from '@/lib/utils'
 
@@ -103,18 +104,22 @@ export function PatientDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb / header */}
-      <div className="flex items-center gap-3">
-        <Link to="/patients">
-          <button className="size-9 rounded-lg border border-[var(--border-primary)] bg-[var(--bg-primary)] hover:bg-[var(--bg-secondary)] flex items-center justify-center transition-colors cursor-pointer shadow-xs">
-            <ChevronLeft size={16} className="text-[var(--text-quaternary)]" />
-          </button>
-        </Link>
-        <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('patientDetail.title')}</h1>
-          <p className="text-sm text-[var(--text-quaternary)]">{t('patientDetail.subtitle', { id: patient.id, name: patient.name })}</p>
-        </div>
-      </div>
+      <PageHeader
+        title={t('patientDetail.title')}
+        subtitle={t('patientDetail.subtitle', { id: patient.id, name: patient.name })}
+        crumbs={[
+          { label: t('nav.patients'), to: '/patients' },
+          { label: patient.name },
+        ]}
+        actions={
+          <Link to="/patients">
+            <button className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg border border-[var(--border-secondary)] bg-[var(--bg-primary)] hover:bg-[var(--bg-secondary)] text-[13px] font-medium text-[var(--text-secondary)] transition-colors cursor-pointer [box-shadow:var(--shadow-xs)]">
+              <ChevronLeft size={16} className="text-[var(--fg-quaternary)]" />
+              {t('nav.patients')}
+            </button>
+          </Link>
+        }
+      />
 
       {/* Main grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">

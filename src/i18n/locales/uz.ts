@@ -204,6 +204,22 @@ const uz = {
     inProgress: "Jarayonda",
     pending:    "Kutilmoqda",
   },
+  header: {
+    notifications:     "Bildirishnomalar",
+    viewProfile:       "Profil",
+    settings:          "Sozlamalar",
+    logout:            "Chiqish",
+    noNotifications:   "Bildirishnoma yo'q",
+    searchPlaceholder: "Bemor, hujjat yoki uchrashuv qidirish...",
+  },
+  roles: {
+    specialist: "Reabilitatsiya mutaxassisi",
+    doctor:     "Shifokor",
+    admin:      "Administrator",
+  },
+  breadcrumb: {
+    home: "Bosh sahifa",
+  },
 } as const
 
 export default uz

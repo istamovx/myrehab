@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, Search, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp } from 'lucide-react'
+import { Calendar, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp } from 'lucide-react'
 import { PillSelect } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
+import { PageHeader } from '@/components/layout/page-header'
 import { Avatar } from '@/components/ui/avatar'
 import { DonutChart } from '@/components/charts/donut-chart'
 import { DOCTORS, DASHBOARD_ALERTS } from '@/data/mock-data'
@@ -64,7 +64,6 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
 export function DashboardPage() {
   const { t } = useTranslation()
   const [department, setDepartment] = useState('orthopedics')
-  const [search, setSearch] = useState('')
 
   const DEPARTMENTS = [
     { value: 'orthopedics', label: t('team.orthopedic') },
@@ -75,30 +74,19 @@ export function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3 flex-wrap">
-          <div>
-            <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('dashboard.title')}</h1>
-            <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('dashboard.subtitle')}</p>
-          </div>
-          <PillSelect value={department} onValueChange={setDepartment} options={DEPARTMENTS} />
-        </div>
-
-        <div className="flex items-center gap-2 flex-wrap">
-          <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-primary)] rounded-lg text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer shadow-xs">
-            <Calendar size={14} className="text-[var(--fg-quaternary)]" />
-            Apr 03, 2025
-          </button>
-          <Input
-            placeholder={t('common.search')}
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            leftIcon={<Search size={14} />}
-            className="w-48"
-          />
-        </div>
-      </div>
+      <PageHeader
+        title={t('dashboard.title')}
+        subtitle={t('dashboard.subtitle')}
+        actions={
+          <>
+            <PillSelect value={department} onValueChange={setDepartment} options={DEPARTMENTS} />
+            <button className="inline-flex items-center gap-2 h-9 px-3.5 bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg text-[13px] font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer [box-shadow:var(--shadow-xs)]">
+              <Calendar size={14} className="text-[var(--fg-quaternary)]" />
+              Apr 03, 2025
+            </button>
+          </>
+        }
+      />
 
       {/* Stats row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Search, Plus, FileText, Download, Eye } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 
 const DOCS = [
@@ -36,23 +37,26 @@ export function DocsPage() {
   const filtered = activeCat === 'all' ? DOCS : DOCS.filter(d => d.categoryKey === activeCat)
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('documents.title')}</h1>
-          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('documents.subtitle', { count: DOCS.length })}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Input placeholder={t('documents.searchPlaceholder')} leftIcon={<Search size={14} />} className="w-52" />
-          <Button size="md">
-            <Plus size={15} />
-            {t('documents.upload')}
-          </Button>
-        </div>
-      </div>
+    <div>
+      <PageHeader
+        title={t('documents.title')}
+        subtitle={t('documents.subtitle', { count: DOCS.length })}
+        crumbs={[{ label: t('nav.documents') }]}
+        actions={
+          <>
+            <div className="w-44 sm:w-56">
+              <Input placeholder={t('documents.searchPlaceholder')} leftIcon={<Search />} uiSize="sm" />
+            </div>
+            <Button size="sm">
+              <Plus size={15} />
+              {t('documents.upload')}
+            </Button>
+          </>
+        }
+      />
 
       {/* Category tabs */}
-      <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="flex items-center gap-1.5 flex-wrap mb-5">
         {CATEGORIES.map(cat => (
           <button
             key={cat.key}
@@ -69,40 +73,40 @@ export function DocsPage() {
         ))}
       </div>
 
-      <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] overflow-hidden">
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] [box-shadow:var(--shadow-xs)] overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="bg-[var(--bg-secondary)] border-b border-[var(--border-secondary)]">
+              <tr className="bg-[var(--bg-secondary-subtle)] border-b border-[var(--border-secondary)]">
                 {[t('documents.name'), t('documents.category'), t('documents.size'), t('documents.lastUpdated'), ''].map((h, i) => (
-                  <th key={i} className="px-5 py-3 text-left text-xs font-medium text-[var(--text-quaternary)]">
+                  <th key={i} className="px-5 py-3 text-left text-[12px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)] whitespace-nowrap">
                     {h}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border-secondary)]">
+            <tbody>
               {filtered.map(doc => (
-                <tr key={doc.id} className="hover:bg-[var(--bg-secondary)] transition-colors group">
-                  <td className="px-5 py-3.5">
+                <tr key={doc.id} className="border-b border-[var(--border-secondary)] last:border-0 hover:bg-[var(--bg-secondary-subtle)] transition-colors group">
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       <div className="size-9 rounded-lg bg-[var(--bg-error-primary)] flex items-center justify-center shrink-0">
                         <FileText size={15} className="text-[var(--fg-error-primary)]" />
                       </div>
-                      <span className="text-sm font-medium text-[var(--text-primary)]">{doc.name}</span>
+                      <span className="text-[14px] font-medium text-[var(--text-primary)]">{doc.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-4">
                     <span className={cn(
-                      'px-2.5 py-0.5 text-xs font-medium rounded-full',
+                      'px-2.5 py-0.5 text-[12px] font-medium rounded-full',
                       CAT_BADGE[doc.categoryKey] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                     )}>
                       {t(`documents.${doc.categoryKey}` as any, doc.categoryKey)}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-[var(--text-quaternary)]">{doc.size}</td>
-                  <td className="px-5 py-3.5 text-sm text-[var(--text-quaternary)]">{doc.updated}</td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-5 py-4 text-[14px] text-[var(--text-tertiary)]">{doc.size}</td>
+                  <td className="px-5 py-4 text-[14px] text-[var(--text-tertiary)]">{doc.updated}</td>
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity justify-end">
                       <button className="size-8 rounded-lg hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] hover:text-[var(--text-secondary)] cursor-pointer">
                         <Eye size={14} />
@@ -118,8 +122,8 @@ export function DocsPage() {
           </table>
         </div>
 
-        <div className="px-5 py-3 border-t border-[var(--border-secondary)]">
-          <p className="text-sm text-[var(--text-quaternary)]">
+        <div className="px-5 py-3.5 border-t border-[var(--border-secondary)] bg-[var(--bg-secondary-subtle)]">
+          <p className="text-[13px] text-[var(--text-tertiary)]">
             {t('documents.showingOf', { count: filtered.length, total: DOCS.length })}
           </p>
         </div>

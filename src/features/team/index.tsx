@@ -4,6 +4,7 @@ import { Search, Plus, Phone, Mail, MoreHorizontal } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
+import { PageHeader } from '@/components/layout/page-header'
 import { DOCTORS } from '@/data/mock-data'
 import { cn } from '@/lib/utils'
 
@@ -20,23 +21,26 @@ export function TeamPage() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-[var(--text-primary)]">{t('team.title')}</h1>
-          <p className="text-sm text-[var(--text-quaternary)] mt-0.5">{t('team.subtitle', { count: DOCTORS.length })}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Input placeholder={t('team.searchPlaceholder')} leftIcon={<Search size={14} />} className="w-52" />
-          <Button size="md">
-            <Plus size={15} />
-            {t('team.addMember')}
-          </Button>
-        </div>
-      </div>
+    <div>
+      <PageHeader
+        title={t('team.title')}
+        subtitle={t('team.subtitle', { count: DOCTORS.length })}
+        crumbs={[{ label: t('nav.team') }]}
+        actions={
+          <>
+            <div className="w-44 sm:w-56">
+              <Input placeholder={t('team.searchPlaceholder')} leftIcon={<Search />} uiSize="sm" />
+            </div>
+            <Button size="sm">
+              <Plus size={15} />
+              {t('team.addMember')}
+            </Button>
+          </>
+        }
+      />
 
       {/* Filter tabs */}
-      <div className="flex items-center gap-1.5 flex-wrap">
+      <div className="flex items-center gap-1.5 flex-wrap mb-5">
         {SPECIALIZATIONS.map(s => (
           <button
             key={s.key}
