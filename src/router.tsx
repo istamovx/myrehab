@@ -28,6 +28,7 @@ import { SuperAdminOrganizationsPage } from './features/super-admin/organization
 import { SuperAdminPaymentsPage } from './features/super-admin/payments'
 import { SuperAdminSettingsPage } from './features/super-admin/settings'
 import { LoginPage } from './features/auth/login'
+import { LandingPage } from './features/landing'
 import { useAuthStore, homePathForRole, type Role } from './store/auth'
 
 const rootRoute = createRootRoute({ component: Outlet })
@@ -50,14 +51,15 @@ const loginRoute = createRoute({
   component: LoginPage,
 })
 
-// ── Root index → route by auth state ───────────────────────────────────────────
+// ── Root index → landing page for guests, dashboard for logged-in users ────────
 const rootIndexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
   beforeLoad: () => {
     const user = useAuthStore.getState().user
-    throw redirect({ to: user ? homePathForRole(user.role) : '/login' })
+    if (user) throw redirect({ to: homePathForRole(user.role) })
   },
+  component: LandingPage,
 })
 
 // ── Admin layout ─────────────────────────────────────────────────────────────

@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse,
-  Globe, ChevronDown, Activity, Check,
+  Globe, ChevronDown, Activity, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
 } from 'lucide-react'
 import { useAuthStore, homePathForRole, type Role } from '@/store/auth'
 import { useLangStore } from '@/store/lang'
@@ -20,13 +20,43 @@ interface DemoAccount {
   username: string
   password: string
   icon: React.ElementType
+  label: string
   color: string
+  bg: string
+  border: string
 }
 
 const DEMO_ACCOUNTS: DemoAccount[] = [
-  { role: 'super_admin', username: 'superadmin', password: 'admin123',   icon: ShieldCheck,  color: 'from-indigo-500 to-indigo-700' },
-  { role: 'doctor',      username: 'doctor',     password: 'doctor123',  icon: Stethoscope,  color: 'from-blue-500 to-blue-700' },
-  { role: 'patient',     username: 'patient',    password: 'patient123', icon: HeartPulse,   color: 'from-teal-500 to-teal-700' },
+  {
+    role: 'super_admin',
+    username: 'superadmin',
+    password: 'admin123',
+    icon: ShieldCheck,
+    label: 'Super Admin',
+    color: '#818cf8',
+    bg: 'rgba(99,102,241,0.12)',
+    border: 'rgba(99,102,241,0.25)',
+  },
+  {
+    role: 'doctor',
+    username: 'doctor',
+    password: 'doctor123',
+    icon: Stethoscope,
+    label: 'Shifokor',
+    color: '#22d3ee',
+    bg: 'rgba(6,182,212,0.12)',
+    border: 'rgba(6,182,212,0.25)',
+  },
+  {
+    role: 'patient',
+    username: 'patient',
+    password: 'patient123',
+    icon: HeartPulse,
+    label: 'Bemor',
+    color: '#34d399',
+    bg: 'rgba(16,185,129,0.12)',
+    border: 'rgba(16,185,129,0.25)',
+  },
 ]
 
 export function LoginPage() {
@@ -41,17 +71,10 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const roleLabel = (role: Role) =>
-    role === 'super_admin' ? t('auth.superAdmin')
-      : role === 'doctor' ? t('auth.doctor')
-      : t('auth.patient')
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
-
-    // Tiny delay to simulate a request and show the loading state.
     setTimeout(() => {
       const res = login(username, password)
       setLoading(false)
@@ -59,9 +82,9 @@ export function LoginPage() {
         navigate({ to: homePathForRole(res.role) })
       } else {
         setError(
-          res.error === 'empty' ? t('auth.fillAllFields')
-            : res.error === 'not_found' ? t('auth.userNotFound')
-            : t('auth.wrongPassword'),
+          res.error === 'empty'     ? t('auth.fillAllFields')
+          : res.error === 'not_found' ? t('auth.userNotFound')
+          : t('auth.wrongPassword'),
         )
       }
     }, 350)
@@ -74,133 +97,218 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex bg-[var(--bg-secondary)]">
-      {/* Left brand panel — desktop only */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#2970FF] to-[#1f4fcc] flex-col justify-between p-12 text-white">
-        <div className="absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-2xl" />
-        <div className="absolute -bottom-32 -left-16 size-96 rounded-full bg-white/10 blur-2xl" />
+    <div
+      className="min-h-screen flex overflow-hidden"
+      style={{ background: '#020817', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+    >
+      {/* ── Left panel ──────────────────────────────────────────────────────── */}
+      <div
+        className="hidden lg:flex lg:w-[52%] relative overflow-hidden flex-col justify-between p-12"
+        style={{ background: 'linear-gradient(145deg,#0f172a 0%,#1e1b4b 60%,#0c1425 100%)' }}
+      >
+        {/* Orbs */}
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 500, height: 500, top: -100, left: -100, background: 'radial-gradient(circle,rgba(99,102,241,0.28) 0%,transparent 65%)', filter: 'blur(60px)', animation: 'float 10s ease-in-out infinite' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 400, height: 400, bottom: -80, right: -80, background: 'radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 65%)', filter: 'blur(50px)', animation: 'float 13s ease-in-out infinite reverse' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 250, height: 250, top: '50%', left: '55%', background: 'radial-gradient(circle,rgba(6,182,212,0.15) 0%,transparent 65%)', filter: 'blur(40px)', animation: 'float 11s ease-in-out infinite 4s' }} />
 
-        <div className="relative flex items-center gap-3">
-          <div className="size-11 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-            <Activity size={24} className="text-white" />
+        {/* Dot grid */}
+        <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px)', backgroundSize: '28px 28px' }} />
+
+        {/* Logo */}
+        <div className="relative flex items-center gap-3" style={{ animation: 'heroFadeUp 0.6s ease-out both' }}>
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', boxShadow: '0 0 20px rgba(99,102,241,0.4)' }}>
+            <Activity size={22} className="text-white" />
           </div>
           <div>
-            <p className="text-xl font-extrabold tracking-tight leading-none">MyRehab</p>
-            <p className="text-[12px] text-white/70 font-medium mt-0.5">{t('auth.platformSubtitle')}</p>
+            <p className="text-[20px] font-extrabold text-white tracking-tight leading-none">My<span style={{ color: '#818cf8' }}>Rehab</span></p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(248,250,252,0.45)' }}>{t('auth.platformSubtitle')}</p>
           </div>
         </div>
 
-        <div className="relative">
-          <h1 className="text-[34px] font-extrabold leading-tight">{t('auth.heroTitle')}</h1>
-          <p className="text-[15px] text-white/80 mt-3 max-w-md leading-relaxed">{t('auth.heroSubtitle')}</p>
+        {/* Main content */}
+        <div className="relative" style={{ animation: 'heroFadeUp 0.6s ease-out 0.1s both' }}>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 text-xs font-bold"
+               style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc' }}>
+            <Sparkles size={12} /> 2025 yilning #1 reabilitatsiya platformasi
+          </div>
 
-          <div className="mt-8 space-y-3">
-            {[t('auth.feature1'), t('auth.feature2'), t('auth.feature3')].map(f => (
-              <div key={f} className="flex items-center gap-3">
-                <div className="size-5 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                  <Check size={12} className="text-white" />
+          <h1 className="text-[38px] font-extrabold leading-tight mb-4">
+            <span className="text-white">{t('auth.heroTitle')}</span>
+            <br />
+            <span style={{ background: 'linear-gradient(135deg,#a5b4fc 0%,#c4b5fd 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+              aqlli platformasi
+            </span>
+          </h1>
+          <p className="text-[15px] leading-relaxed mb-8 max-w-sm" style={{ color: 'rgba(248,250,252,0.55)' }}>
+            {t('auth.heroSubtitle')}
+          </p>
+
+          <div className="space-y-3">
+            {[
+              { icon: Shield,     color: '#818cf8', text: t('auth.feature1') },
+              { icon: TrendingUp, color: '#34d399', text: t('auth.feature2') },
+              { icon: Users,      color: '#22d3ee', text: t('auth.feature3') },
+            ].map(f => {
+              const Icon = f.icon
+              return (
+                <div key={f.text} className="flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${f.color}18`, border: `1px solid ${f.color}30` }}>
+                    <Icon size={14} style={{ color: f.color }} />
+                  </div>
+                  <span className="text-sm" style={{ color: 'rgba(248,250,252,0.7)' }}>{f.text}</span>
                 </div>
-                <span className="text-[14px] text-white/90">{f}</span>
+              )
+            })}
+          </div>
+
+          {/* Mini stats */}
+          <div className="flex gap-6 mt-10 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            {[['24+', 'Tashkilot'], ['1200+', 'Bemor'], ['98%', 'Muvaffaqiyat']].map(([v, l]) => (
+              <div key={l}>
+                <div className="text-lg font-black" style={{ color: '#818cf8' }}>{v}</div>
+                <div className="text-xs" style={{ color: 'rgba(248,250,252,0.35)' }}>{l}</div>
               </div>
             ))}
           </div>
         </div>
 
-        <p className="relative text-[12px] text-white/50">© 2026 MyRehab. {t('auth.allRights')}</p>
+        <p className="relative text-xs" style={{ color: 'rgba(248,250,252,0.3)' }}>© 2025 MyRehab. {t('auth.allRights')}</p>
       </div>
 
-      {/* Right form panel */}
-      <div className="flex-1 flex flex-col">
-        {/* Top bar: language switcher */}
-        <div className="flex items-center justify-between p-5">
+      {/* ── Right panel ─────────────────────────────────────────────────────── */}
+      <div className="flex-1 flex flex-col" style={{ background: 'rgba(255,255,255,0.015)', borderLeft: '1px solid rgba(255,255,255,0.06)' }}>
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-6 py-4">
+          <a href="/" className="flex items-center gap-1.5 text-sm transition-colors"
+             style={{ color: 'rgba(248,250,252,0.45)' }}
+             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.8)')}
+             onMouseLeave={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.45)')}>
+            <ArrowLeft size={14} />
+            <span>Bosh sahifa</span>
+          </a>
+
+          {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2">
-            <div className="size-8 rounded-lg bg-gradient-to-br from-[#2970FF] to-[#1f4fcc] flex items-center justify-center">
-              <Activity size={18} className="text-white" />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
+              <Activity size={14} className="text-white" />
             </div>
-            <span className="font-extrabold text-[15px] text-[var(--text-primary)]">MyRehab</span>
+            <span className="font-bold text-[15px] text-white">My<span style={{ color: '#818cf8' }}>Rehab</span></span>
           </div>
-          <div className="ml-auto">
-            <Menu>
-              <MenuTrigger className="inline-flex items-center gap-1.5 h-9 px-3 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] cursor-pointer outline-none transition-colors">
-                <Globe size={16} />
-                <span className="text-[13px] font-semibold uppercase">{lang}</span>
-                <ChevronDown size={13} className="text-[var(--text-quaternary)]" />
-              </MenuTrigger>
-              <MenuContent>
-                {LANGS.map(l => (
-                  <MenuItem key={l.code} onClick={() => setLang(l.code)}>
-                    <span className="w-6 text-[12px] font-bold uppercase text-[var(--text-quaternary)]">{l.code}</span>
-                    <span className="flex-1">{l.label}</span>
-                    {lang === l.code && <Check size={15} className="text-[var(--fg-brand-primary)]" />}
-                  </MenuItem>
-                ))}
-              </MenuContent>
-            </Menu>
-          </div>
+
+          {/* Language switcher */}
+          <Menu>
+            <MenuTrigger className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-sm outline-none cursor-pointer transition-all"
+                         style={{ color: 'rgba(248,250,252,0.5)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <Globe size={14} />
+              <span className="uppercase font-bold" style={{ fontSize: 11 }}>{lang}</span>
+              <ChevronDown size={12} />
+            </MenuTrigger>
+            <MenuContent>
+              {LANGS.map(l => (
+                <MenuItem key={l.code} onClick={() => setLang(l.code)}>
+                  <span className="w-6 text-[12px] font-bold uppercase" style={{ color: 'rgba(248,250,252,0.4)' }}>{l.code}</span>
+                  <span className="flex-1">{l.label}</span>
+                  {lang === l.code && <Check size={14} style={{ color: '#818cf8' }} />}
+                </MenuItem>
+              ))}
+            </MenuContent>
+          </Menu>
         </div>
 
-        {/* Form */}
-        <div className="flex-1 flex items-center justify-center px-5 pb-10">
-          <div className="w-full max-w-sm">
-            <div className="mb-7">
-              <h2 className="text-2xl font-extrabold text-[var(--text-primary)]">{t('auth.welcome')}</h2>
-              <p className="text-[14px] text-[var(--text-tertiary)] mt-1">{t('auth.signInToContinue')}</p>
+        {/* Form area */}
+        <div className="flex-1 flex items-center justify-center px-6 py-8">
+          <div className="w-full max-w-[380px]" style={{ animation: 'heroFadeUp 0.6s ease-out 0.15s both' }}>
+            <div className="mb-8">
+              <h2 className="text-[26px] font-extrabold text-white mb-1.5 tracking-tight">{t('auth.welcome')} 👋</h2>
+              <p className="text-sm" style={{ color: 'rgba(248,250,252,0.5)' }}>{t('auth.signInToContinue')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username */}
               <div>
-                <label className="text-[13px] font-semibold text-[var(--text-secondary)]">{t('auth.username')}</label>
-                <div className="relative mt-1.5">
-                  <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-quaternary)] pointer-events-none" />
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(248,250,252,0.6)' }}>
+                  {t('auth.username')}
+                </label>
+                <div className="relative">
+                  <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'rgba(248,250,252,0.3)' }} />
                   <input
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     autoFocus
                     autoComplete="username"
                     placeholder={t('auth.usernamePlaceholder')}
-                    className="w-full h-11 pl-9 pr-3 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-secondary)] text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] outline-none focus:border-[var(--fg-brand-primary)] focus:[box-shadow:0_0_0_3px_rgba(41,112,255,0.12)] transition-all"
+                    className="w-full h-11 pl-10 pr-4 rounded-xl text-sm text-white outline-none transition-all"
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      caretColor: '#818cf8',
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)' }}
+                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div>
-                <label className="text-[13px] font-semibold text-[var(--text-secondary)]">{t('auth.password')}</label>
-                <div className="relative mt-1.5">
-                  <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-quaternary)] pointer-events-none" />
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(248,250,252,0.6)' }}>
+                  {t('auth.password')}
+                </label>
+                <div className="relative">
+                  <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'rgba(248,250,252,0.3)' }} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     autoComplete="current-password"
                     placeholder="••••••••"
-                    className="w-full h-11 pl-9 pr-10 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-secondary)] text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] outline-none focus:border-[var(--fg-brand-primary)] focus:[box-shadow:0_0_0_3px_rgba(41,112,255,0.12)] transition-all"
+                    className="w-full h-11 pl-10 pr-11 rounded-xl text-sm text-white outline-none transition-all"
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      caretColor: '#818cf8',
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)' }}
+                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-quaternary)] hover:text-[var(--text-secondary)] transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
+                    style={{ color: 'rgba(248,250,252,0.35)' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.7)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.35)')}
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
               </div>
 
+              {/* Error */}
               {error && (
-                <div className="px-3.5 py-2.5 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 text-[13px] font-medium text-red-600 dark:text-red-400">
+                <div className="flex items-start gap-2.5 px-4 py-3 rounded-xl text-sm font-medium"
+                     style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#fca5a5' }}>
+                  <span className="shrink-0 mt-0.5">⚠</span>
                   {error}
                 </div>
               )}
 
+              {/* Submit */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 rounded-xl bg-[var(--fg-brand-primary)] text-white text-[14px] font-semibold hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center justify-center gap-2"
+                className="w-full h-11 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-50"
+                style={{
+                  background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
+                  boxShadow: '0 0 24px rgba(99,102,241,0.4)',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 36px rgba(99,102,241,0.6)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)' } }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 24px rgba(99,102,241,0.4)'; (e.currentTarget as HTMLButtonElement).style.transform = 'none' }}
               >
                 {loading ? (
                   <>
-                    <span className="size-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    <span className="w-4 h-4 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(255,255,255,0.3)', borderTopColor: '#fff' }} />
                     {t('auth.signingIn')}
                   </>
                 ) : t('auth.signIn')}
@@ -209,28 +317,44 @@ export function LoginPage() {
 
             {/* Demo accounts */}
             <div className="mt-8">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex-1 h-px bg-[var(--border-secondary)]" />
-                <span className="text-[11px] font-semibold uppercase tracking-wide text-[var(--text-quaternary)]">{t('auth.demoAccounts')}</span>
-                <div className="flex-1 h-px bg-[var(--border-secondary)]" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
+                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(248,250,252,0.3)' }}>
+                  {t('auth.demoAccounts')}
+                </span>
+                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
               </div>
+
               <div className="space-y-2">
                 {DEMO_ACCOUNTS.map(acct => (
                   <button
                     key={acct.username}
                     type="button"
                     onClick={() => fillDemo(acct)}
-                    className="w-full flex items-center gap-3 p-2.5 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-secondary)] hover:border-[var(--fg-brand-primary)] transition-colors text-left group"
+                    className="w-full flex items-center gap-3 p-3 rounded-xl text-left transition-all group"
+                    style={{ background: acct.bg, border: `1px solid ${acct.border}` }}
+                    onMouseEnter={e => {
+                      const el = e.currentTarget as HTMLButtonElement
+                      el.style.borderColor = acct.color + '55'
+                      el.style.background = acct.bg.replace('0.12', '0.18')
+                    }}
+                    onMouseLeave={e => {
+                      const el = e.currentTarget as HTMLButtonElement
+                      el.style.borderColor = acct.border
+                      el.style.background = acct.bg
+                    }}
                   >
-                    <div className={`size-9 rounded-lg bg-gradient-to-br ${acct.color} flex items-center justify-center shrink-0`}>
-                      <acct.icon size={17} className="text-white" />
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0" style={{ background: acct.color + '25', border: `1px solid ${acct.color}35` }}>
+                      <acct.icon size={17} style={{ color: acct.color }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[13px] font-semibold text-[var(--text-primary)]">{roleLabel(acct.role)}</p>
-                      <p className="text-[11px] text-[var(--text-tertiary)] font-mono">{acct.username} · {acct.password}</p>
+                      <p className="text-sm font-bold text-white">{acct.label}</p>
+                      <p className="text-xs font-mono" style={{ color: 'rgba(248,250,252,0.45)' }}>
+                        {acct.username} · {acct.password}
+                      </p>
                     </div>
-                    <span className="text-[11px] font-semibold text-[var(--fg-brand-primary)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                      {t('auth.use')}
+                    <span className="text-[11px] font-bold opacity-0 group-hover:opacity-100 transition-opacity shrink-0" style={{ color: acct.color }}>
+                      {t('auth.use')} →
                     </span>
                   </button>
                 ))}
