@@ -114,6 +114,9 @@
   /* Brand tints for chips */
   --blue-200:             #B2CCFF;
 
+  /* Accent-aware focus ring — follows --fg-brand-primary (set by accent system) */
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--fg-brand-primary) 20%, transparent);
+
   /* Shadows */
   --shadow-xs: 0 1px 2px 0 rgb(16 24 40 / 0.05);
   --shadow-sm: 0 1px 3px 0 rgb(16 24 40 / 0.10), 0 1px 2px -1px rgb(16 24 40 / 0.10);
@@ -198,6 +201,37 @@ html, body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-primary); border-radius: 99px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--fg-quaternary); }
+
+/* Range slider (used by ui/range.tsx) */
+.myrehab-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 99px;
+  outline: none;
+  cursor: pointer;
+}
+.myrehab-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--range-thumb, var(--fg-brand-primary));
+  border: 3px solid var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.12s ease;
+}
+.myrehab-range::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.myrehab-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--range-thumb, var(--fg-brand-primary));
+  border: 3px solid var(--bg-primary);
+  box-shadow: var(--shadow-sm);
+}
+.myrehab-range:focus-visible { box-shadow: var(--focus-ring); }
 
 /* Base UI animations */
 @keyframes slideDown {

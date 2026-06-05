@@ -183,7 +183,7 @@ export function DashboardPage() {
       {/* Stats row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Sessions — BarChart */}
-        <Card className="p-5">
+        <Card className="p-5 flex flex-col">
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.sessionsToday')}</p>
@@ -194,19 +194,21 @@ export function DashboardPage() {
               +2
             </span>
           </div>
-          <ResponsiveContainer width="100%" height={110}>
-            <BarChart data={SESSION_DATA} margin={{ top: 0, right: 0, left: -28, bottom: 0 }} barSize={18}>
-              <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
-              <XAxis dataKey="kun" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
-              <Tooltip
-                cursor={{ fill: 'var(--bg-secondary)', radius: 4 }}
-                contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
-                formatter={(v) => [`${v} seans`, '']}
-              />
-              <Bar dataKey="soni" fill="#2970FF" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="flex-1 min-h-[150px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={SESSION_DATA} margin={{ top: 0, right: 0, left: -28, bottom: 0 }} barSize={18}>
+                <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
+                <XAxis dataKey="kun" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  cursor={{ fill: 'var(--bg-secondary)', radius: 4 }}
+                  contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
+                  formatter={(v) => [`${v} seans`, '']}
+                />
+                <Bar dataKey="soni" fill="var(--fg-brand-primary)" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-secondary)] text-[13px] text-[var(--text-quaternary)]">
             <span><span className="font-semibold text-[var(--text-secondary)]">8</span> {t('dashboard.finished', { count: 8 }).replace('8 ta ', '')}</span>
             <span><span className="font-semibold text-[var(--text-secondary)]">4</span> {t('dashboard.upcoming', { count: 4 }).replace('4 ta ', '')}</span>
@@ -215,7 +217,7 @@ export function DashboardPage() {
         </Card>
 
         {/* At-risk — LineChart */}
-        <Card className="p-5">
+        <Card className="p-5 flex flex-col">
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-[16px] font-medium text-[var(--text-quaternary)]">{t('dashboard.atRiskToday')}</p>
@@ -225,19 +227,21 @@ export function DashboardPage() {
               −3 kritik
             </span>
           </div>
-          <ResponsiveContainer width="100%" height={110}>
-            <LineChart data={ATRISK_DATA} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
-              <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
-              <XAxis dataKey="hafta" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
-              <Tooltip
-                contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
-                formatter={(v) => [`${v} bemor`, '']}
-              />
-              <ReferenceLine y={10} stroke="#D92D20" strokeDasharray="4 3" strokeWidth={1.5} />
-              <Line type="monotone" dataKey="soni" stroke="#2970FF" strokeWidth={2} dot={{ r: 3, fill: '#2970FF' }} activeDot={{ r: 5 }} />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="flex-1 min-h-[150px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={ATRISK_DATA} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
+                <CartesianGrid vertical={false} stroke="var(--border-secondary)" />
+                <XAxis dataKey="hafta" tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: 'var(--fg-quaternary)' }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
+                  formatter={(v) => [`${v} bemor`, '']}
+                />
+                <ReferenceLine y={10} stroke="var(--fg-error-primary)" strokeDasharray="4 3" strokeWidth={1.5} />
+                <Line type="monotone" dataKey="soni" stroke="var(--fg-brand-primary)" strokeWidth={2} dot={{ r: 3, fill: 'var(--fg-brand-primary)' }} activeDot={{ r: 5 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-[var(--border-secondary)] text-[13px] text-[var(--text-quaternary)]">
             <span><span className="font-semibold text-[var(--text-secondary)]">5</span> {t('dashboard.reviewed', { count: 5 }).replace('5 ta ', '')}</span>
             <span><span className="font-semibold text-[var(--text-secondary)]">3</span> {t('dashboard.pending', { count: 3 }).replace('3 ta ', '')}</span>

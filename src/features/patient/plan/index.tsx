@@ -93,7 +93,7 @@ export function PatientPlanPage() {
       {/* Overall progress */}
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-semibold text-[var(--text-primary)]">Overall progress</span>
+          <span className="text-sm font-semibold text-[var(--text-primary)]">Umumiy jarayon</span>
           <span className="text-sm font-bold text-[var(--fg-brand-primary)]">~40%</span>
         </div>
         <div className="h-3 bg-[var(--bg-tertiary)] rounded-full overflow-hidden">

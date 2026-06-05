@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react'
+import { forwardRef, type InputHTMLAttributes, type TextareaHTMLAttributes, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -26,7 +26,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               'text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)]',
               'outline-none transition-colors',
               'hover:border-[var(--border-primary)]',
-              'focus:border-[var(--fg-brand-primary)] focus:[box-shadow:0_0_0_3px_rgba(41,112,255,0.15)]',
+              'focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)]',
               'disabled:bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:text-[var(--text-quaternary)]',
               height,
               leftIcon ? 'pl-9' : 'pl-3',
@@ -50,4 +50,44 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input'
 
-export { Input }
+interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  error?: string
+}
+
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, error, rows = 3, ...props }, ref) => {
+    return (
+      <div className="flex flex-col gap-1.5 w-full">
+        <textarea
+          ref={ref}
+          rows={rows}
+          className={cn(
+            'w-full bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg px-3 py-2.5',
+            'text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)]',
+            'outline-none transition-colors resize-none leading-relaxed',
+            'hover:border-[var(--border-primary)]',
+            'focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)]',
+            'disabled:bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:text-[var(--text-quaternary)]',
+            error && 'border-[var(--border-error)] focus:border-[var(--fg-error-primary)]',
+            className,
+          )}
+          {...props}
+        />
+        {error && <p className="text-[12px] text-[var(--fg-error-primary)]">{error}</p>}
+      </div>
+    )
+  },
+)
+
+Textarea.displayName = 'Textarea'
+
+/** Small uppercase field label used in forms. */
+export function FieldLabel({ children, htmlFor, className }: { children: ReactNode; htmlFor?: string; className?: string }) {
+  return (
+    <label htmlFor={htmlFor} className={cn('block text-[13px] font-semibold text-[var(--text-secondary)] mb-1.5', className)}>
+      {children}
+    </label>
+  )
+}
+
+export { Input, Textarea }

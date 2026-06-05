@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertTriangle, Plus, X } from 'lucide-react'
+import { AlertTriangle, Plus } from 'lucide-react'
 import { SYMPTOM_LOGS, type SymptomLog } from '@/data/patient-mock-data'
+import { Dialog } from '@/components/ui/dialog'
+import { Input, Textarea, FieldLabel } from '@/components/ui/input'
+import { Range } from '@/components/ui/range'
+import { Button } from '@/components/ui/button'
+import { formatUzDateTime } from '@/lib/utils'
 
 const SEVERITY_COLORS: Record<string, string> = {
   mild:     'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
@@ -55,6 +60,7 @@ export function PatientSymptomsPage() {
     }
     setLogs(prev => [newEntry, ...prev])
     setShowModal(false)
+    setForm({ type: 'pain', severity: 'mild', intensity: 3, location: '', note: '' })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -64,20 +70,17 @@ export function PatientSymptomsPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">{t('patient.symptoms')}</h1>
-          <p className="text-sm text-[var(--text-tertiary)] mt-0.5">{logs.length} entries</p>
+          <p className="text-sm text-[var(--text-tertiary)] mt-0.5">{logs.length} ta yozuv</p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-3 py-2 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90"
-        >
+        <Button onClick={() => setShowModal(true)}>
           <Plus size={15} />
           {t('patient.logSymptom')}
-        </button>
+        </Button>
       </div>
 
       {saved && (
         <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-3 rounded-xl text-sm font-medium">
-          ✓ Symptom saved
+          ✓ Belgi saqlandi
         </div>
       )}
 
@@ -110,94 +113,76 @@ export function PatientSymptomsPage() {
             <IntensityBar value={log.intensity} />
             {log.note && <p className="text-xs text-[var(--text-tertiary)] mt-2">{log.note}</p>}
             <p className="text-xs text-[var(--text-quaternary)] mt-1">
-              {new Date(log.recorded_at).toLocaleString()}
+              {formatUzDateTime(log.recorded_at)}
             </p>
           </div>
         ))}
       </div>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40" onClick={() => setShowModal(false)} />
-          <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-[var(--text-primary)]">{t('patient.logSymptom')}</h3>
-              <button onClick={() => setShowModal(false)} className="text-[var(--text-tertiary)]"><X size={18} /></button>
+      <Dialog open={showModal} onOpenChange={setShowModal} title={t('patient.logSymptom')} className="max-w-md">
+        <div className="space-y-4">
+          {/* Type */}
+          <div>
+            <FieldLabel>{t('patient.symptomType')}</FieldLabel>
+            <div className="flex flex-wrap gap-2">
+              {SYMPTOM_TYPES.map(type => (
+                <button
+                  key={type}
+                  onClick={() => setForm(f => ({ ...f, type }))}
+                  className={['px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer', form.type === type ? 'bg-[var(--fg-brand-primary)] text-white border-[var(--fg-brand-primary)]' : 'border-[var(--border-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-primary)]'].join(' ')}
+                >
+                  {t(`patient.${type}`)}
+                </button>
+              ))}
             </div>
-
-            {/* Type */}
-            <div>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{t('patient.symptomType')}</label>
-              <div className="flex flex-wrap gap-2 mt-1.5">
-                {SYMPTOM_TYPES.map(type => (
-                  <button
-                    key={type}
-                    onClick={() => setForm(f => ({ ...f, type }))}
-                    className={['px-3 py-1 rounded-lg text-xs font-semibold border transition-colors', form.type === type ? 'bg-[var(--fg-brand-primary)] text-white border-[var(--fg-brand-primary)]' : 'border-[var(--border-secondary)] text-[var(--text-secondary)]'].join(' ')}
-                  >
-                    {t(`patient.${type}`)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Severity */}
-            <div>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{t('patient.severity')}</label>
-              <div className="flex gap-2 mt-1.5">
-                {SEVERITIES.map(sev => (
-                  <button
-                    key={sev}
-                    onClick={() => setForm(f => ({ ...f, severity: sev }))}
-                    className={['flex-1 py-1 rounded-lg text-xs font-semibold border transition-colors', form.severity === sev ? 'bg-[var(--fg-brand-primary)] text-white border-[var(--fg-brand-primary)]' : 'border-[var(--border-secondary)] text-[var(--text-secondary)]'].join(' ')}
-                  >
-                    {t(`patient.${sev}`)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Intensity */}
-            <div>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{t('patient.intensity')} ({form.intensity}/10)</label>
-              <input type="range" min={1} max={10} value={form.intensity}
-                onChange={e => setForm(f => ({ ...f, intensity: +e.target.value }))}
-                className="w-full mt-1.5 accent-[var(--fg-brand-primary)]"
-              />
-            </div>
-
-            {/* Location */}
-            <div>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{t('patient.location')}</label>
-              <input
-                value={form.location}
-                onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-                placeholder="e.g. Left knee"
-                className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
-              />
-            </div>
-
-            {/* Note */}
-            <div>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{t('patient.note')}</label>
-              <textarea
-                value={form.note}
-                onChange={e => setForm(f => ({ ...f, note: e.target.value }))}
-                rows={2}
-                className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)] resize-none"
-              />
-            </div>
-
-            <button
-              onClick={handleSubmit}
-              className="w-full py-2.5 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90"
-            >
-              {t('common.save')}
-            </button>
           </div>
+
+          {/* Severity */}
+          <div>
+            <FieldLabel>{t('patient.severity')}</FieldLabel>
+            <div className="flex gap-2">
+              {SEVERITIES.map(sev => (
+                <button
+                  key={sev}
+                  onClick={() => setForm(f => ({ ...f, severity: sev }))}
+                  className={['flex-1 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer', form.severity === sev ? 'bg-[var(--fg-brand-primary)] text-white border-[var(--fg-brand-primary)]' : 'border-[var(--border-secondary)] text-[var(--text-secondary)] hover:border-[var(--border-primary)]'].join(' ')}
+                >
+                  {t(`patient.${sev}`)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Intensity */}
+          <div>
+            <FieldLabel>{t('patient.intensity')} ({form.intensity}/10)</FieldLabel>
+            <Range value={form.intensity} onChange={v => setForm(f => ({ ...f, intensity: v }))} min={1} max={10} />
+          </div>
+
+          {/* Location */}
+          <div>
+            <FieldLabel>{t('patient.location')}</FieldLabel>
+            <Input
+              value={form.location}
+              onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
+              placeholder="masalan, Chap tizza"
+            />
+          </div>
+
+          {/* Note */}
+          <div>
+            <FieldLabel>{t('patient.note')}</FieldLabel>
+            <Textarea
+              value={form.note}
+              onChange={e => setForm(f => ({ ...f, note: e.target.value }))}
+              rows={2}
+            />
+          </div>
+
+          <Button onClick={handleSubmit} className="w-full">{t('common.save')}</Button>
         </div>
-      )}
+      </Dialog>
     </div>
   )
 }

@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, X, Heart, Thermometer, Activity, Weight, Droplets } from 'lucide-react'
+import { Plus, Heart, Thermometer, Activity, Weight, Droplets } from 'lucide-react'
 import { VITAL_HISTORY, LATEST_VITAL, VITAL_NORMS } from '@/data/patient-mock-data'
+import { Dialog } from '@/components/ui/dialog'
+import { Input, FieldLabel } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { formatUzDate } from '@/lib/utils'
 
 function statusOf(value: number, min: number, max: number): 'normal' | 'high' | 'low' {
   if (value > max) return 'high'
@@ -48,16 +52,13 @@ export function PatientVitalsPage() {
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">{t('patient.vitals')}</h1>
           <p className="text-sm text-[var(--text-tertiary)] mt-0.5">
-            Latest: {new Date(v.recorded_at).toLocaleDateString()}
+            Oxirgi: {formatUzDate(v.recorded_at)}
           </p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-3 py-2 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-        >
+        <Button onClick={() => setShowModal(true)}>
           <Plus size={15} />
           {t('patient.newReading')}
-        </button>
+        </Button>
       </div>
 
       {/* Vital cards */}
@@ -109,18 +110,18 @@ export function PatientVitalsPage() {
             <thead>
               <tr className="text-xs text-[var(--text-tertiary)] border-b border-[var(--border-secondary)]">
                 <th className="text-left px-4 py-2 font-semibold">{t('common.date')}</th>
-                <th className="text-left px-4 py-2 font-semibold">BP</th>
-                <th className="text-left px-4 py-2 font-semibold">HR</th>
-                <th className="text-left px-4 py-2 font-semibold">Temp</th>
+                <th className="text-left px-4 py-2 font-semibold">Bosim</th>
+                <th className="text-left px-4 py-2 font-semibold">Puls</th>
+                <th className="text-left px-4 py-2 font-semibold">Harorat</th>
                 <th className="text-left px-4 py-2 font-semibold">SpO₂</th>
-                <th className="text-left px-4 py-2 font-semibold">Wt</th>
+                <th className="text-left px-4 py-2 font-semibold">Vazn</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--border-secondary)]">
               {VITAL_HISTORY.slice().reverse().slice(0, 7).map(r => (
                 <tr key={r.id} className="text-[var(--text-primary)]">
                   <td className="px-4 py-2 text-xs text-[var(--text-tertiary)]">
-                    {new Date(r.recorded_at).toLocaleDateString()}
+                    {formatUzDate(r.recorded_at)}
                   </td>
                   <td className="px-4 py-2 text-xs">{r.systolic}/{r.diastolic}</td>
                   <td className="px-4 py-2 text-xs">{r.heart_rate}</td>
@@ -135,44 +136,24 @@ export function PatientVitalsPage() {
       </div>
 
       {/* Add reading modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div className="fixed inset-0 bg-black/40" onClick={() => setShowModal(false)} />
-          <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-[var(--text-primary)]">{t('patient.newReading')}</h3>
-              <button onClick={() => setShowModal(false)} className="text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
-                <X size={18} />
-              </button>
+      <Dialog open={showModal} onOpenChange={setShowModal} title={t('patient.newReading')} className="max-w-md">
+        <div className="space-y-3">
+          {[
+            { label: t('patient.systolic'), placeholder: '120' },
+            { label: t('patient.diastolic'), placeholder: '80' },
+            { label: t('patient.heartRate'), placeholder: '72' },
+            { label: t('patient.temperature'), placeholder: '36.6' },
+            { label: t('patient.spo2'), placeholder: '98' },
+            { label: t('patient.weight'), placeholder: '77.5' },
+          ].map(f => (
+            <div key={f.label}>
+              <FieldLabel>{f.label}</FieldLabel>
+              <Input type="number" placeholder={f.placeholder} uiSize="sm" />
             </div>
-            <div className="space-y-3">
-              {[
-                { label: t('patient.systolic'), placeholder: '120' },
-                { label: t('patient.diastolic'), placeholder: '80' },
-                { label: t('patient.heartRate'), placeholder: '72' },
-                { label: t('patient.temperature'), placeholder: '36.6' },
-                { label: t('patient.spo2'), placeholder: '98' },
-                { label: t('patient.weight'), placeholder: '77.5' },
-              ].map(f => (
-                <div key={f.label}>
-                  <label className="text-xs font-medium text-[var(--text-secondary)]">{f.label}</label>
-                  <input
-                    type="number"
-                    placeholder={f.placeholder}
-                    className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
-                  />
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 w-full py-2.5 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90"
-            >
-              {t('common.save')}
-            </button>
-          </div>
+          ))}
         </div>
-      )}
+        <Button onClick={() => setShowModal(false)} className="w-full mt-4">{t('common.save')}</Button>
+      </Dialog>
     </div>
   )
 }

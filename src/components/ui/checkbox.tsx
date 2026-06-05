@@ -21,7 +21,7 @@ export function Checkbox({ checked, onCheckedChange, disabled, className, id }: 
         'size-5 rounded-md border flex items-center justify-center transition-all cursor-pointer outline-none shrink-0',
         'border-[var(--border-primary)] bg-[var(--bg-primary)]',
         'data-[checked]:bg-[var(--fg-brand-primary)] data-[checked]:border-[var(--fg-brand-primary)]',
-        'focus-visible:[box-shadow:0_0_0_3px_rgba(41,112,255,0.20)]',
+        'focus-visible:[box-shadow:var(--focus-ring)]',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         className,
       )}

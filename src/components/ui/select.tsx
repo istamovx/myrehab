@@ -43,7 +43,7 @@ export function Select({
           'bg-[var(--bg-primary)] border border-[var(--border-secondary)] rounded-lg',
           'text-[13px] font-medium cursor-pointer select-none',
           'hover:bg-[var(--bg-secondary)] transition-colors outline-none [box-shadow:var(--shadow-xs)]',
-          'focus-visible:border-[var(--fg-brand-primary)]',
+          'focus-visible:border-[var(--fg-brand-primary)] focus-visible:[box-shadow:var(--focus-ring)]',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           triggerClassName,
         )}

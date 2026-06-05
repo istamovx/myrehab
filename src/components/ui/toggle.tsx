@@ -26,7 +26,7 @@ export function Toggle({ checked, onCheckedChange, disabled, id, size = 'md', cl
       className={cn(
         'relative inline-flex items-center rounded-full p-0.5 transition-colors cursor-pointer outline-none shrink-0',
         'bg-[var(--bg-tertiary)] data-[checked]:bg-[var(--fg-brand-primary)]',
-        'focus-visible:[box-shadow:0_0_0_3px_rgba(41,112,255,0.20)]',
+        'focus-visible:[box-shadow:var(--focus-ring)]',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         s.track,
         className,
