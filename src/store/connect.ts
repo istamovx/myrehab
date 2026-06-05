@@ -66,6 +66,7 @@ interface ConnectState {
   medications: ConnectMedication[]
   symptoms: ConnectSymptom[]
   teleconsults: ConnectTeleconsult[]
+  telegramLinked: boolean
 }
 
 interface ConnectStore extends ConnectState {
@@ -74,6 +75,7 @@ interface ConnectStore extends ConnectState {
   assignMedication: (med: Omit<ConnectMedication, 'id' | 'assigned_at'>) => void
   reportSymptom: (symptom: Omit<ConnectSymptom, 'id' | 'reported_at'>) => void
   scheduleTeleconsult: (tc: Omit<ConnectTeleconsult, 'id' | 'created_at'>) => void
+  setTelegramLinked: (linked: boolean) => void
   addNotification: (n: Omit<ConnectNotification, 'id' | 'read' | 'created_at'>) => void
   markNotificationRead: (id: string) => void
   markAllNotificationsRead: (audience: NotificationAudience) => void
@@ -98,7 +100,7 @@ function seedTeleconsults(): ConnectTeleconsult[] {
 }
 
 function seed(): ConnectState {
-  return { messages: [...MESSAGES], notifications: [], medications: [], symptoms: [], teleconsults: seedTeleconsults() }
+  return { messages: [...MESSAGES], notifications: [], medications: [], symptoms: [], teleconsults: seedTeleconsults(), telegramLinked: false }
 }
 
 function load(): ConnectState {
@@ -112,6 +114,7 @@ function load(): ConnectState {
         medications: parsed.medications ?? [],
         symptoms: parsed.symptoms ?? [],
         teleconsults: parsed.teleconsults ?? seedTeleconsults(),
+        telegramLinked: parsed.telegramLinked ?? false,
       }
     }
   } catch { /* ignore corrupt storage */ }
@@ -129,6 +132,7 @@ function persist(state: ConnectState) {
       medications: state.medications,
       symptoms: state.symptoms,
       teleconsults: state.teleconsults,
+      telegramLinked: state.telegramLinked,
     }))
   } catch { /* ignore quota / serialization errors */ }
 }
@@ -252,6 +256,24 @@ export const useConnectStore = create<ConnectStore>((set, get) => ({
     set({ teleconsults: next.teleconsults, notifications: next.notifications })
   },
 
+  // -- Telegram link (patient ↔ doctor visibility) ----------------------------
+  setTelegramLinked: (linked) => {
+    const extra = linked
+      ? [{
+          id: uid('ntf'),
+          audience: 'doctor' as NotificationAudience,
+          type: 'message' as NotificationType,
+          title: 'Bemor Telegram\'ga ulandi',
+          body: 'Eslatmalar endi Telegram orqali ham yetkaziladi',
+          read: false,
+          created_at: new Date().toISOString(),
+        }]
+      : []
+    const notifications = [...extra, ...get().notifications]
+    persist({ ...get(), telegramLinked: linked, notifications })
+    set({ telegramLinked: linked, notifications })
+  },
+
   // -- Notifications ----------------------------------------------------------
   addNotification: (n) => {
     const notif: ConnectNotification = { ...n, id: uid('ntf'), read: false, created_at: new Date().toISOString() }
@@ -293,6 +315,7 @@ if (typeof window !== 'undefined') {
           medications: parsed.medications ?? [],
           symptoms: parsed.symptoms ?? [],
           teleconsults: parsed.teleconsults ?? [],
+          telegramLinked: parsed.telegramLinked ?? false,
         })
       } catch { /* ignore */ }
     }

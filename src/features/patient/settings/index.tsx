@@ -5,6 +5,7 @@ import { PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
 import { Input, FieldLabel } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { useConnectStore } from '@/store/connect'
 
 type Tab = 'profile' | 'security'
 
@@ -23,7 +24,8 @@ function genCode(): string {
 }
 
 function TelegramCard() {
-  const [linked, setLinked] = useState(false)
+  const linked = useConnectStore(s => s.telegramLinked)
+  const setLinked = useConnectStore(s => s.setTelegramLinked)
   const [code] = useState(genCode)
   const [copied, setCopied] = useState(false)
   const deepLink = `https://t.me/${TELEGRAM_BOT}?start=${code}`

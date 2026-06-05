@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Send, Pill, AlertTriangle, Plus } from 'lucide-react'
+import { Send, Pill, AlertTriangle, Plus, Check } from 'lucide-react'
 import { useConnectStore } from '@/store/connect'
 import { PATIENT_PROFILE, type Message } from '@/data/patient-mock-data'
 import { Avatar } from '@/components/ui/avatar'
@@ -42,6 +42,7 @@ const EMPTY_MED = { name: '', dose: '', schedule: '', instructions: '' }
 export function MessagesPage() {
   const messages = useConnectStore(s => s.messages)
   const symptoms = useConnectStore(s => s.symptoms)
+  const telegramLinked = useConnectStore(s => s.telegramLinked)
   const sendMessage = useConnectStore(s => s.sendMessage)
   const markThreadRead = useConnectStore(s => s.markThreadRead)
   const assignMedication = useConnectStore(s => s.assignMedication)
@@ -119,10 +120,16 @@ export function MessagesPage() {
         {/* Header — patient */}
         <div className="bg-[var(--bg-primary)] rounded-t-xl border border-b-0 border-[var(--border-secondary)] px-4 py-3 flex items-center gap-3">
           <Avatar name={PATIENT_PROFILE.name} size="sm" />
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-bold text-[var(--text-primary)] truncate">{PATIENT_PROFILE.name}</p>
             <p className="text-xs text-[var(--text-tertiary)] truncate">{PATIENT_PROFILE.diagnosis}</p>
           </div>
+          {telegramLinked && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-sky-600 bg-sky-50 dark:bg-sky-950/30 px-2 py-1 rounded-full shrink-0">
+              <Check size={11} />
+              Telegram
+            </span>
+          )}
         </div>
 
         {/* Messages */}
