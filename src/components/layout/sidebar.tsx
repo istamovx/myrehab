@@ -1,8 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import {
-  X, ClipboardList, Users, FilePlus, Activity, MessageSquare, Bell,
-  Video, UsersRound, Dumbbell, Newspaper, TrendingUp, History, Settings,
-  ChevronLeft, ChevronRight, Package, FlaskConical,
+  X, LayoutDashboard, Users, CalendarDays, TrendingUp,
+  UsersRound, FileText, Bell, Package, FlaskConical,
+  Settings, ChevronLeft, ChevronRight, Stethoscope,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -133,26 +133,22 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
       {/* Navigation */}
       <nav className={cn('flex-1 overflow-y-auto py-2', collapsed ? 'px-1.5' : 'px-[14px]')}>
         <NavGroup label="ASOSIY" collapsed={collapsed}>
-          <NavItem to="/dashboard"           icon={ClipboardList} label="Ish ro'yxati"     badge={0} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/patients"            icon={Users}         label="Bemorlar"          badge={3} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/docs"                icon={FilePlus}      label="Reja yaratish"     onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/insights"            icon={Activity}      label="Monitoring"        onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/appointments"        icon={MessageSquare} label="Xabarlar"          onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/membership-requests" icon={Bell}          label="Bildirishnomalar"  badge={6} onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/dashboard"    icon={LayoutDashboard} label="Bosh sahifa"     onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/patients"     icon={Users}           label="Bemorlar"        badge={3} onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/appointments" icon={CalendarDays}    label="Uchrashuvlar"   onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/insights"     icon={TrendingUp}      label="Tahlillar"      onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
-        <NavGroup label="KUNDALIK ISH" collapsed={collapsed}>
-          <NavItem to="/appointments" icon={Video}         label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/team"         icon={UsersRound}    label="MDT jamoasi"       onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/doctors"      icon={Dumbbell}      label="Mashqlar"          onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/docs"         icon={Newspaper}     label="Protokollar"       onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/inventory"    icon={Package}       label="Omborxona"         onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/lab-results"  icon={FlaskConical}  label="Laboratoriya"      onClose={onClose} collapsed={collapsed} />
+        <NavGroup label="KLINIKA" collapsed={collapsed}>
+          <NavItem to="/doctors"             icon={Stethoscope} label="Shifokorlar"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/team"                icon={UsersRound}  label="MDT jamoasi"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/docs"                icon={FileText}    label="Hujjatlar"            onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/membership-requests" icon={Bell}        label="Hamkorlik so'rovlari" badge={3} onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
-        <NavGroup label="TAHLIL" collapsed={collapsed}>
-          <NavItem to="/insights"   icon={TrendingUp} label="Tahlil va hisobot" onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/dashboard"  icon={History}    label="Faoliyat tarixi"   onClose={onClose} collapsed={collapsed} />
+        <NavGroup label="TIBBIY" collapsed={collapsed}>
+          <NavItem to="/inventory"   icon={Package}      label="Omborxona"   onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/lab-results" icon={FlaskConical} label="Laboratoriya" onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
         <NavGroup label="SOZLAMALAR" collapsed={collapsed}>
