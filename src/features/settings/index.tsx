@@ -1,23 +1,44 @@
 import { useState } from 'react'
 import {
   User, Building2, Bell, Lock, CheckCircle2, LogOut, Monitor,
-  Search, ShieldCheck, Clock,
+  Search, ShieldCheck, Clock, Landmark, RefreshCw, CheckCheck,
+  AlertTriangle, Hourglass, ShieldAlert,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Tab = 'profile' | 'clinics' | 'notifications' | 'security'
+type Tab = 'profile' | 'clinics' | 'dmed' | 'notifications' | 'security'
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
 const DOCTOR = {
   name:           'Muhrim Devonov',
-  specialization: 'Orthopedics',
+  specialization: 'Ortopediya',
   phone:          '998900010101',
   clinic:         'MyRehab Medical',
   initials:       'MD',
 }
+
+// Dmed.uz — government health system sync log (demo data)
+type DmedStatus = 'synced' | 'pending' | 'failed'
+interface DmedRecord {
+  id: string
+  type: 'Bemor' | 'Tibbiy yozuv' | 'Tashxis'
+  name: string
+  dmedId?: string
+  status: DmedStatus
+  syncedAt: string
+}
+
+const DMED_RECORDS: DmedRecord[] = [
+  { id: 'r1', type: 'Bemor',       name: 'Dilnoza Karimova', dmedId: 'DMED-2025-0041', status: 'synced',  syncedAt: '05 iyun, 09:12' },
+  { id: 'r2', type: 'Tibbiy yozuv', name: 'Sardor Aliyev — ko\'rik',  dmedId: 'DMED-2025-0040', status: 'synced',  syncedAt: '05 iyun, 08:54' },
+  { id: 'r3', type: 'Bemor',       name: 'Gulnora Saidova',  status: 'pending', syncedAt: '—' },
+  { id: 'r4', type: 'Tashxis',     name: 'Jasur Tursunov — M51.1', status: 'failed', syncedAt: '04 iyun, 17:30' },
+  { id: 'r5', type: 'Bemor',       name: 'Nilufar Rahimova', dmedId: 'DMED-2025-0038', status: 'synced',  syncedAt: '04 iyun, 14:02' },
+  { id: 'r6', type: 'Tibbiy yozuv', name: 'Otabek Yusupov — ko\'rik',  status: 'pending', syncedAt: '—' },
+]
 
 const MY_REQUESTS = [
   { id: 1, clinic: 'Darmon Med', initials: 'DM', sentAt: '23.05.2026', status: 'pending' },
@@ -209,6 +230,129 @@ function ClinicsTab() {
   )
 }
 
+// ── Tab: Dmed.uz (government health system) ───────────────────────────────────
+
+const DMED_STATUS_META: Record<DmedStatus, { label: string; cls: string; dot: string; icon: React.ElementType }> = {
+  synced:  { label: 'Sinxronlangan', cls: 'text-green-600 bg-green-50 dark:bg-green-900/20',  dot: 'bg-green-500',  icon: CheckCheck },
+  pending: { label: 'Kutilmoqda',    cls: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20',  dot: 'bg-amber-500',  icon: Hourglass },
+  failed:  { label: 'Xatolik',       cls: 'text-red-600 bg-red-50 dark:bg-red-900/20',        dot: 'bg-red-500',    icon: AlertTriangle },
+}
+
+function DmedTab() {
+  const [records, setRecords] = useState(DMED_RECORDS)
+  const [syncing, setSyncing] = useState(false)
+
+  const counts = {
+    synced:  records.filter(r => r.status === 'synced').length,
+    pending: records.filter(r => r.status === 'pending').length,
+    failed:  records.filter(r => r.status === 'failed').length,
+  }
+
+  function retryFailed() {
+    setSyncing(true)
+    setTimeout(() => {
+      setRecords(prev => prev.map(r =>
+        r.status === 'failed'
+          ? { ...r, status: 'synced', dmedId: `DMED-2025-${String(Math.floor(Math.random() * 9000) + 1000)}`, syncedAt: 'hozir' }
+          : r,
+      ))
+      setSyncing(false)
+    }, 1500)
+  }
+
+  const stats = [
+    { label: 'Sinxronlangan', value: counts.synced,  icon: CheckCheck,     color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
+    { label: 'Kutilmoqda',    value: counts.pending, icon: Hourglass,      color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+    { label: 'Xatolik',       value: counts.failed,  icon: AlertTriangle,  color: 'text-red-600',   bg: 'bg-red-50 dark:bg-red-900/20' },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* Connection header */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-start gap-3">
+            <div className="size-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+              <Landmark size={22} className="text-white" />
+            </div>
+            <div>
+              <p className="text-[15px] font-bold text-[var(--text-primary)]">Dmed.uz — Davlat tizimi</p>
+              <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">
+                O'zbekiston Sog'liqni Saqlash Vazirligi yagona tibbiy axborot tizimi
+              </p>
+            </div>
+          </div>
+          <span className="flex items-center gap-1.5 text-[12px] font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2.5 py-1 rounded-full shrink-0">
+            <span className="size-1.5 rounded-full bg-green-500" />
+            Ulangan
+          </span>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3 mt-4">
+          {stats.map(s => (
+            <div key={s.label} className={['rounded-xl p-3', s.bg].join(' ')}>
+              <s.icon size={16} className={s.color} />
+              <p className="text-[22px] font-bold text-[var(--text-primary)] leading-tight mt-1">{s.value}</p>
+              <p className="text-[12px] text-[var(--text-tertiary)]">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sync log */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-[var(--text-primary)]">Sinxronizatsiya jurnali</h3>
+          <button
+            onClick={retryFailed}
+            disabled={syncing || counts.failed === 0}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border-secondary)] text-[13px] font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
+            Qayta urinish
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {records.map(r => {
+            const meta = DMED_STATUS_META[r.status]
+            return (
+              <div key={r.id} className="flex items-center justify-between gap-3 p-3 bg-[var(--bg-secondary)] rounded-xl">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-semibold text-[var(--text-tertiary)] bg-[var(--bg-tertiary)] px-1.5 py-0.5 rounded">{r.type}</span>
+                    <p className="text-[14px] font-medium text-[var(--text-primary)] truncate">{r.name}</p>
+                  </div>
+                  <p className="text-[12px] text-[var(--text-quaternary)] mt-0.5">
+                    {r.dmedId ? `${r.dmedId} · ` : ''}{r.syncedAt}
+                  </p>
+                </div>
+                <span className={['shrink-0 flex items-center gap-1 text-[12px] font-semibold px-2.5 py-1 rounded-full', meta.cls].join(' ')}>
+                  <span className={['size-1.5 rounded-full', meta.dot].join(' ')} />
+                  {meta.label}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Security note */}
+      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded-2xl p-4 flex items-start gap-3">
+        <ShieldAlert size={18} className="text-blue-600 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-[13px] font-semibold text-[var(--text-primary)]">Xavfsiz ulanish</p>
+          <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5 leading-relaxed">
+            Dmed.uz bilan barcha aloqa server tomonida, shifrlangan kanal orqali amalga oshiriladi.
+            Davlat API kaliti hech qachon brauzerga uzatilmaydi.
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ── Tab: Notifications ────────────────────────────────────────────────────────
 
 function NotifRow({ label, on, onChange }: { label: string; on: boolean; onChange: (v: boolean) => void }) {
@@ -395,6 +539,7 @@ function SecurityTab() {
 const TABS: { key: Tab; icon: React.ElementType; label: string }[] = [
   { key: 'profile',       icon: User,      label: 'Profil'          },
   { key: 'clinics',       icon: Building2, label: 'Klinikalar'      },
+  { key: 'dmed',          icon: Landmark,  label: 'Davlat tizimi'   },
   { key: 'notifications', icon: Bell,      label: 'Bildirishnomalar'},
   { key: 'security',      icon: Lock,      label: 'Xavfsizlik'      },
 ]
@@ -433,6 +578,7 @@ export function SettingsPage() {
         <div className="flex-1 min-w-0">
           {tab === 'profile'       && <ProfileTab />}
           {tab === 'clinics'       && <ClinicsTab />}
+          {tab === 'dmed'          && <DmedTab />}
           {tab === 'notifications' && <NotificationsTab />}
           {tab === 'security'      && <SecurityTab />}
         </div>
