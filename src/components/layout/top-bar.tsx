@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Search, Bell, Sun, Moon, Globe, ChevronDown, LogOut, Settings, UserRound, Check,
+  Search, Bell, Sun, Moon, Globe, ChevronDown, LogOut, Settings, UserRound, Check, Eye,
 } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { Menu, MenuTrigger, MenuContent, MenuItem, MenuSeparator, MenuLabel } from '@/components/ui/menu'
@@ -16,14 +16,14 @@ const LANGS = [
   { code: 'ru', label: 'Русский' },
 ] as const
 
-const USER = { name: 'Dr. Robert Fox', roleKey: 'specialist' as const }
+const USER = { name: 'Dr. Muhrim Devonov', roleKey: 'doctor' as const }
 
 export function TopBar() {
   const { t } = useTranslation()
   const { lang, setLang } = useLangStore()
   const { theme, toggle } = useThemeStore()
   const [search, setSearch] = useState('')
-  const unread = DASHBOARD_ALERTS.length
+  const unread = 6
 
   return (
     <header className="sticky top-0 z-20 h-[72px] flex items-center gap-3 px-4 sm:px-6 bg-[var(--bg-primary)]/80 backdrop-blur-md border-b border-[var(--border-secondary)]">
@@ -33,9 +33,15 @@ export function TopBar() {
         <input
           value={search}
           onChange={e => setSearch(e.target.value)}
-          placeholder={t('header.searchPlaceholder')}
+          placeholder="Bemor, ICD-10, alert, reja, MDT qaydini qidiring..."
           className="w-full h-10 pl-9 pr-3 rounded-lg bg-[var(--bg-secondary)] border border-transparent text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] outline-none transition-colors focus:bg-[var(--bg-primary)] focus:border-[var(--fg-brand-primary)] focus:[box-shadow:0_0_0_3px_rgba(41,112,255,0.12)]"
         />
+      </div>
+
+      {/* Center: income badge */}
+      <div className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 text-[12px] font-semibold shrink-0">
+        <Eye size={13} />
+        <span>4.5M so'm</span>
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">

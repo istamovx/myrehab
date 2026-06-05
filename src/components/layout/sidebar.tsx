@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  LayoutDashboard, Users, BarChart2, Calendar, FileText, UsersRound,
-  Search, X, ChevronDown, HelpCircle, Stethoscope, GitPullRequest, Settings,
+  Search, X, LogOut,
+  ClipboardList, Users, FilePlus, Activity, MessageSquare, Bell,
+  Video, UsersRound, Dumbbell, Newspaper,
+  TrendingUp, History, Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -56,9 +58,7 @@ function NavGroup({ label, children }: { label: string; children: React.ReactNod
   )
 }
 
-interface SidebarProps {
-  onClose?: () => void
-}
+interface SidebarProps { onClose?: () => void }
 
 export function Sidebar({ onClose }: SidebarProps) {
   const { t } = useTranslation()
@@ -73,7 +73,10 @@ export function Sidebar({ onClose }: SidebarProps) {
               <path d="M8 3h4v4h4v4h-4v4H8v-4H4V7h4V3z" fill="white" />
             </svg>
           </div>
-          <span className="font-extrabold text-[16.5px] tracking-[-0.3px] text-[var(--text-primary)]">MyRehab</span>
+          <div>
+            <span className="font-extrabold text-[15px] tracking-[-0.3px] text-[var(--text-primary)] block leading-none">MyRehab</span>
+            <span className="text-[10px] text-[var(--text-quaternary)] font-medium">{t('nav.clinicalPlatform')}</span>
+          </div>
         </div>
         {onClose && (
           <button
@@ -85,7 +88,7 @@ export function Sidebar({ onClose }: SidebarProps) {
         )}
       </div>
 
-      {/* Sidebar search */}
+      {/* Search */}
       <div className="mx-[14px] mt-[14px] mb-[6px] h-[38px] bg-[var(--bg-secondary)] rounded-[10px] flex items-center gap-2 px-[11px] text-[var(--text-tertiary)]">
         <Search size={15} className="shrink-0" />
         <input
@@ -97,50 +100,49 @@ export function Sidebar({ onClose }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-[14px] py-1">
-        <NavGroup label={t('nav.general')}>
-          <NavItem to="/dashboard"    icon={LayoutDashboard} label={t('nav.dashboard')}    onClose={onClose} />
-          <NavItem to="/patients"     icon={Users}           label={t('nav.patients')}     onClose={onClose} />
-          <NavItem to="/doctors"      icon={Stethoscope}     label={t('nav.doctors')}      onClose={onClose} />
-          <NavItem to="/membership-requests" icon={GitPullRequest} label={t('nav.membership')} badge={3} onClose={onClose} />
+        <NavGroup label="ASOSIY">
+          <NavItem to="/dashboard"    icon={ClipboardList}  label="Ish ro'yxati"     onClose={onClose} />
+          <NavItem to="/patients"     icon={Users}          label="Bemorlar"          badge={3} onClose={onClose} />
+          <NavItem to="/docs"         icon={FilePlus}       label="Reja yaratish"     onClose={onClose} />
+          <NavItem to="/insights"     icon={Activity}       label="Monitoring"        onClose={onClose} />
+          <NavItem to="/appointments" icon={MessageSquare}  label="Xabarlar"          onClose={onClose} />
+          <NavItem to="/membership-requests" icon={Bell}   label="Bildirishnomalar"  badge={6} onClose={onClose} />
         </NavGroup>
 
-        <NavGroup label={t('nav.management')}>
-          <NavItem to="/insights"     icon={BarChart2}       label={t('nav.insights')}     onClose={onClose} />
-          <NavItem to="/appointments" icon={Calendar}        label={t('nav.appointments')} onClose={onClose} />
-          <NavItem to="/docs"         icon={FileText}        label={t('nav.documents')}    onClose={onClose} />
-          <NavItem to="/team"         icon={UsersRound}      label={t('nav.team')}         onClose={onClose} />
+        <NavGroup label="KUNDALIK ISH">
+          <NavItem to="/appointments" icon={Video}          label="Telekonsultatsiya" onClose={onClose} />
+          <NavItem to="/team"         icon={UsersRound}     label="MDT jamoasi"       onClose={onClose} />
+          <NavItem to="/docs"         icon={Dumbbell}       label="Mashqlar kutubxonasi" onClose={onClose} />
+          <NavItem to="/insights"     icon={Newspaper}      label="Yangiliklar"       onClose={onClose} />
         </NavGroup>
 
-        <NavGroup label={t('nav.system')}>
-          <NavItem to="/settings" icon={Settings} label={t('nav.settings')} onClose={onClose} />
+        <NavGroup label="HISOBOTLAR">
+          <NavItem to="/insights"     icon={TrendingUp}     label="Daromad ko'rinishi" onClose={onClose} />
+          <NavItem to="/dashboard"    icon={History}        label="Faollik tarixi"    onClose={onClose} />
+        </NavGroup>
+
+        <NavGroup label="SOZLAMALAR">
+          <NavItem to="/settings"     icon={Settings}       label="Sozlamalar"        onClose={onClose} />
         </NavGroup>
       </nav>
 
-      {/* Footer */}
-      <div className="px-[14px] pb-[18px] pt-[16px] border-t border-[var(--border-secondary)] space-y-[10px]">
-        {/* Clinic card */}
-        <div className="bg-[var(--bg-secondary)] rounded-[13px] p-[11px] flex items-center gap-[10px] cursor-pointer hover:bg-[var(--bg-tertiary)] transition-colors">
-          <div className="size-[33px] rounded-[9px] shrink-0 bg-gradient-to-br from-[#34d8c8] to-[#19b6a6] flex items-center justify-center text-white">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
+      {/* Footer — doctor card */}
+      <div className="px-[14px] pb-[14px] pt-[12px] border-t border-[var(--border-secondary)]">
+        <div className="flex items-center gap-[10px]">
+          <div className="size-[36px] rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-[13px] font-bold shrink-0">
+            MD
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] text-[var(--text-quaternary)] font-semibold">{t('nav.clinic')}</p>
-            <p className="text-[13.5px] font-bold text-[var(--text-primary)] truncate">{t('nav.clinicName')}</p>
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-bold text-[var(--text-primary)] truncate">Muhrim Devonov</p>
+            <p className="text-[11px] text-[var(--text-tertiary)]">Shifokor</p>
           </div>
-          <ChevronDown size={15} className="text-[var(--text-quaternary)] shrink-0" />
+          <button
+            className="size-8 rounded-lg flex items-center justify-center text-[var(--text-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-red-500 transition-colors cursor-pointer shrink-0"
+            title="Chiqish"
+          >
+            <LogOut size={15} />
+          </button>
         </div>
-
-        {/* Support button */}
-        <button className="w-full border border-[var(--border-secondary)] bg-[var(--bg-primary)] rounded-[11px] p-[11px] text-[13px] font-bold text-[var(--text-secondary)] cursor-pointer hover:bg-[var(--bg-secondary)] transition-colors flex items-center justify-center gap-[7px]">
-          <HelpCircle size={15} />
-          {t('nav.support')}
-        </button>
-
-        {/* Copyright */}
-        <p className="text-center text-[10.5px] text-[var(--text-quaternary)] font-medium">© 2025 MyRehab</p>
       </div>
     </aside>
   )
