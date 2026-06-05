@@ -4,6 +4,7 @@ import { CheckCircle2, Circle, Flame, TrendingUp, Pill, Dumbbell, Smile, Meh, Fr
 import {
   TODAY_SUMMARY, TODAY_EXERCISES, TODAY_MEDICATIONS, PATIENT_PROFILE, ASSIGNED_DOCTOR,
 } from '@/data/patient-mock-data'
+import { useConnectStore } from '@/store/connect'
 
 const MOOD_OPTIONS = [
   { key: 'happy',   Icon: Smile, color: 'text-green-500'  },
@@ -23,6 +24,7 @@ export function PatientTodayPage() {
   const [mood, setMood] = useState<string | null>(TODAY_SUMMARY.mood)
   const [moodSaved, setMoodSaved] = useState(false)
   const [exercises, setExercises] = useState(TODAY_EXERCISES)
+  const assignedMeds = useConnectStore(s => s.medications)
 
   const doneCount = exercises.filter(e => e.completedToday).length
 
@@ -146,6 +148,19 @@ export function PatientTodayPage() {
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-3">{t('patient.todayMeds')}</h2>
         <div className="space-y-2">
+          {/* Doctor-assigned medications (cross-role) */}
+          {assignedMeds.map(m => (
+            <div key={m.id} className="flex items-start justify-between p-3 rounded-lg bg-[var(--bg-brand-primary)] border border-[var(--border-brand)]">
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-[var(--text-primary)]">{m.name}</p>
+                <p className="text-xs text-[var(--text-tertiary)]">{m.dose}{m.schedule ? ' · ' + m.schedule : ''}</p>
+                {m.instructions && <p className="text-xs text-[var(--text-tertiary)] mt-0.5">{m.instructions}</p>}
+              </div>
+              <span className="text-xs font-semibold px-2 py-1 rounded-full bg-[var(--fg-brand-primary)] text-white shrink-0">
+                Shifokor tayinladi
+              </span>
+            </div>
+          ))}
           {TODAY_MEDICATIONS.map((m, i) => (
             <div key={i} className="flex items-center justify-between p-3 rounded-lg bg-[var(--bg-secondary)]">
               <div>
