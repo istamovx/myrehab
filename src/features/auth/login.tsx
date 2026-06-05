@@ -71,23 +71,21 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
     setLoading(true)
-    setTimeout(() => {
-      const res = login(username, password)
-      setLoading(false)
-      if (res.ok && res.role) {
-        navigate({ to: homePathForRole(res.role) })
-      } else {
-        setError(
-          res.error === 'empty'     ? t('auth.fillAllFields')
-          : res.error === 'not_found' ? t('auth.userNotFound')
-          : t('auth.wrongPassword'),
-        )
-      }
-    }, 350)
+    const res = await login(username, password)
+    setLoading(false)
+    if (res.ok && res.role) {
+      navigate({ to: homePathForRole(res.role) })
+    } else {
+      setError(
+        res.error === 'empty'       ? t('auth.fillAllFields')
+        : res.error === 'not_found' ? t('auth.userNotFound')
+        : t('auth.wrongPassword'),
+      )
+    }
   }
 
   function fillDemo(acct: DemoAccount) {

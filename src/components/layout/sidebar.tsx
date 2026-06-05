@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import {
   X, ClipboardList, Users, FilePlus, Activity, MessageSquare, Bell,
   Video, UsersRound, Dumbbell, Newspaper, TrendingUp, History, Settings,
-  ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, Package, FlaskConical,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -148,10 +148,12 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
         </NavGroup>
 
         <NavGroup label="KUNDALIK ISH" collapsed={collapsed}>
-          <NavItem to="/appointments" icon={Video}        label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/team"         icon={UsersRound}   label="MDT jamoasi"       onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/doctors"      icon={Dumbbell}     label="Mashqlar"          onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/docs"         icon={Newspaper}    label="Protokollar"       onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/appointments" icon={Video}         label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/team"         icon={UsersRound}    label="MDT jamoasi"       onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/doctors"      icon={Dumbbell}      label="Mashqlar"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/docs"         icon={Newspaper}     label="Protokollar"       onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/inventory"    icon={Package}       label="Omborxona"         onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/lab-results"  icon={FlaskConical}  label="Laboratoriya"      onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
         <NavGroup label="TAHLIL" collapsed={collapsed}>
