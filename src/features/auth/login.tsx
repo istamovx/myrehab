@@ -33,9 +33,9 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     password: 'admin123',
     icon: ShieldCheck,
     label: 'Super Admin',
-    color: '#818cf8',
-    bg: 'rgba(99,102,241,0.12)',
-    border: 'rgba(99,102,241,0.25)',
+    color: '#528BFF',
+    bg: 'rgba(21,94,239,0.12)',
+    border: 'rgba(21,94,239,0.25)',
   },
   {
     role: 'doctor',
@@ -107,7 +107,7 @@ export function LoginPage() {
         style={{ background: 'linear-gradient(145deg,#0f172a 0%,#1e1b4b 60%,#0c1425 100%)' }}
       >
         {/* Orbs */}
-        <div className="absolute rounded-full pointer-events-none" style={{ width: 500, height: 500, top: -100, left: -100, background: 'radial-gradient(circle,rgba(99,102,241,0.28) 0%,transparent 65%)', filter: 'blur(60px)', animation: 'float 10s ease-in-out infinite' }} />
+        <div className="absolute rounded-full pointer-events-none" style={{ width: 500, height: 500, top: -100, left: -100, background: 'radial-gradient(circle,rgba(21,94,239,0.28) 0%,transparent 65%)', filter: 'blur(60px)', animation: 'float 10s ease-in-out infinite' }} />
         <div className="absolute rounded-full pointer-events-none" style={{ width: 400, height: 400, bottom: -80, right: -80, background: 'radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 65%)', filter: 'blur(50px)', animation: 'float 13s ease-in-out infinite reverse' }} />
         <div className="absolute rounded-full pointer-events-none" style={{ width: 250, height: 250, top: '50%', left: '55%', background: 'radial-gradient(circle,rgba(6,182,212,0.15) 0%,transparent 65%)', filter: 'blur(40px)', animation: 'float 11s ease-in-out infinite 4s' }} />
 
@@ -118,7 +118,7 @@ export function LoginPage() {
         <div className="relative flex items-center gap-3" style={{ animation: 'heroFadeUp 0.6s ease-out both' }}>
           <img src="/logo.svg" alt="" className="w-11 h-11 shrink-0" />
           <div>
-            <p className="text-[20px] font-extrabold text-white tracking-tight leading-none">My<span style={{ color: '#818cf8' }}>Rehab</span></p>
+            <p className="text-[20px] font-extrabold text-white tracking-tight leading-none">My<span style={{ color: '#528BFF' }}>Rehab</span></p>
             <p className="text-xs mt-0.5" style={{ color: 'rgba(248,250,252,0.45)' }}>{t('auth.platformSubtitle')}</p>
           </div>
         </div>
@@ -126,14 +126,14 @@ export function LoginPage() {
         {/* Main content */}
         <div className="relative" style={{ animation: 'heroFadeUp 0.6s ease-out 0.1s both' }}>
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-6 text-xs font-bold"
-               style={{ background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)', color: '#a5b4fc' }}>
+               style={{ background: 'rgba(21,94,239,0.15)', border: '1px solid rgba(21,94,239,0.3)', color: '#84ADFF' }}>
             <Sparkles size={12} /> 2025 yilning #1 reabilitatsiya platformasi
           </div>
 
           <h1 className="text-[38px] font-extrabold leading-tight mb-4">
             <span className="text-white">{t('auth.heroTitle')}</span>
             <br />
-            <span style={{ background: 'linear-gradient(135deg,#a5b4fc 0%,#c4b5fd 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <span style={{ background: 'linear-gradient(135deg,#84ADFF 0%,#528BFF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
               aqlli platformasi
             </span>
           </h1>
@@ -143,7 +143,7 @@ export function LoginPage() {
 
           <div className="space-y-3">
             {[
-              { icon: Shield,     color: '#818cf8', text: t('auth.feature1') },
+              { icon: Shield,     color: '#528BFF', text: t('auth.feature1') },
               { icon: TrendingUp, color: '#34d399', text: t('auth.feature2') },
               { icon: Users,      color: '#22d3ee', text: t('auth.feature3') },
             ].map(f => {
@@ -163,7 +163,7 @@ export function LoginPage() {
           <div className="flex gap-6 mt-10 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
             {[['24+', 'Tashkilot'], ['1200+', 'Bemor'], ['98%', 'Muvaffaqiyat']].map(([v, l]) => (
               <div key={l}>
-                <div className="text-lg font-black" style={{ color: '#818cf8' }}>{v}</div>
+                <div className="text-lg font-black" style={{ color: '#528BFF' }}>{v}</div>
                 <div className="text-xs" style={{ color: 'rgba(248,250,252,0.35)' }}>{l}</div>
               </div>
             ))}
@@ -188,7 +188,7 @@ export function LoginPage() {
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-7 h-7 shrink-0" />
-            <span className="font-bold text-[15px] text-white">My<span style={{ color: '#818cf8' }}>Rehab</span></span>
+            <span className="font-bold text-[15px] text-white">My<span style={{ color: '#84ADFF' }}>Rehab</span></span>
           </div>
 
           {/* Language switcher */}
@@ -204,7 +204,7 @@ export function LoginPage() {
                 <MenuItem key={l.code} onClick={() => setLang(l.code)}>
                   <span className="w-6 text-[12px] font-bold uppercase" style={{ color: 'rgba(248,250,252,0.4)' }}>{l.code}</span>
                   <span className="flex-1">{l.label}</span>
-                  {lang === l.code && <Check size={14} style={{ color: '#818cf8' }} />}
+                  {lang === l.code && <Check size={14} style={{ color: '#155EEF' }} />}
                 </MenuItem>
               ))}
             </MenuContent>
@@ -233,13 +233,13 @@ export function LoginPage() {
                     autoFocus
                     autoComplete="username"
                     placeholder={t('auth.usernamePlaceholder')}
-                    className="w-full h-11 pl-10 pr-4 rounded-xl text-sm text-white outline-none transition-all"
+                    className="autofill-dark w-full h-11 pl-10 pr-4 rounded-xl text-sm text-white outline-none transition-all"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.1)',
-                      caretColor: '#818cf8',
+                      caretColor: '#155EEF',
                     }}
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)' }}
+                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(21,94,239,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(21,94,239,0.12)' }}
                     onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
                   />
                 </div>
@@ -258,13 +258,13 @@ export function LoginPage() {
                     onChange={e => setPassword(e.target.value)}
                     autoComplete="current-password"
                     placeholder="••••••••"
-                    className="w-full h-11 pl-10 pr-11 rounded-xl text-sm text-white outline-none transition-all"
+                    className="autofill-dark w-full h-11 pl-10 pr-11 rounded-xl text-sm text-white outline-none transition-all"
                     style={{
                       background: 'rgba(255,255,255,0.05)',
                       border: '1px solid rgba(255,255,255,0.1)',
-                      caretColor: '#818cf8',
+                      caretColor: '#155EEF',
                     }}
-                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(99,102,241,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(99,102,241,0.12)' }}
+                    onFocus={e => { e.currentTarget.style.borderColor = 'rgba(21,94,239,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(21,94,239,0.12)' }}
                     onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
                   />
                   <button
@@ -295,12 +295,12 @@ export function LoginPage() {
                 disabled={loading}
                 className="w-full h-11 rounded-xl font-bold text-sm text-white flex items-center justify-center gap-2 transition-all disabled:opacity-50"
                 style={{
-                  background: 'linear-gradient(135deg,#6366f1,#8b5cf6)',
-                  boxShadow: '0 0 24px rgba(99,102,241,0.4)',
+                  background: '#155EEF',
+                  boxShadow: '0 0 24px rgba(21,94,239,0.4)',
                   transition: 'all 0.2s',
                 }}
-                onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 36px rgba(99,102,241,0.6)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)' } }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 24px rgba(99,102,241,0.4)'; (e.currentTarget as HTMLButtonElement).style.transform = 'none' }}
+                onMouseEnter={e => { if (!loading) { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 36px rgba(21,94,239,0.6)'; (e.currentTarget as HTMLButtonElement).style.transform = 'translateY(-1px)' } }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 24px rgba(21,94,239,0.4)'; (e.currentTarget as HTMLButtonElement).style.transform = 'none' }}
               >
                 {loading ? (
                   <>

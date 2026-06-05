@@ -76,7 +76,7 @@
   --bg-secondary-hover:   #F2F4F7;
   --bg-tertiary:          #F2F4F7;
   --bg-brand-primary:     #EFF4FF;
-  --bg-brand-solid:       #2970FF;
+  --bg-brand-solid:       #155EEF;
   --bg-success-primary:   #ECFDF3;
   --bg-warning-primary:   #FFFAEB;
   --bg-error-primary:     #FEF3F2;
@@ -87,7 +87,7 @@
   --fg-secondary:         #344054;
   --fg-tertiary:          #475467;
   --fg-quaternary:        #98A2B3;
-  --fg-brand-primary:     #2970FF;
+  --fg-brand-primary:     #155EEF;
   --fg-success-primary:   #079455;
   --fg-warning-primary:   #DC6803;
   --fg-error-primary:     #D92D20;
@@ -98,8 +98,8 @@
   --text-tertiary:        #475467;
   --text-quaternary:      #667085;
   --text-placeholder:     #98A2B3;
-  --text-brand-primary:   #2970FF;
-  --text-brand-secondary: #004EEB;
+  --text-brand-primary:   #155EEF;
+  --text-brand-secondary: #0040C1;
   --text-success-primary: #067647;
   --text-warning-primary: #B54708;
   --text-error-primary:   #B42318;
@@ -245,4 +245,14 @@ html { scroll-behavior: smooth; }
   0%   { background-position: 0% 50% }
   50%  { background-position: 100% 50% }
   100% { background-position: 0% 50% }
+}
+
+/* ─── Autofill override for dark inputs (e.g. login page) ─────────────────── */
+.autofill-dark:-webkit-autofill,
+.autofill-dark:-webkit-autofill:hover,
+.autofill-dark:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(10, 16, 36, 0.95) inset !important;
+  caret-color: #ffffff;
+  transition: background-color 5000s ease-in-out 0s;
 }
