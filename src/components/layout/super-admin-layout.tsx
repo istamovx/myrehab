@@ -97,7 +97,7 @@ export function SuperAdminLayout() {
         )}
 
         {/* TopBar */}
-        <header className="sticky top-0 z-20 h-[72px] flex items-center gap-3 px-4 sm:px-6 bg-[var(--bg-primary)]/80 backdrop-blur-md border-b border-[var(--border-secondary)]">
+        <header className="sticky top-0 z-20 h-16 flex items-center gap-3 px-4 sm:px-6 bg-[var(--bg-primary)]/80 backdrop-blur-md border-b border-[var(--border-secondary)]">
           {/* Left: search */}
           <div className="relative flex-1 max-w-md">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--fg-quaternary)] pointer-events-none" />
@@ -108,8 +108,8 @@ export function SuperAdminLayout() {
           </div>
 
           {/* Platform badge */}
-          <div className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-[12px] font-semibold shrink-0">
-            <span className="size-1.5 rounded-full bg-indigo-500" />
+          <div className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full bg-[var(--bg-brand-primary)] border border-[var(--border-brand)] text-[var(--text-brand-primary)] text-[12px] font-semibold shrink-0">
+            <span className="size-1.5 rounded-full bg-[var(--fg-brand-primary)]" />
             Super Admin
           </div>
 
@@ -143,12 +143,12 @@ export function SuperAdminLayout() {
 
             {/* Super Admin avatar */}
             <div className="inline-flex items-center gap-2 h-10 pl-1.5 pr-2 rounded-lg transition-colors">
-              <div className="size-8 rounded-full bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white text-[12px] font-bold shrink-0">
+              <div className="size-8 rounded-full bg-gradient-to-br from-[#155EEF] to-[#004EEB] flex items-center justify-center text-white text-[12px] font-bold shrink-0">
                 SA
               </div>
               <div className="hidden sm:block text-left leading-tight">
                 <p className="text-[13px] font-semibold text-[var(--text-primary)]">Super Admin</p>
-                <p className="text-[11px] text-indigo-500 font-semibold">Platform</p>
+                <p className="text-[11px] text-[var(--text-brand-primary)] font-semibold">Platform</p>
               </div>
             </div>
 
@@ -165,7 +165,7 @@ export function SuperAdminLayout() {
         </header>
 
         <main className="flex-1">
-          <div className="px-4 py-6 sm:px-6 lg:px-8 w-full">
+          <div className="p-4 sm:p-6 w-full">
             <Outlet />
           </div>
         </main>
@@ -179,8 +179,8 @@ export function SuperAdminLayout() {
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-[var(--border-secondary)] shrink-0">
               <div className="flex items-center gap-2.5">
-                <div className="size-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/30 flex items-center justify-center">
-                  <Glasses size={16} className="text-indigo-600 dark:text-indigo-400" />
+                <div className="size-8 rounded-lg bg-[var(--bg-brand-primary)] flex items-center justify-center">
+                  <Glasses size={16} className="text-[var(--fg-brand-primary)]" />
                 </div>
                 <div>
                   <p className="text-[14px] font-bold text-[var(--text-primary)]">Ko'rish rejimi</p>
@@ -250,7 +250,7 @@ export function SuperAdminLayout() {
 
 function UserRow({ user, onClick }: { user: OrgUser; onClick: () => void }) {
   const roleColors: Record<string, string> = {
-    admin:   'bg-indigo-100 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300',
+    admin:   'bg-[var(--bg-brand-primary)] text-[var(--text-brand-primary)]',
     doctor:  'bg-teal-100 dark:bg-teal-950/30 text-teal-700 dark:text-teal-300',
     patient: 'bg-green-100 dark:bg-green-950/30 text-green-700 dark:text-green-300',
   }
@@ -272,7 +272,7 @@ function UserRow({ user, onClick }: { user: OrgUser; onClick: () => void }) {
         {roleLabel[user.role]}
       </span>
       <ChevronRight size={14} className="text-[var(--fg-quaternary)] opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-      <span className="hidden group-hover:flex items-center gap-1 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 shrink-0">
+      <span className="hidden group-hover:flex items-center gap-1 text-[11px] font-semibold text-[var(--text-brand-primary)] shrink-0">
         <LogOut size={11} />
         Kirish
       </span>

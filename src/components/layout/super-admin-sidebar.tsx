@@ -69,7 +69,7 @@ export function SuperAdminSidebar({ onClose }: SuperAdminSidebarProps) {
   return (
     <aside className="w-[260px] h-full bg-[var(--bg-primary)] border-r border-[var(--border-secondary)] flex flex-col select-none">
       {/* Logo */}
-      <div className="h-[72px] flex items-center justify-between px-[14px] border-b border-[var(--border-secondary)] shrink-0">
+      <div className="h-16 flex items-center justify-between px-[14px] border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-[9px]">
           <img src="/logo.svg" alt="" className="size-7 shrink-0" />
           <div>
