@@ -12,6 +12,7 @@ import { TimePicker } from '@/components/ui/time-picker'
 import { Toggle } from '@/components/ui/toggle'
 import { PageHeader } from '@/components/layout/page-header'
 import { VideoRoom } from './video-room'
+import { useConnectStore } from '@/store/connect'
 import { PATIENTS } from '@/data/mock-data'
 import { generateMeetLink, meetCode } from '@/lib/meet'
 import { ensureNotificationPermission, scheduleReminders, offsetsLabel } from '@/lib/reminders'
@@ -65,6 +66,7 @@ export function TeleconsultationPage() {
   const [form, setForm] = useState(EMPTY_FORM)
   const [newLink, setNewLink] = useState(generateMeetLink())
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  const scheduleTeleconsult = useConnectStore(s => s.scheduleTeleconsult)
 
   function f<K extends keyof typeof form>(key: K, value: (typeof form)[K]) {
     setForm(prev => ({ ...prev, [key]: value }))
@@ -105,6 +107,15 @@ export function TeleconsultationPage() {
     }
 
     setList(prev => [tc, ...prev].sort((a, b) => +new Date(a.scheduledAt) - +new Date(b.scheduledAt)))
+
+    // Share the call with the patient app + notify them (cross-role).
+    scheduleTeleconsult({
+      scheduledAt,
+      durationMin: tc.durationMin,
+      meetUrl: tc.meetUrl,
+      reminderOffsets: offsets,
+    })
+
     setAddOpen(false)
     setForm(EMPTY_FORM)
     setNewLink(generateMeetLink())

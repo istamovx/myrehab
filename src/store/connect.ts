@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 import { MESSAGES, type Message } from '@/data/patient-mock-data'
+import { generateMeetLink } from '@/lib/meet'
+import { formatUzDateTime } from '@/lib/utils'
 
 // ---------------------------------------------------------------------------
 // Cross-role "connect" store
@@ -48,11 +50,22 @@ export interface ConnectSymptom {
   reported_at: string
 }
 
+// A video consultation the doctor schedules with the patient.
+export interface ConnectTeleconsult {
+  id: string
+  scheduledAt: string
+  durationMin: number
+  meetUrl: string
+  reminderOffsets: number[]
+  created_at: string
+}
+
 interface ConnectState {
   messages: Message[]
   notifications: ConnectNotification[]
   medications: ConnectMedication[]
   symptoms: ConnectSymptom[]
+  teleconsults: ConnectTeleconsult[]
 }
 
 interface ConnectStore extends ConnectState {
@@ -60,6 +73,7 @@ interface ConnectStore extends ConnectState {
   markThreadRead: (reader: Party) => void
   assignMedication: (med: Omit<ConnectMedication, 'id' | 'assigned_at'>) => void
   reportSymptom: (symptom: Omit<ConnectSymptom, 'id' | 'reported_at'>) => void
+  scheduleTeleconsult: (tc: Omit<ConnectTeleconsult, 'id' | 'created_at'>) => void
   addNotification: (n: Omit<ConnectNotification, 'id' | 'read' | 'created_at'>) => void
   markNotificationRead: (id: string) => void
   markAllNotificationsRead: (audience: NotificationAudience) => void
@@ -68,8 +82,23 @@ interface ConnectStore extends ConnectState {
 
 const STORAGE_KEY = 'myrehab_connect'
 
+function plusHours(h: number): string {
+  const d = new Date()
+  d.setHours(d.getHours() + h, 0, 0, 0)
+  return d.toISOString()
+}
+
+// Two baseline upcoming video calls so the patient's teleconsult page isn't empty.
+function seedTeleconsults(): ConnectTeleconsult[] {
+  const now = new Date().toISOString()
+  return [
+    { id: 'tc-seed-1', scheduledAt: plusHours(2),  durationMin: 30, meetUrl: generateMeetLink(), reminderOffsets: [60, 10], created_at: now },
+    { id: 'tc-seed-2', scheduledAt: plusHours(48), durationMin: 45, meetUrl: generateMeetLink(), reminderOffsets: [60, 10], created_at: now },
+  ]
+}
+
 function seed(): ConnectState {
-  return { messages: [...MESSAGES], notifications: [], medications: [], symptoms: [] }
+  return { messages: [...MESSAGES], notifications: [], medications: [], symptoms: [], teleconsults: seedTeleconsults() }
 }
 
 function load(): ConnectState {
@@ -82,10 +111,14 @@ function load(): ConnectState {
         notifications: parsed.notifications ?? [],
         medications: parsed.medications ?? [],
         symptoms: parsed.symptoms ?? [],
+        teleconsults: parsed.teleconsults ?? seedTeleconsults(),
       }
     }
   } catch { /* ignore corrupt storage */ }
-  return seed()
+  // First run: persist the seed so both roles share the same baseline.
+  const s = seed()
+  persist(s)
+  return s
 }
 
 function persist(state: ConnectState) {
@@ -95,6 +128,7 @@ function persist(state: ConnectState) {
       notifications: state.notifications,
       medications: state.medications,
       symptoms: state.symptoms,
+      teleconsults: state.teleconsults,
     }))
   } catch { /* ignore quota / serialization errors */ }
 }
@@ -195,6 +229,29 @@ export const useConnectStore = create<ConnectStore>((set, get) => ({
     set({ symptoms: next.symptoms, notifications: next.notifications })
   },
 
+  // -- Teleconsultation (doctor → patient) ------------------------------------
+  scheduleTeleconsult: (tc) => {
+    const now = new Date().toISOString()
+    const entry: ConnectTeleconsult = { ...tc, id: uid('tc'), created_at: now }
+    const notif: ConnectNotification = {
+      id: uid('ntf'),
+      audience: 'patient',
+      type: 'teleconsult',
+      title: 'Yangi video qabul rejalashtirildi',
+      body: `${formatUzDateTime(entry.scheduledAt)} · ${entry.durationMin} daqiqa`,
+      read: false,
+      created_at: now,
+      link: '/patient/teleconsultation',
+    }
+    const next: ConnectState = {
+      ...get(),
+      teleconsults: [entry, ...get().teleconsults].sort((a, b) => +new Date(a.scheduledAt) - +new Date(b.scheduledAt)),
+      notifications: [notif, ...get().notifications],
+    }
+    persist(next)
+    set({ teleconsults: next.teleconsults, notifications: next.notifications })
+  },
+
   // -- Notifications ----------------------------------------------------------
   addNotification: (n) => {
     const notif: ConnectNotification = { ...n, id: uid('ntf'), read: false, created_at: new Date().toISOString() }
@@ -235,6 +292,7 @@ if (typeof window !== 'undefined') {
           notifications: parsed.notifications ?? [],
           medications: parsed.medications ?? [],
           symptoms: parsed.symptoms ?? [],
+          teleconsults: parsed.teleconsults ?? [],
         })
       } catch { /* ignore */ }
     }

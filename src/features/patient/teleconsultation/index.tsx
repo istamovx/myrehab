@@ -4,30 +4,15 @@ import { Video, Clock, Bell, ExternalLink, Copy, Check, X } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { VideoRoom } from '@/features/teleconsultation/video-room'
 import { ASSIGNED_DOCTOR } from '@/data/patient-mock-data'
-import { generateMeetLink, meetCode } from '@/lib/meet'
+import { useConnectStore, type ConnectTeleconsult } from '@/store/connect'
+import { meetCode } from '@/lib/meet'
 import { offsetsLabel } from '@/lib/reminders'
 import { cn, formatUzDateTime } from '@/lib/utils'
 
-interface PatientTeleconsult {
-  id: string
+interface PatientTeleconsult extends ConnectTeleconsult {
   doctorName: string
   doctorSpec: string
-  scheduledAt: string
-  durationMin: number
-  meetUrl: string
-  reminderOffsets: number[]
 }
-
-function plusHours(h: number): string {
-  const d = new Date()
-  d.setHours(d.getHours() + h, 0, 0, 0)
-  return d.toISOString()
-}
-
-const SESSIONS: PatientTeleconsult[] = [
-  { id: 'pt1', doctorName: ASSIGNED_DOCTOR.name, doctorSpec: ASSIGNED_DOCTOR.specialization, scheduledAt: plusHours(2),  durationMin: 30, meetUrl: generateMeetLink(), reminderOffsets: [60, 10] },
-  { id: 'pt2', doctorName: ASSIGNED_DOCTOR.name, doctorSpec: ASSIGNED_DOCTOR.specialization, scheduledAt: plusHours(48), durationMin: 45, meetUrl: generateMeetLink(), reminderOffsets: [60, 10] },
-]
 
 function untilLabel(iso: string): string {
   const diff = new Date(iso).getTime() - Date.now()
@@ -41,8 +26,16 @@ function untilLabel(iso: string): string {
 
 export function PatientTeleconsultationPage() {
   const { t } = useTranslation()
+  const teleconsults = useConnectStore(s => s.teleconsults)
   const [active, setActive] = useState<PatientTeleconsult | null>(null)
   const [copiedId, setCopiedId] = useState<string | null>(null)
+
+  // Every call is with the patient's assigned doctor.
+  const sessions: PatientTeleconsult[] = teleconsults.map(tc => ({
+    ...tc,
+    doctorName: ASSIGNED_DOCTOR.name,
+    doctorSpec: ASSIGNED_DOCTOR.specialization,
+  }))
 
   async function copyLink(id: string, url: string) {
     await navigator.clipboard?.writeText(url)
@@ -81,7 +74,7 @@ export function PatientTeleconsultationPage() {
 
       {/* Sessions list */}
       <div className="space-y-3">
-        {SESSIONS.map(s => {
+        {sessions.map(s => {
           const soon = new Date(s.scheduledAt).getTime() - Date.now() < 15 * 60000
           return (
             <div
@@ -144,7 +137,7 @@ export function PatientTeleconsultationPage() {
             </div>
           )
         })}
-        {SESSIONS.length === 0 && (
+        {sessions.length === 0 && (
           <p className="text-center text-[var(--text-tertiary)] py-12">Rejalashtirilgan video qabullar yo'q</p>
         )}
       </div>
