@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AlertTriangle, Plus } from 'lucide-react'
 import { SYMPTOM_LOGS, type SymptomLog } from '@/data/patient-mock-data'
+import { useConnectStore } from '@/store/connect'
 import { Dialog } from '@/components/ui/dialog'
 import { Input, Textarea, FieldLabel } from '@/components/ui/input'
 import { Range } from '@/components/ui/range'
@@ -45,6 +46,7 @@ export function PatientSymptomsPage() {
   const [showModal, setShowModal] = useState(false)
   const [form, setForm] = useState({ type: 'pain', severity: 'mild', intensity: 3, location: '', note: '' })
   const [saved, setSaved] = useState(false)
+  const reportSymptom = useConnectStore(s => s.reportSymptom)
 
   const hasEmergency = logs.some(s => s.severity === 'severe')
 
@@ -59,6 +61,14 @@ export function PatientSymptomsPage() {
       recorded_at: new Date().toISOString(),
     }
     setLogs(prev => [newEntry, ...prev])
+    // Notify the assigned doctor of the complaint (cross-role).
+    reportSymptom({
+      type: form.type,
+      severity: form.severity as SymptomLog['severity'],
+      intensity: form.intensity,
+      location: form.location,
+      note: form.note,
+    })
     setShowModal(false)
     setForm({ type: 'pain', severity: 'mild', intensity: 3, location: '', note: '' })
     setSaved(true)

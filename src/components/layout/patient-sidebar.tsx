@@ -6,6 +6,8 @@ import {
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
+import { useConnectStore, selectUnreadMessages } from '@/store/connect'
+import { NotificationsBell } from '@/components/notifications-bell'
 
 interface NavItem {
   to:    string
@@ -13,7 +15,7 @@ interface NavItem {
   label: string
 }
 
-function PatientNavItem({ to, icon: Icon, label }: NavItem) {
+function PatientNavItem({ to, icon: Icon, label, badge }: NavItem & { badge?: number }) {
   const { pathname } = useRouterState({ select: s => s.location })
   const active = pathname === to || pathname.startsWith(to + '/')
 
@@ -29,7 +31,15 @@ function PatientNavItem({ to, icon: Icon, label }: NavItem) {
       ].join(' ')}
     >
       <Icon size={16} className="shrink-0" />
-      <span className="truncate">{label}</span>
+      <span className="truncate flex-1">{label}</span>
+      {badge != null && badge > 0 && (
+        <span className={[
+          'text-[11px] font-bold min-w-[18px] h-[18px] px-1.5 rounded-full flex items-center justify-center shrink-0',
+          active ? 'bg-white text-[var(--fg-brand-primary)]' : 'bg-[var(--fg-brand-primary)] text-white',
+        ].join(' ')}>
+          {badge}
+        </span>
+      )}
     </Link>
   )
 }
@@ -44,6 +54,7 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
   const navigate = useNavigate()
   const user = useAuthStore(s => s.user)
   const logout = useAuthStore(s => s.logout)
+  const unreadMessages = useConnectStore(selectUnreadMessages('patient'))
 
   function handleLogout() {
     logout()
@@ -73,9 +84,12 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
           <img src="/logo.svg" alt="" className="w-8 h-8 shrink-0" />
           <span className="text-[13.5px] font-semibold text-[var(--text-primary)]">MyRehab</span>
         </div>
-        <button onClick={onClose} className="lg:hidden p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
-          <X size={18} />
-        </button>
+        <div className="flex items-center gap-0.5">
+          <NotificationsBell audience="patient" />
+          <button onClick={onClose} className="lg:hidden p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
+            <X size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Patient profile card */}
@@ -87,7 +101,11 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
         {navItems.map(item => (
-          <PatientNavItem key={item.to} {...item} />
+          <PatientNavItem
+            key={item.to}
+            {...item}
+            badge={item.to === '/patient/messages' ? unreadMessages : undefined}
+          />
         ))}
       </nav>
 

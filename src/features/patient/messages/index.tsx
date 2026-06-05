@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Send } from 'lucide-react'
-import { MESSAGES, ASSIGNED_DOCTOR, type Message } from '@/data/patient-mock-data'
+import { ASSIGNED_DOCTOR, type Message } from '@/data/patient-mock-data'
+import { useConnectStore } from '@/store/connect'
 import { formatUzDate } from '@/lib/utils'
 
 function groupByDate(messages: Message[]) {
@@ -24,9 +25,14 @@ function formatTime(iso: string) {
 
 export function PatientMessagesPage() {
   const { t } = useTranslation()
-  const [messages, setMessages] = useState<Message[]>(MESSAGES)
+  const messages = useConnectStore(s => s.messages)
+  const sendMessage = useConnectStore(s => s.sendMessage)
+  const markThreadRead = useConnectStore(s => s.markThreadRead)
   const [input, setInput] = useState('')
   const endRef = useRef<HTMLDivElement>(null)
+
+  // Opening the chat clears the patient's unread message notifications.
+  useEffect(() => { markThreadRead('patient') }, [markThreadRead, messages.length])
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -35,13 +41,7 @@ export function PatientMessagesPage() {
   function send() {
     const text = input.trim()
     if (!text) return
-    setMessages(prev => [...prev, {
-      id: `msg-${Date.now()}`,
-      sender_role: 'patient',
-      body: text,
-      is_read: false,
-      created_at: new Date().toISOString(),
-    }])
+    sendMessage('patient', text)
     setInput('')
   }
 

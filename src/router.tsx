@@ -16,6 +16,7 @@ import { InventoryPage } from './features/inventory'
 import { LabResultsPage } from './features/lab-results'
 import { ExercisesPage } from './features/exercises'
 import { TeleconsultationPage } from './features/teleconsultation'
+import { MessagesPage } from './features/messages'
 import { PatientTodayPage } from './features/patient/today'
 import { PatientTeleconsultationPage } from './features/patient/teleconsultation'
 import { PatientExercisesPage } from './features/patient/exercises'
@@ -157,6 +158,12 @@ const exercisesRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/exercises',
   component: ExercisesPage,
+})
+
+const messagesRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/messages',
+  component: MessagesPage,
 })
 
 // ── Super Admin layout ────────────────────────────────────────────────────────
@@ -301,6 +308,7 @@ const routeTree = rootRoute.addChildren([
     labResultsRoute,
     teleconsultationRoute,
     exercisesRoute,
+    messagesRoute,
   ]),
   superAdminLayoutRoute.addChildren([
     superAdminIndexRoute,

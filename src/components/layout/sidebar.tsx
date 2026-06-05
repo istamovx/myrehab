@@ -2,8 +2,9 @@ import { Link } from '@tanstack/react-router'
 import {
   X, LayoutDashboard, Users, CalendarDays, TrendingUp,
   UsersRound, FileText, Bell, Package, FlaskConical,
-  Settings, ChevronLeft, ChevronRight, Stethoscope, Video, Dumbbell,
+  Settings, ChevronLeft, ChevronRight, Stethoscope, Video, Dumbbell, MessageSquare,
 } from 'lucide-react'
+import { useConnectStore, selectUnreadMessages } from '@/store/connect'
 import { cn } from '@/lib/utils'
 
 function NavItem({ to, icon: Icon, label, badge, onClose, collapsed }: {
@@ -81,6 +82,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) {
+  const unreadMessages = useConnectStore(selectUnreadMessages('doctor'))
   return (
     <aside
       className={cn(
@@ -117,6 +119,7 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
           <NavItem to="/patients"         icon={Users}           label="Bemorlar"         badge={3} onClose={onClose} collapsed={collapsed} />
           <NavItem to="/appointments"     icon={CalendarDays}    label="Uchrashuvlar"     onClose={onClose} collapsed={collapsed} />
           <NavItem to="/teleconsultation" icon={Video}           label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/messages"         icon={MessageSquare}   label="Xabarlar"         badge={unreadMessages} onClose={onClose} collapsed={collapsed} />
           <NavItem to="/insights"         icon={TrendingUp}      label="Tahlillar"        onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
