@@ -12,6 +12,7 @@ export interface SessionUser {
   role: Role
   name: string
   initials: string
+  organizationId?: string
 }
 
 interface StoredAccount {
@@ -127,16 +128,17 @@ export const useAuthStore = create<AuthStore>((set, get) => {
       const sbUser = data.session.user
       const { data: profileData } = await sb
         .from('profiles')
-        .select('name, role')
+        .select('name, role, organization_id')
         .eq('id', sbUser.id)
         .single()
-      const profile = profileData as Pick<Profile, 'name' | 'role'> | null
+      const profile = profileData as Pick<Profile, 'name' | 'role' | 'organization_id'> | null
       if (profile) {
         const user: SessionUser = {
           username: sbUser.email?.replace('@myrehab.demo', '') ?? sbUser.id,
           role: profile.role as Role,
           name: profile.name,
           initials: initialsFromName(profile.name),
+          organizationId: profile.organization_id ?? undefined,
         }
         localStorage.setItem(SESSION_KEY, JSON.stringify(user))
         set({ user, isLoading: false })
@@ -169,10 +171,10 @@ export const useAuthStore = create<AuthStore>((set, get) => {
         if (!sbError && sbData.session) {
           const { data: profileData } = await sb
             .from('profiles')
-            .select('name, role')
+            .select('name, role, organization_id')
             .eq('id', sbData.session.user.id)
             .single()
-          const profile = profileData as Pick<Profile, 'name' | 'role'> | null
+          const profile = profileData as Pick<Profile, 'name' | 'role' | 'organization_id'> | null
 
           if (profile) {
             const user: SessionUser = {
@@ -180,6 +182,7 @@ export const useAuthStore = create<AuthStore>((set, get) => {
               role: profile.role as Role,
               name: profile.name,
               initials: initialsFromName(profile.name),
+              organizationId: profile.organization_id ?? undefined,
             }
             localStorage.setItem(SESSION_KEY, JSON.stringify(user))
             set({ user, isLoading: false })

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Calendar, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp, Users, Activity, Stethoscope, UserX, Clock, FileText } from 'lucide-react'
 import { PillSelect } from '@/components/ui/select'
@@ -8,6 +8,9 @@ import { DonutChart } from '@/components/charts/donut-chart'
 import { DOCTORS, DASHBOARD_ALERTS } from '@/data/mock-data'
 import { CLINIC_STATS } from '@/data/clinic-mock-data'
 import { cn } from '@/lib/utils'
+import { SUPABASE_ENABLED } from '@/lib/supabase'
+import { getOrganizationStats } from '@/services/analytics.service'
+import { useAuthStore } from '@/store/auth'
 
 const TIME_SLOTS = [8, 9, 10, 11, 12, 13, 14, 15]
 const TOTAL_HOURS = 7
@@ -65,6 +68,24 @@ function Card({ children, className }: { children: React.ReactNode; className?: 
 export function DashboardPage() {
   const { t } = useTranslation()
   const [department, setDepartment] = useState('orthopedics')
+  const orgId = useAuthStore(s => s.user?.organizationId)
+  const [stats, setStats] = useState(CLINIC_STATS)
+
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !orgId) return
+    getOrganizationStats(orgId)
+      .then(live => {
+        setStats({
+          totalPatients:   live.totalPatients,
+          activePlans:     live.appointmentsThisMonth,
+          totalDoctors:    live.totalDoctors,
+          unassigned:      Math.max(0, live.totalPatients - live.activePatients),
+          pendingRequests: Math.max(0, live.appointmentsThisMonth - live.completedAppointments),
+          draftPlans:      0,
+        })
+      })
+      .catch(console.error)
+  }, [orgId])
 
   const DEPARTMENTS = [
     { value: 'orthopedics', label: t('team.orthopedic') },
@@ -92,12 +113,12 @@ export function DashboardPage() {
       {/* Aggregate stat cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
         {[
-          { label: t('dashboard.totalPatients'),   value: CLINIC_STATS.totalPatients,   Icon: Users,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
-          { label: t('dashboard.activePlans'),     value: CLINIC_STATS.activePlans,     Icon: Activity,    color: 'text-[var(--fg-success-primary)]',  bg: 'bg-[var(--bg-success-primary)]' },
-          { label: t('dashboard.totalDoctors'),    value: CLINIC_STATS.totalDoctors,    Icon: Stethoscope, color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
-          { label: t('dashboard.unassigned'),      value: CLINIC_STATS.unassigned,      Icon: UserX,       color: 'text-[var(--fg-warning-primary)]',  bg: 'bg-[var(--bg-warning-primary)]' },
-          { label: t('dashboard.pendingRequests'), value: CLINIC_STATS.pendingRequests, Icon: Clock,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
-          { label: t('dashboard.draftPlans'),      value: CLINIC_STATS.draftPlans,      Icon: FileText,    color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
+          { label: t('dashboard.totalPatients'),   value: stats.totalPatients,   Icon: Users,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
+          { label: t('dashboard.activePlans'),     value: stats.activePlans,     Icon: Activity,    color: 'text-[var(--fg-success-primary)]',  bg: 'bg-[var(--bg-success-primary)]' },
+          { label: t('dashboard.totalDoctors'),    value: stats.totalDoctors,    Icon: Stethoscope, color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
+          { label: t('dashboard.unassigned'),      value: stats.unassigned,      Icon: UserX,       color: 'text-[var(--fg-warning-primary)]',  bg: 'bg-[var(--bg-warning-primary)]' },
+          { label: t('dashboard.pendingRequests'), value: stats.pendingRequests, Icon: Clock,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
+          { label: t('dashboard.draftPlans'),      value: stats.draftPlans,      Icon: FileText,    color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
         ].map(s => (
           <div key={s.label} className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] p-4">
             <div className={cn('size-8 rounded-lg flex items-center justify-center mb-3', s.bg)}>
