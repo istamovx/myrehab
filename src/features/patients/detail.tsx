@@ -4,7 +4,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import {
   ChevronLeft, Phone, Calendar, MessageSquare, MoreHorizontal,
   Edit, Plus, Eye, Download, ChevronRight, ChevronDown, FileText, FileType,
-  AlertTriangle, Info, ClipboardCheck, CalendarClock, ShieldAlert,
+  AlertTriangle, Info, Activity, ClipboardCheck, CalendarClock, ShieldAlert,
   MapPin, Cake, Globe, Pill, HeartPulse, Stethoscope, BadgeAlert,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import {
   X, LayoutDashboard, Users, CalendarDays, TrendingUp,
   UsersRound, FileText, Bell, Package, FlaskConical,
-  Settings, ChevronLeft, ChevronRight, Stethoscope,
+  Settings, ChevronLeft, ChevronRight, Stethoscope, Video,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -133,10 +133,11 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
       {/* Navigation */}
       <nav className={cn('flex-1 overflow-y-auto py-2', collapsed ? 'px-1.5' : 'px-[14px]')}>
         <NavGroup label="ASOSIY" collapsed={collapsed}>
-          <NavItem to="/dashboard"    icon={LayoutDashboard} label="Bosh sahifa"     onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/patients"     icon={Users}           label="Bemorlar"        badge={3} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/appointments" icon={CalendarDays}    label="Uchrashuvlar"   onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/insights"     icon={TrendingUp}      label="Tahlillar"      onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/dashboard"        icon={LayoutDashboard} label="Bosh sahifa"      onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/patients"         icon={Users}           label="Bemorlar"         badge={3} onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/appointments"     icon={CalendarDays}    label="Uchrashuvlar"     onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/teleconsultation" icon={Video}           label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/insights"         icon={TrendingUp}      label="Tahlillar"        onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
         <NavGroup label="KLINIKA" collapsed={collapsed}>

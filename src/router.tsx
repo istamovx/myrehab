@@ -14,7 +14,9 @@ import { DocsPage } from './features/docs'
 import { TeamPage } from './features/team'
 import { InventoryPage } from './features/inventory'
 import { LabResultsPage } from './features/lab-results'
+import { TeleconsultationPage } from './features/teleconsultation'
 import { PatientTodayPage } from './features/patient/today'
+import { PatientTeleconsultationPage } from './features/patient/teleconsultation'
 import { PatientExercisesPage } from './features/patient/exercises'
 import { PatientPlanPage } from './features/patient/plan'
 import { PatientProgressPage } from './features/patient/progress'
@@ -144,6 +146,12 @@ const labResultsRoute = createRoute({
   component: LabResultsPage,
 })
 
+const teleconsultationRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/teleconsultation',
+  component: TeleconsultationPage,
+})
+
 // ── Super Admin layout ────────────────────────────────────────────────────────
 const superAdminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
@@ -256,6 +264,12 @@ const patientAppointmentsRoute = createRoute({
   component: PatientAppointmentsPage,
 })
 
+const patientTeleconsultationRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/teleconsultation',
+  component: PatientTeleconsultationPage,
+})
+
 const patientSettingsRoute = createRoute({
   getParentRoute: () => patientLayoutRoute,
   path: '/settings',
@@ -278,6 +292,7 @@ const routeTree = rootRoute.addChildren([
     teamRoute,
     inventoryRoute,
     labResultsRoute,
+    teleconsultationRoute,
   ]),
   superAdminLayoutRoute.addChildren([
     superAdminIndexRoute,
@@ -298,6 +313,7 @@ const routeTree = rootRoute.addChildren([
     patientKnowledgeRoute,
     patientMessagesRoute,
     patientAppointmentsRoute,
+    patientTeleconsultationRoute,
     patientSettingsRoute,
   ]),
 ])

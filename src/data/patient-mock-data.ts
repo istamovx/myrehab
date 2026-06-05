@@ -161,7 +161,7 @@ export const PATIENT_PROFILE = {
 export const ASSIGNED_DOCTOR = {
   id: 'doc-001',
   name: 'Dr. Sardor Rahimov',
-  specialization: 'Orthopedic Surgeon',
+  specialization: 'Ortoped jarroh',
   phone: '+998 71 200 11 22',
 }
 
