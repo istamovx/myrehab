@@ -12,6 +12,7 @@ export interface SessionUser {
   role: Role
   name: string
   initials: string
+  email?: string
   organizationId?: string
 }
 
@@ -21,13 +22,14 @@ interface StoredAccount {
   role: Role
   name: string
   initials: string
+  email: string
 }
 
 // Default credentials for every role (demo).
 const DEFAULT_ACCOUNTS: StoredAccount[] = [
-  { username: 'superadmin', password: 'admin123',   role: 'super_admin', name: 'Super Admin',        initials: 'SA' },
-  { username: 'doctor',     password: 'doctor123',  role: 'doctor',      name: 'Dr. Muhrim Devonov', initials: 'MD' },
-  { username: 'patient',    password: 'patient123', role: 'patient',     name: 'Murod Aliyev',       initials: 'MA' },
+  { username: 'superadmin', password: 'admin123',   role: 'super_admin', name: 'Bosh Administrator',  initials: 'BA', email: 'superadmin@myrehab.uz' },
+  { username: 'doctor',     password: 'doctor123',  role: 'doctor',      name: 'Dr. Muhrim Devonov',  initials: 'MD', email: 'muhrim.devonov@myrehab.uz' },
+  { username: 'patient',    password: 'patient123', role: 'patient',     name: 'Murod Aliyev',        initials: 'MA', email: 'murod.aliyev@myrehab.uz' },
 ]
 
 const ACCOUNTS_KEY = 'myrehab_accounts'
@@ -110,6 +112,7 @@ function demoLogin(
     role: acct.role,
     name: acct.name,
     initials: acct.initials,
+    email: acct.email,
   }
   return { ok: true, role: acct.role, user }
 }
@@ -138,6 +141,7 @@ export const useAuthStore = create<AuthStore>((set, get) => {
           role: profile.role as Role,
           name: profile.name,
           initials: initialsFromName(profile.name),
+          email: sbUser.email ?? undefined,
           organizationId: profile.organization_id ?? undefined,
         }
         localStorage.setItem(SESSION_KEY, JSON.stringify(user))
@@ -182,6 +186,7 @@ export const useAuthStore = create<AuthStore>((set, get) => {
               role: profile.role as Role,
               name: profile.name,
               initials: initialsFromName(profile.name),
+              email: sbData.session.user.email ?? undefined,
               organizationId: profile.organization_id ?? undefined,
             }
             localStorage.setItem(SESSION_KEY, JSON.stringify(user))

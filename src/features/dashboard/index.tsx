@@ -408,7 +408,14 @@ export function DashboardPage() {
                             width: `${durationPercent(block.startHour, block.startMin, block.endHour, block.endMin)}%`,
                           }}
                         >
-                          <span className="mr-1 opacity-60">{blockIcons[block.type]}</span>
+                          {block.type === 'surgery' ? (
+                            <span className="relative flex shrink-0 size-2.5 mr-1.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-70" />
+                              <span className="relative inline-flex rounded-full size-2.5 bg-orange-300" />
+                            </span>
+                          ) : (
+                            <span className="mr-1 opacity-60">{blockIcons[block.type]}</span>
+                          )}
                           <span className="truncate">{block.label}</span>
                         </div>
                         )

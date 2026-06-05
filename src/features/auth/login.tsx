@@ -4,9 +4,11 @@ import { useTranslation } from 'react-i18next'
 import {
   Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse,
   Globe, ChevronDown, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
+  Sun, Moon,
 } from 'lucide-react'
 import { useAuthStore, homePathForRole, type Role } from '@/store/auth'
 import { useLangStore } from '@/store/lang'
+import { useThemeStore } from '@/store/theme'
 import { Menu, MenuTrigger, MenuContent, MenuItem } from '@/components/ui/menu'
 
 const LANGS = [
@@ -64,6 +66,8 @@ export function LoginPage() {
   const navigate = useNavigate()
   const login = useAuthStore(s => s.login)
   const { lang, setLang } = useLangStore()
+  const { theme, toggle } = useThemeStore()
+  const isDark = theme === 'dark'
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -94,10 +98,30 @@ export function LoginPage() {
     setError(null)
   }
 
+  const rp = {
+    bg:          isDark ? 'rgba(255,255,255,0.015)' : '#ffffff',
+    border:      isDark ? '1px solid rgba(255,255,255,0.06)' : '1px solid #e2e8f0',
+    textPrimary: isDark ? '#f8fafc' : '#0f172a',
+    textMuted:   isDark ? 'rgba(248,250,252,0.5)' : '#64748b',
+    labelColor:  isDark ? 'rgba(248,250,252,0.6)' : '#475569',
+    inputBg:     isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc',
+    inputBorder: isDark ? 'rgba(255,255,255,0.1)' : '#e2e8f0',
+    inputText:   isDark ? '#f8fafc' : '#0f172a',
+    iconColor:   isDark ? 'rgba(248,250,252,0.3)' : '#94a3b8',
+    divider:     isDark ? 'rgba(255,255,255,0.07)' : '#e2e8f0',
+    dividerText: isDark ? 'rgba(248,250,252,0.3)' : '#94a3b8',
+    topLink:     isDark ? 'rgba(248,250,252,0.45)' : '#64748b',
+    langBg:      isDark ? 'rgba(255,255,255,0.05)' : '#f1f5f9',
+    langBorder:  isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0',
+    langText:    isDark ? 'rgba(248,250,252,0.5)' : '#475569',
+    toggleBg:    isDark ? 'rgba(255,255,255,0.05)' : '#f1f5f9',
+    toggleBorder:isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0',
+  }
+
   return (
     <div
       className="min-h-screen flex overflow-hidden"
-      style={{ background: '#020817', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
+      style={{ background: isDark ? '#020817' : '#f1f5f9', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}
     >
       {/* ── Left panel ──────────────────────────────────────────────────────── */}
       <div
@@ -172,13 +196,13 @@ export function LoginPage() {
       </div>
 
       {/* ── Right panel ─────────────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col" style={{ background: 'rgba(255,255,255,0.015)', borderLeft: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex-1 flex flex-col" style={{ background: rp.bg, borderLeft: rp.border }}>
         {/* Top bar */}
         <div className="flex items-center justify-between px-6 py-4">
           <a href="/" className="flex items-center gap-1.5 text-sm transition-colors"
-             style={{ color: 'rgba(248,250,252,0.45)' }}
-             onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.8)')}
-             onMouseLeave={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.45)')}>
+             style={{ color: rp.topLink }}
+             onMouseEnter={e => (e.currentTarget.style.color = isDark ? 'rgba(248,250,252,0.8)' : '#0f172a')}
+             onMouseLeave={e => (e.currentTarget.style.color = rp.topLink)}>
             <ArrowLeft size={14} />
             <span>Bosh sahifa</span>
           </a>
@@ -186,92 +210,106 @@ export function LoginPage() {
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2">
             <img src="/logo.svg" alt="" className="w-7 h-7 shrink-0" />
-            <span className="font-bold text-[15px] text-white">My<span style={{ color: '#84ADFF' }}>Rehab</span></span>
+            <span className="font-bold text-[15px]" style={{ color: rp.textPrimary }}>My<span style={{ color: '#84ADFF' }}>Rehab</span></span>
           </div>
 
-          {/* Language switcher */}
-          <Menu>
-            <MenuTrigger className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-sm outline-none cursor-pointer transition-all"
-                         style={{ color: 'rgba(248,250,252,0.5)', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <Globe size={14} />
-              <span className="uppercase font-bold" style={{ fontSize: 11 }}>{lang}</span>
-              <ChevronDown size={12} />
-            </MenuTrigger>
-            <MenuContent>
-              {LANGS.map(l => (
-                <MenuItem key={l.code} onClick={() => setLang(l.code)}>
-                  <span className="w-6 text-[12px] font-bold uppercase" style={{ color: 'rgba(248,250,252,0.4)' }}>{l.code}</span>
-                  <span className="flex-1">{l.label}</span>
-                  {lang === l.code && <Check size={14} style={{ color: '#155EEF' }} />}
-                </MenuItem>
-              ))}
-            </MenuContent>
-          </Menu>
+          <div className="flex items-center gap-2">
+            {/* Theme toggle */}
+            <button
+              onClick={toggle}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-lg transition-all"
+              style={{ color: rp.langText, background: rp.toggleBg, border: `1px solid ${rp.toggleBorder}` }}
+              title={isDark ? 'Yorug\' rejim' : 'Qorong\'u rejim'}
+            >
+              {isDark ? <Sun size={14} /> : <Moon size={14} />}
+            </button>
+
+            {/* Language switcher */}
+            <Menu>
+              <MenuTrigger className="inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-sm outline-none cursor-pointer transition-all"
+                           style={{ color: rp.langText, background: rp.langBg, border: `1px solid ${rp.langBorder}` }}>
+                <Globe size={14} />
+                <span className="uppercase font-bold" style={{ fontSize: 11 }}>{lang}</span>
+                <ChevronDown size={12} />
+              </MenuTrigger>
+              <MenuContent>
+                {LANGS.map(l => (
+                  <MenuItem key={l.code} onClick={() => setLang(l.code)}>
+                    <span className="w-6 text-[12px] font-bold uppercase" style={{ color: 'rgba(248,250,252,0.4)' }}>{l.code}</span>
+                    <span className="flex-1">{l.label}</span>
+                    {lang === l.code && <Check size={14} style={{ color: '#155EEF' }} />}
+                  </MenuItem>
+                ))}
+              </MenuContent>
+            </Menu>
+          </div>
         </div>
 
         {/* Form area */}
         <div className="flex-1 flex items-center justify-center px-6 py-8">
           <div className="w-full max-w-[380px]" style={{ animation: 'heroFadeUp 0.6s ease-out 0.15s both' }}>
             <div className="mb-8">
-              <h2 className="text-[26px] font-extrabold text-white mb-1.5 tracking-tight">{t('auth.welcome')} 👋</h2>
-              <p className="text-sm" style={{ color: 'rgba(248,250,252,0.5)' }}>{t('auth.signInToContinue')}</p>
+              <h2 className="text-[26px] font-extrabold mb-1.5 tracking-tight" style={{ color: rp.textPrimary }}>{t('auth.welcome')} 👋</h2>
+              <p className="text-sm" style={{ color: rp.textMuted }}>{t('auth.signInToContinue')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Username */}
               <div>
-                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(248,250,252,0.6)' }}>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: rp.labelColor }}>
                   {t('auth.username')}
                 </label>
                 <div className="relative">
-                  <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'rgba(248,250,252,0.3)' }} />
+                  <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: rp.iconColor }} />
                   <input
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     autoFocus
                     autoComplete="username"
                     placeholder={t('auth.usernamePlaceholder')}
-                    className="autofill-dark w-full h-11 pl-10 pr-4 rounded-xl text-sm text-white outline-none transition-all"
+                    className={`${isDark ? 'autofill-dark' : ''} w-full h-11 pl-10 pr-4 rounded-xl text-sm outline-none transition-all`}
                     style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: rp.inputBg,
+                      border: `1px solid ${rp.inputBorder}`,
+                      color: rp.inputText,
                       caretColor: '#155EEF',
                     }}
                     onFocus={e => { e.currentTarget.style.borderColor = 'rgba(21,94,239,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(21,94,239,0.12)' }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
+                    onBlur={e => { e.currentTarget.style.borderColor = rp.inputBorder; e.currentTarget.style.boxShadow = 'none' }}
                   />
                 </div>
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-xs font-semibold mb-1.5" style={{ color: 'rgba(248,250,252,0.6)' }}>
+                <label className="block text-xs font-semibold mb-1.5" style={{ color: rp.labelColor }}>
                   {t('auth.password')}
                 </label>
                 <div className="relative">
-                  <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'rgba(248,250,252,0.3)' }} />
+                  <Lock size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: rp.iconColor }} />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     autoComplete="current-password"
                     placeholder="••••••••"
-                    className="autofill-dark w-full h-11 pl-10 pr-11 rounded-xl text-sm text-white outline-none transition-all"
+                    className={`${isDark ? 'autofill-dark' : ''} w-full h-11 pl-10 pr-11 rounded-xl text-sm outline-none transition-all`}
                     style={{
-                      background: 'rgba(255,255,255,0.05)',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: rp.inputBg,
+                      border: `1px solid ${rp.inputBorder}`,
+                      color: rp.inputText,
                       caretColor: '#155EEF',
                     }}
                     onFocus={e => { e.currentTarget.style.borderColor = 'rgba(21,94,239,0.6)'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(21,94,239,0.12)' }}
-                    onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'; e.currentTarget.style.boxShadow = 'none' }}
+                    onBlur={e => { e.currentTarget.style.borderColor = rp.inputBorder; e.currentTarget.style.boxShadow = 'none' }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(v => !v)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 transition-colors"
-                    style={{ color: 'rgba(248,250,252,0.35)' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.7)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(248,250,252,0.35)')}
+                    style={{ color: rp.iconColor }}
+                    onMouseEnter={e => (e.currentTarget.style.color = rp.inputText)}
+                    onMouseLeave={e => (e.currentTarget.style.color = rp.iconColor)}
                   >
                     {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
@@ -312,11 +350,11 @@ export function LoginPage() {
             {/* Demo accounts */}
             <div className="mt-8">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
-                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'rgba(248,250,252,0.3)' }}>
+                <div className="flex-1 h-px" style={{ background: rp.divider }} />
+                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: rp.dividerText }}>
                   {t('auth.demoAccounts')}
                 </span>
-                <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.07)' }} />
+                <div className="flex-1 h-px" style={{ background: rp.divider }} />
               </div>
 
               <div className="space-y-2">

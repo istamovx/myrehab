@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Outlet, useNavigate } from '@tanstack/react-router'
-import { Menu, Glasses, X, Search, Sun, Moon, LogOut, ChevronRight, UserCheck } from 'lucide-react'
+import { Menu, Glasses, X, Search, Sun, Moon, LogOut, ChevronRight, UserCheck, Bell, ChevronDown, Settings, UserRound } from 'lucide-react'
 import { SuperAdminSidebar } from './super-admin-sidebar'
 import { ThemeCustomizer } from '@/components/theme-customizer'
 import { useThemeStore } from '@/store/theme'
 import { useAuthStore } from '@/store/auth'
+import { Menu as DropMenu, MenuTrigger, MenuContent, MenuItem, MenuSeparator } from '@/components/ui/menu'
+import { Avatar } from '@/components/ui/avatar'
 import { ORG_USERS, ORGANIZATIONS, type OrgUser } from '@/data/super-admin-mock-data'
 import { cn } from '@/lib/utils'
 
@@ -19,7 +21,9 @@ export function SuperAdminLayout() {
   const [impersonating, setImpersonating] = useState<ImpersonatingUser | null>(null)
   const { theme, toggle } = useThemeStore()
   const navigate = useNavigate()
+  const user = useAuthStore(s => s.user)
   const logout = useAuthStore(s => s.logout)
+  const displayEmail = user?.email ?? `${user?.username ?? 'superadmin'}@myrehab.uz`
 
   function handleLogout() {
     logout()
@@ -64,17 +68,6 @@ export function SuperAdminLayout() {
 
       {/* Main area */}
       <div className="flex-1 lg:ml-[260px] min-h-screen flex flex-col min-w-0">
-        {/* Mobile top bar */}
-        <div className="lg:hidden flex items-center h-12 px-4 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
-          <button
-            onClick={() => setMobileOpen(true)}
-            className="size-9 -ml-2 rounded-lg flex items-center justify-center text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
-          >
-            <Menu size={20} />
-          </button>
-          <span className="text-[15px] font-semibold text-[var(--text-primary)] ml-1">MyRehab</span>
-        </div>
-
         {/* Impersonation banner */}
         {impersonating && (
           <div className="flex items-center justify-between px-4 sm:px-6 py-2.5 bg-amber-50 dark:bg-amber-950/30 border-b border-amber-200 dark:border-amber-800">
@@ -98,70 +91,89 @@ export function SuperAdminLayout() {
         )}
 
         {/* TopBar */}
-        <header className="sticky top-0 z-20 h-16 flex items-center gap-3 px-4 sm:px-6 bg-[var(--bg-primary)]/80 backdrop-blur-md border-b border-[var(--border-secondary)]">
-          {/* Left: search */}
-          <div className="relative flex-1 max-w-md">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--fg-quaternary)] pointer-events-none" />
+        <header className="sticky top-0 z-20 h-16 flex items-center gap-2 px-4 sm:px-6 bg-[var(--bg-primary)]/90 backdrop-blur-md border-b border-[var(--border-secondary)]">
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileOpen(true)}
+            className="lg:hidden size-9 -ml-1 rounded-lg flex items-center justify-center text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors shrink-0"
+          >
+            <Menu size={20} />
+          </button>
+
+          {/* Search */}
+          <div className="relative flex-1 max-w-xs sm:max-w-sm">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--fg-quaternary)] pointer-events-none" />
             <input
               placeholder="Tashkilot, foydalanuvchi, to'lov qidiring..."
-              className="w-full h-10 pl-9 pr-3 rounded-lg bg-[var(--bg-secondary)] border border-transparent text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] outline-none transition-colors focus:bg-[var(--bg-primary)] focus:border-[var(--fg-brand-primary)] focus:[box-shadow:0_0_0_3px_rgba(41,112,255,0.12)]"
+              className="w-full h-9 pl-9 pr-3 rounded-lg bg-[var(--bg-secondary)] border border-transparent text-[13.5px] text-[var(--text-primary)] placeholder:text-[var(--text-placeholder)] outline-none transition-colors focus:bg-[var(--bg-primary)] focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)]"
             />
           </div>
 
-          {/* Platform badge */}
-          <div className="hidden md:flex items-center gap-1.5 h-8 px-3 rounded-full bg-[var(--bg-brand-primary)] border border-[var(--border-brand)] text-[var(--text-brand-primary)] text-[12px] font-semibold shrink-0">
-            <span className="size-1.5 rounded-full bg-[var(--fg-brand-primary)]" />
-            Super Admin
-          </div>
+          <div className="flex items-center gap-1.5 ml-auto">
+            {/* Role badge */}
+            <span className="hidden sm:inline-flex items-center gap-1.5 h-7 px-3 rounded-full bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] border border-[var(--border-brand)] text-[11.5px] font-semibold shrink-0">
+              <span className="size-1.5 rounded-full bg-[var(--fg-brand-primary)]" />
+              Platforma egasi
+            </span>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
             {/* Glass / Impersonation button */}
             <button
               onClick={() => setGlassOpen(true)}
               title="Foydalanuvchi profilini ko'rish"
               className={cn(
-                'relative inline-flex items-center gap-1.5 h-9 px-3 rounded-lg text-[13px] font-semibold transition-colors cursor-pointer',
-                impersonating
-                  ? 'bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700'
-                  : 'text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)]',
+                'relative size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors',
+                impersonating && 'bg-amber-100 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400',
               )}
             >
-              <Glasses size={18} />
-              <span className="hidden sm:inline">Ko'rish rejimi</span>
+              <Glasses size={17} />
               {impersonating && (
-                <span className="absolute -top-1 -right-1 size-2.5 rounded-full bg-amber-500 ring-2 ring-[var(--bg-primary)]" />
+                <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-amber-500 ring-2 ring-[var(--bg-primary)]" />
               )}
             </button>
 
             {/* Theme */}
             <button
               onClick={toggle}
-              aria-label="Theme"
+              aria-label="Mavzu"
               className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
             >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
             </button>
 
-            {/* Super Admin avatar */}
-            <div className="inline-flex items-center gap-2 h-10 pl-1.5 pr-2 rounded-lg transition-colors">
-              <div className="size-8 rounded-full bg-gradient-to-br from-[#155EEF] to-[#004EEB] flex items-center justify-center text-white text-[12px] font-bold shrink-0">
-                SA
-              </div>
-              <div className="hidden sm:block text-left leading-tight">
-                <p className="text-[13px] font-semibold text-[var(--text-primary)]">Super Admin</p>
-                <p className="text-[11px] text-[var(--text-brand-primary)] font-semibold">Platform</p>
-              </div>
-            </div>
-
-            {/* Logout */}
+            {/* Notifications */}
             <button
-              onClick={handleLogout}
-              aria-label="Chiqish"
-              title="Chiqish"
-              className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500 cursor-pointer transition-colors"
+              aria-label="Bildirishnomalar"
+              className="relative size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
             >
-              <LogOut size={18} />
+              <Bell size={17} />
+              <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-red-500 ring-2 ring-[var(--bg-primary)]" />
             </button>
+
+            {/* Avatar + dropdown */}
+            <DropMenu>
+              <MenuTrigger className="inline-flex items-center gap-2 h-9 pl-1 pr-2 rounded-lg hover:bg-[var(--bg-secondary)] cursor-pointer outline-none transition-colors">
+                <Avatar name={user?.name ?? 'Bosh Administrator'} size="sm" />
+                <div className="hidden sm:block text-left leading-tight">
+                  <p className="text-[12.5px] font-semibold text-[var(--text-primary)] max-w-[120px] truncate">{user?.name ?? 'Bosh Administrator'}</p>
+                  <p className="text-[10.5px] text-[var(--text-quaternary)] max-w-[120px] truncate">{displayEmail}</p>
+                </div>
+                <ChevronDown size={13} className="text-[var(--fg-quaternary)] shrink-0 hidden sm:block" />
+              </MenuTrigger>
+              <MenuContent>
+                <div className="flex items-center gap-3 px-2.5 py-2.5 mb-1">
+                  <Avatar name={user?.name ?? 'Bosh Administrator'} size="md" />
+                  <div className="min-w-0">
+                    <p className="text-[13.5px] font-semibold text-[var(--text-primary)] truncate">{user?.name ?? 'Bosh Administrator'}</p>
+                    <p className="text-[11.5px] text-[var(--text-tertiary)] truncate">{displayEmail}</p>
+                  </div>
+                </div>
+                <MenuSeparator />
+                <MenuItem><UserRound size={15} className="text-[var(--fg-quaternary)]" />Profil</MenuItem>
+                <MenuItem><Settings size={15} className="text-[var(--fg-quaternary)]" />Sozlamalar</MenuItem>
+                <MenuSeparator />
+                <MenuItem danger onClick={handleLogout}><LogOut size={15} />Chiqish</MenuItem>
+              </MenuContent>
+            </DropMenu>
           </div>
         </header>
 
