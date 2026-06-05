@@ -6,9 +6,12 @@ const ru = {
     appointments: "Приёмы",
     documents:    "Документы",
     team:         "Команда",
+    general:      "Общее",
     management:   "Управление",
     support:      "Поддержка",
     settings:     "Настройки",
+    clinic:       "Клиника",
+    clinicName:   "Ташкент Клиника",
     clinicalPlatform: "Клиническая платформа",
   },
   common: {
