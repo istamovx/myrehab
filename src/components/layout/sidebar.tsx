@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutDashboard, Users, BarChart2, Calendar, FileText, UsersRound,
-  Search, X, ChevronDown, HelpCircle,
+  Search, X, ChevronDown, HelpCircle, Stethoscope, GitPullRequest, Settings,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -66,7 +66,7 @@ export function Sidebar({ onClose }: SidebarProps) {
   return (
     <aside className="w-[260px] h-full bg-[var(--bg-primary)] border-r border-[var(--border-secondary)] flex flex-col select-none">
       {/* Logo */}
-      <div className="flex items-center justify-between px-[14px] pt-[18px] pb-[4px] shrink-0">
+      <div className="h-[72px] flex items-center justify-between px-[14px] border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-[9px]">
           <div className="size-[26px] rounded-lg bg-gradient-to-br from-[#6d6bf0] to-[#4b48d6] flex items-center justify-center shrink-0">
             <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
@@ -86,7 +86,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       </div>
 
       {/* Sidebar search */}
-      <div className="mx-[14px] mt-[16px] mb-[6px] h-[38px] bg-[var(--bg-secondary)] rounded-[10px] flex items-center gap-2 px-[11px] text-[var(--text-tertiary)]">
+      <div className="mx-[14px] mt-[14px] mb-[6px] h-[38px] bg-[var(--bg-secondary)] rounded-[10px] flex items-center gap-2 px-[11px] text-[var(--text-tertiary)]">
         <Search size={15} className="shrink-0" />
         <input
           placeholder={t('common.search')}
@@ -100,13 +100,19 @@ export function Sidebar({ onClose }: SidebarProps) {
         <NavGroup label={t('nav.general')}>
           <NavItem to="/dashboard"    icon={LayoutDashboard} label={t('nav.dashboard')}    onClose={onClose} />
           <NavItem to="/patients"     icon={Users}           label={t('nav.patients')}     onClose={onClose} />
-          <NavItem to="/insights"     icon={BarChart2}       label={t('nav.insights')}     onClose={onClose} />
-          <NavItem to="/appointments" icon={Calendar}        label={t('nav.appointments')} badge={3} onClose={onClose} />
+          <NavItem to="/doctors"      icon={Stethoscope}     label={t('nav.doctors')}      onClose={onClose} />
+          <NavItem to="/membership-requests" icon={GitPullRequest} label={t('nav.membership')} badge={3} onClose={onClose} />
         </NavGroup>
 
         <NavGroup label={t('nav.management')}>
-          <NavItem to="/docs" icon={FileText}   label={t('nav.documents')} onClose={onClose} />
-          <NavItem to="/team" icon={UsersRound} label={t('nav.team')}      onClose={onClose} />
+          <NavItem to="/insights"     icon={BarChart2}       label={t('nav.insights')}     onClose={onClose} />
+          <NavItem to="/appointments" icon={Calendar}        label={t('nav.appointments')} onClose={onClose} />
+          <NavItem to="/docs"         icon={FileText}        label={t('nav.documents')}    onClose={onClose} />
+          <NavItem to="/team"         icon={UsersRound}      label={t('nav.team')}         onClose={onClose} />
+        </NavGroup>
+
+        <NavGroup label={t('nav.system')}>
+          <NavItem to="/settings" icon={Settings} label={t('nav.settings')} onClose={onClose} />
         </NavGroup>
       </nav>
 

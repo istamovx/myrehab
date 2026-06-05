@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp } from 'lucide-react'
+import { Calendar, Settings2, Maximize2, Plus, Phone, MoreHorizontal, AlertTriangle, Info, TrendingUp, Users, Activity, Stethoscope, UserX, Clock, FileText } from 'lucide-react'
 import { PillSelect } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { Avatar } from '@/components/ui/avatar'
 import { DonutChart } from '@/components/charts/donut-chart'
 import { DOCTORS, DASHBOARD_ALERTS } from '@/data/mock-data'
+import { CLINIC_STATS } from '@/data/clinic-mock-data'
 import { cn } from '@/lib/utils'
 
 const TIME_SLOTS = [8, 9, 10, 11, 12, 13, 14, 15]
@@ -87,6 +88,26 @@ export function DashboardPage() {
           </>
         }
       />
+
+      {/* Aggregate stat cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+        {[
+          { label: t('dashboard.totalPatients'),   value: CLINIC_STATS.totalPatients,   Icon: Users,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
+          { label: t('dashboard.activePlans'),     value: CLINIC_STATS.activePlans,     Icon: Activity,    color: 'text-[var(--fg-success-primary)]',  bg: 'bg-[var(--bg-success-primary)]' },
+          { label: t('dashboard.totalDoctors'),    value: CLINIC_STATS.totalDoctors,    Icon: Stethoscope, color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
+          { label: t('dashboard.unassigned'),      value: CLINIC_STATS.unassigned,      Icon: UserX,       color: 'text-[var(--fg-warning-primary)]',  bg: 'bg-[var(--bg-warning-primary)]' },
+          { label: t('dashboard.pendingRequests'), value: CLINIC_STATS.pendingRequests, Icon: Clock,       color: 'text-[var(--fg-brand-primary)]',    bg: 'bg-[var(--bg-brand-primary)]' },
+          { label: t('dashboard.draftPlans'),      value: CLINIC_STATS.draftPlans,      Icon: FileText,    color: 'text-[var(--text-tertiary)]',       bg: 'bg-[var(--bg-secondary)]' },
+        ].map(s => (
+          <div key={s.label} className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] shadow-[var(--shadow-xs)] p-4">
+            <div className={cn('size-8 rounded-lg flex items-center justify-center mb-3', s.bg)}>
+              <s.Icon size={16} className={s.color} />
+            </div>
+            <p className="text-[24px] font-bold text-[var(--text-primary)] leading-none mb-1">{s.value}</p>
+            <p className="text-[12px] text-[var(--text-tertiary)] leading-snug">{s.label}</p>
+          </div>
+        ))}
+      </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
