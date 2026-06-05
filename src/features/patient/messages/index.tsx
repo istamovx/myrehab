@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Send } from 'lucide-react'
-import { MESSAGES, ASSIGNED_DOCTOR, PATIENT_PROFILE, type Message } from '@/data/patient-mock-data'
+import { MESSAGES, ASSIGNED_DOCTOR, type Message } from '@/data/patient-mock-data'
 
 function groupByDate(messages: Message[]) {
   const groups: { label: string; messages: Message[] }[] = []

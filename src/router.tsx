@@ -1,6 +1,7 @@
 import { createRouter, createRoute, createRootRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AppLayout } from './components/layout/app-layout'
 import { PatientLayout } from './components/layout/patient-layout'
+import { SuperAdminLayout } from './components/layout/super-admin-layout'
 import { DashboardPage } from './features/dashboard'
 import { PatientsListPage } from './features/patients/list'
 import { PatientDetailPage } from './features/patients/detail'
@@ -22,6 +23,10 @@ import { PatientKnowledgePage } from './features/patient/knowledge'
 import { PatientMessagesPage } from './features/patient/messages'
 import { PatientAppointmentsPage } from './features/patient/appointments'
 import { PatientSettingsPage } from './features/patient/settings'
+import { SuperAdminDashboardPage } from './features/super-admin/dashboard'
+import { SuperAdminOrganizationsPage } from './features/super-admin/organizations'
+import { SuperAdminPaymentsPage } from './features/super-admin/payments'
+import { SuperAdminSettingsPage } from './features/super-admin/settings'
 
 const rootRoute = createRootRoute({ component: Outlet })
 
@@ -96,6 +101,43 @@ const teamRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/team',
   component: TeamPage,
+})
+
+// ── Super Admin layout ────────────────────────────────────────────────────────
+const superAdminLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/super-admin',
+  component: SuperAdminLayout,
+})
+
+const superAdminIndexRoute = createRoute({
+  getParentRoute: () => superAdminLayoutRoute,
+  path: '/',
+  beforeLoad: () => { throw redirect({ to: '/super-admin/dashboard' }) },
+})
+
+const superAdminDashboardRoute = createRoute({
+  getParentRoute: () => superAdminLayoutRoute,
+  path: '/dashboard',
+  component: SuperAdminDashboardPage,
+})
+
+const superAdminOrganizationsRoute = createRoute({
+  getParentRoute: () => superAdminLayoutRoute,
+  path: '/organizations',
+  component: SuperAdminOrganizationsPage,
+})
+
+const superAdminPaymentsRoute = createRoute({
+  getParentRoute: () => superAdminLayoutRoute,
+  path: '/payments',
+  component: SuperAdminPaymentsPage,
+})
+
+const superAdminSettingsRoute = createRoute({
+  getParentRoute: () => superAdminLayoutRoute,
+  path: '/settings',
+  component: SuperAdminSettingsPage,
 })
 
 // ── Patient layout ────────────────────────────────────────────────────────────
@@ -190,6 +232,13 @@ const routeTree = rootRoute.addChildren([
     appointmentsRoute,
     docsRoute,
     teamRoute,
+  ]),
+  superAdminLayoutRoute.addChildren([
+    superAdminIndexRoute,
+    superAdminDashboardRoute,
+    superAdminOrganizationsRoute,
+    superAdminPaymentsRoute,
+    superAdminSettingsRoute,
   ]),
   patientLayoutRoute.addChildren([
     patientIndexRoute,

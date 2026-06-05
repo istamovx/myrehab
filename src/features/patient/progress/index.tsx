@@ -45,7 +45,7 @@ export function PatientProgressPage() {
             <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
             <Tooltip
               contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
-              formatter={(v: number) => [`${v}%`, t('patient.adherenceLabel')]}
+              formatter={(v) => [`${v}%`, t('patient.adherenceLabel')]}
             />
             <Bar dataKey="adherence_pct" fill="#2970FF" radius={[4, 4, 0, 0]} />
           </BarChart>
@@ -68,7 +68,7 @@ export function PatientProgressPage() {
             <YAxis domain={[0, 10]} tick={{ fontSize: 11, fill: 'var(--text-tertiary)' }} />
             <Tooltip
               contentStyle={{ background: 'var(--bg-primary)', border: '1px solid var(--border-secondary)', borderRadius: 8, fontSize: 12 }}
-              formatter={(v: number) => [v, t('patient.painLabel')]}
+              formatter={(v) => [v, t('patient.painLabel')]}
             />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Line

@@ -97,9 +97,9 @@ export function PatientNutritionPage() {
                 <AlertTriangle size={16} className="text-amber-600 shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
-                    {w.drug} + {w.food}
+                    {w.drug}
                   </p>
-                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">{w.reason}</p>
+                  <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">{w.warning}</p>
                 </div>
               </div>
             ))}

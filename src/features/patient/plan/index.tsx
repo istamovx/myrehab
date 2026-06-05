@@ -67,7 +67,7 @@ export function PatientPlanPage() {
     <div className="space-y-5 max-w-3xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-[var(--text-primary)]">{t('patient.myPlan')}</h1>
-        <p className="text-sm text-[var(--text-tertiary)] mt-0.5">{TREATMENT_PLAN.name}</p>
+        <p className="text-sm text-[var(--text-tertiary)] mt-0.5">{TREATMENT_PLAN.title}</p>
       </div>
 
       {/* Plan header card */}
