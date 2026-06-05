@@ -49,11 +49,19 @@ const statusDot: Record<PatientStatus, string> = {
   Done:                'bg-[var(--fg-success-primary)]',
 }
 
+const statusLabel: Record<PatientStatus, string> = {
+  Ready:               'Tayyor',
+  'At-Risk':           'Xavf ostida',
+  'In Progress':       'Jarayonda',
+  'Awaiting clearance':'Ruxsat kutilmoqda',
+  Done:                'Yakunlangan',
+}
+
 export function StatusBadge({ status }: { status: PatientStatus }) {
   return (
     <Badge variant={statusVariant[status]}>
       <span className={cn('size-1.5 rounded-full shrink-0', statusDot[status])} />
-      {status}
+      {statusLabel[status]}
     </Badge>
   )
 }
