@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
   Search, Sun, Moon, Globe, ChevronDown, LogOut, Settings, UserRound, Check,
-  Glasses, Menu,
+  Menu,
 } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { Menu as DropMenu, MenuTrigger, MenuContent, MenuItem, MenuSeparator } from '@/components/ui/menu'
@@ -69,14 +69,6 @@ export function TopBar({ onMobileMenu }: TopBarProps) {
           {t('roles.doctor')}
         </span>
 
-        {/* Glasses / Ko'rish rejimi */}
-        <button
-          title="Ko'rish rejimi"
-          className="size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
-        >
-          <Glasses size={18} />
-        </button>
-
         {/* Language */}
         <DropMenu>
           <MenuTrigger className="inline-flex items-center gap-1 h-9 px-2 rounded-lg text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer outline-none transition-colors">
@@ -87,7 +79,6 @@ export function TopBar({ onMobileMenu }: TopBarProps) {
           <MenuContent>
             {LANGS.map(l => (
               <MenuItem key={l.code} onClick={() => setLang(l.code)}>
-                <span className="w-6 text-[11px] font-bold uppercase text-[var(--text-quaternary)]">{l.code}</span>
                 <span className="flex-1">{l.label}</span>
                 {lang === l.code && <Check size={14} className="text-[var(--fg-brand-primary)]" />}
               </MenuItem>

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import {
   X, LayoutDashboard, Users, CalendarDays, TrendingUp,
   UsersRound, FileText, Bell, Package, FlaskConical,
-  Settings, ChevronLeft, ChevronRight, Stethoscope, Video,
+  Settings, ChevronLeft, ChevronRight, Stethoscope, Video, Dumbbell,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -88,47 +88,17 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
         collapsed ? 'w-16' : 'w-[260px]',
       )}
     >
-      {/* Header */}
-      <div className="h-16 flex items-center justify-between px-3 border-b border-[var(--border-secondary)] shrink-0">
-        {collapsed ? (
-          <div className="flex flex-col items-center w-full gap-1">
-            <img src="/logo.svg" alt="" className="size-7" />
-            {onToggle && (
-              <button
-                onClick={onToggle}
-                className="size-6 rounded flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
-              >
-                <ChevronRight size={13} />
-              </button>
-            )}
-          </div>
-        ) : (
-          <>
-            <div className="flex items-center gap-[9px]">
-              <img src="/logo.svg" alt="" className="size-7 shrink-0" />
-              <span className="font-extrabold text-[17px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
-            </div>
-            <div className="flex items-center gap-1">
-              {onClose && (
-                <button
-                  onClick={onClose}
-                  className="lg:hidden size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
-                >
-                  <X size={17} />
-                </button>
-              )}
-              {onToggle && (
-                <button
-                  onClick={onToggle}
-                  className="hidden lg:flex size-8 rounded-lg items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
-                >
-                  <ChevronLeft size={17} />
-                </button>
-              )}
-            </div>
-          </>
-        )}
-      </div>
+      {/* Mobile close button (top-right, mobile only) */}
+      {onClose && (
+        <div className="lg:hidden flex justify-end p-2 shrink-0">
+          <button
+            onClick={onClose}
+            className="size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
+          >
+            <X size={17} />
+          </button>
+        </div>
+      )}
 
       {/* Navigation */}
       <nav className={cn('flex-1 overflow-y-auto py-2', collapsed ? 'px-1.5' : 'px-[14px]')}>
@@ -143,6 +113,7 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
         <NavGroup label="KLINIKA" collapsed={collapsed}>
           <NavItem to="/doctors"             icon={Stethoscope} label="Shifokorlar"          onClose={onClose} collapsed={collapsed} />
           <NavItem to="/team"                icon={UsersRound}  label="MDT jamoasi"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/exercises"           icon={Dumbbell}    label="Mashqlar"             onClose={onClose} collapsed={collapsed} />
           <NavItem to="/docs"                icon={FileText}    label="Hujjatlar"            onClose={onClose} collapsed={collapsed} />
           <NavItem to="/membership-requests" icon={Bell}        label="Hamkorlik so'rovlari" badge={3} onClose={onClose} collapsed={collapsed} />
         </NavGroup>
@@ -156,6 +127,28 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
           <NavItem to="/settings" icon={Settings} label="Sozlamalar" onClose={onClose} collapsed={collapsed} />
         </NavGroup>
       </nav>
+
+      {/* Footer — logo + collapse toggle */}
+      <div className={cn(
+        'border-t border-[var(--border-secondary)] shrink-0',
+        collapsed ? 'p-2 flex flex-col items-center gap-2' : 'px-[14px] py-3 flex items-center justify-between',
+      )}>
+        <div className="flex items-center gap-[9px]">
+          <img src="/logo.svg" alt="" className="size-7 shrink-0" />
+          {!collapsed && (
+            <span className="font-extrabold text-[16px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
+          )}
+        </div>
+        {onToggle && (
+          <button
+            onClick={onToggle}
+            title={collapsed ? 'Kengaytirish' : 'Yig\'ish'}
+            className="hidden lg:flex size-8 rounded-lg items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
+          >
+            {collapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
+          </button>
+        )}
+      </div>
     </aside>
   )
 }

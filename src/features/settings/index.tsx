@@ -1,23 +1,44 @@
 import { useState } from 'react'
 import {
   User, Building2, Bell, Lock, CheckCircle2, LogOut, Monitor,
-  Search, ShieldCheck, Clock,
+  Search, ShieldCheck, Clock, Landmark, RefreshCw, CheckCheck,
+  AlertTriangle, Hourglass, ShieldAlert,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type Tab = 'profile' | 'clinics' | 'notifications' | 'security'
+type Tab = 'profile' | 'clinics' | 'dmed' | 'notifications' | 'security'
 
 // ── Mock data ─────────────────────────────────────────────────────────────────
 
 const DOCTOR = {
   name:           'Muhrim Devonov',
-  specialization: 'Orthopedics',
+  specialization: 'Ortopediya',
   phone:          '998900010101',
   clinic:         'MyRehab Medical',
   initials:       'MD',
 }
+
+// Dmed.uz — government health system sync log (demo data)
+type DmedStatus = 'synced' | 'pending' | 'failed'
+interface DmedRecord {
+  id: string
+  type: 'Bemor' | 'Tibbiy yozuv' | 'Tashxis'
+  name: string
+  dmedId?: string
+  status: DmedStatus
+  syncedAt: string
+}
+
+const DMED_RECORDS: DmedRecord[] = [
+  { id: 'r1', type: 'Bemor',       name: 'Dilnoza Karimova', dmedId: 'DMED-2025-0041', status: 'synced',  syncedAt: '05 iyun, 09:12' },
+  { id: 'r2', type: 'Tibbiy yozuv', name: 'Sardor Aliyev — ko\'rik',  dmedId: 'DMED-2025-0040', status: 'synced',  syncedAt: '05 iyun, 08:54' },
+  { id: 'r3', type: 'Bemor',       name: 'Gulnora Saidova',  status: 'pending', syncedAt: '—' },
+  { id: 'r4', type: 'Tashxis',     name: 'Jasur Tursunov — M51.1', status: 'failed', syncedAt: '04 iyun, 17:30' },
+  { id: 'r5', type: 'Bemor',       name: 'Nilufar Rahimova', dmedId: 'DMED-2025-0038', status: 'synced',  syncedAt: '04 iyun, 14:02' },
+  { id: 'r6', type: 'Tibbiy yozuv', name: 'Otabek Yusupov — ko\'rik',  status: 'pending', syncedAt: '—' },
+]
 
 const MY_REQUESTS = [
   { id: 1, clinic: 'Darmon Med', initials: 'DM', sentAt: '23.05.2026', status: 'pending' },
@@ -50,7 +71,7 @@ function ToggleSwitch({ on, onChange }: { on: boolean; onChange: (v: boolean) =>
       onClick={() => onChange(!on)}
       className={[
         'relative w-10 h-6 rounded-full transition-colors shrink-0',
-        on ? 'bg-teal-500' : 'bg-[var(--bg-tertiary)]',
+        on ? 'bg-blue-500' : 'bg-[var(--bg-tertiary)]',
       ].join(' ')}
     >
       <span className={[
@@ -79,14 +100,14 @@ function ProfileTab() {
 
       {/* Avatar + verified */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
           {DOCTOR.initials}
         </div>
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-base font-bold text-[var(--text-primary)]">Dr. {name}</p>
-            <span className="flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+            <span className="flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
               Tasdiqlangan
             </span>
           </div>
@@ -95,7 +116,7 @@ function ProfileTab() {
       </div>
 
       {saved && (
-        <p className="text-green-600 text-sm font-medium">✓ O'zgarishlar saqlandi!</p>
+        <p className="text-blue-600 text-sm font-medium">✓ O'zgarishlar saqlandi!</p>
       )}
 
       {/* Form fields */}
@@ -105,7 +126,7 @@ function ProfileTab() {
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500 transition-colors"
+            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-blue-500 transition-colors"
           />
         </div>
         <div>
@@ -144,7 +165,7 @@ function ProfileTab() {
           className={[
             'px-5 py-2.5 rounded-xl text-sm font-semibold transition-all',
             dirty
-              ? 'bg-teal-500 text-white hover:bg-teal-600'
+              ? 'bg-blue-500 text-white hover:bg-blue-600'
               : 'bg-[var(--bg-tertiary)] text-[var(--text-quaternary)] cursor-not-allowed',
           ].join(' ')}
         >
@@ -173,7 +194,7 @@ function ClinicsTab() {
           {MY_REQUESTS.map(r => (
             <div key={r.id} className="flex items-center justify-between p-3 bg-[var(--bg-secondary)] rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
                   {r.initials}
                 </div>
                 <div>
@@ -199,11 +220,134 @@ function ClinicsTab() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Klinika, shahar qidiring"
-              className="pl-7 pr-3 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs text-[var(--text-primary)] outline-none focus:border-teal-500 w-48"
+              className="pl-7 pr-3 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs text-[var(--text-primary)] outline-none focus:border-blue-500 w-48"
             />
           </div>
         </div>
         <p className="text-sm text-[var(--text-tertiary)]">Hozircha klinikalar mavjud emas.</p>
+      </div>
+    </div>
+  )
+}
+
+// ── Tab: Dmed.uz (government health system) ───────────────────────────────────
+
+const DMED_STATUS_META: Record<DmedStatus, { label: string; cls: string; dot: string; icon: React.ElementType }> = {
+  synced:  { label: 'Sinxronlangan', cls: 'text-green-600 bg-green-50 dark:bg-green-900/20',  dot: 'bg-green-500',  icon: CheckCheck },
+  pending: { label: 'Kutilmoqda',    cls: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20',  dot: 'bg-amber-500',  icon: Hourglass },
+  failed:  { label: 'Xatolik',       cls: 'text-red-600 bg-red-50 dark:bg-red-900/20',        dot: 'bg-red-500',    icon: AlertTriangle },
+}
+
+function DmedTab() {
+  const [records, setRecords] = useState(DMED_RECORDS)
+  const [syncing, setSyncing] = useState(false)
+
+  const counts = {
+    synced:  records.filter(r => r.status === 'synced').length,
+    pending: records.filter(r => r.status === 'pending').length,
+    failed:  records.filter(r => r.status === 'failed').length,
+  }
+
+  function retryFailed() {
+    setSyncing(true)
+    setTimeout(() => {
+      setRecords(prev => prev.map(r =>
+        r.status === 'failed'
+          ? { ...r, status: 'synced', dmedId: `DMED-2025-${String(Math.floor(Math.random() * 9000) + 1000)}`, syncedAt: 'hozir' }
+          : r,
+      ))
+      setSyncing(false)
+    }, 1500)
+  }
+
+  const stats = [
+    { label: 'Sinxronlangan', value: counts.synced,  icon: CheckCheck,     color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
+    { label: 'Kutilmoqda',    value: counts.pending, icon: Hourglass,      color: 'text-amber-600', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+    { label: 'Xatolik',       value: counts.failed,  icon: AlertTriangle,  color: 'text-red-600',   bg: 'bg-red-50 dark:bg-red-900/20' },
+  ]
+
+  return (
+    <div className="space-y-4">
+      {/* Connection header */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div className="flex items-start gap-3">
+            <div className="size-11 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shrink-0">
+              <Landmark size={22} className="text-white" />
+            </div>
+            <div>
+              <p className="text-[15px] font-bold text-[var(--text-primary)]">Dmed.uz — Davlat tizimi</p>
+              <p className="text-[13px] text-[var(--text-tertiary)] mt-0.5">
+                O'zbekiston Sog'liqni Saqlash Vazirligi yagona tibbiy axborot tizimi
+              </p>
+            </div>
+          </div>
+          <span className="flex items-center gap-1.5 text-[12px] font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2.5 py-1 rounded-full shrink-0">
+            <span className="size-1.5 rounded-full bg-green-500" />
+            Ulangan
+          </span>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-3 gap-3 mt-4">
+          {stats.map(s => (
+            <div key={s.label} className={['rounded-xl p-3', s.bg].join(' ')}>
+              <s.icon size={16} className={s.color} />
+              <p className="text-[22px] font-bold text-[var(--text-primary)] leading-tight mt-1">{s.value}</p>
+              <p className="text-[12px] text-[var(--text-tertiary)]">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sync log */}
+      <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-[var(--text-primary)]">Sinxronizatsiya jurnali</h3>
+          <button
+            onClick={retryFailed}
+            disabled={syncing || counts.failed === 0}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[var(--border-secondary)] text-[13px] font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <RefreshCw size={13} className={syncing ? 'animate-spin' : ''} />
+            Qayta urinish
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {records.map(r => {
+            const meta = DMED_STATUS_META[r.status]
+            return (
+              <div key={r.id} className="flex items-center justify-between gap-3 p-3 bg-[var(--bg-secondary)] rounded-xl">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-semibold text-[var(--text-tertiary)] bg-[var(--bg-tertiary)] px-1.5 py-0.5 rounded">{r.type}</span>
+                    <p className="text-[14px] font-medium text-[var(--text-primary)] truncate">{r.name}</p>
+                  </div>
+                  <p className="text-[12px] text-[var(--text-quaternary)] mt-0.5">
+                    {r.dmedId ? `${r.dmedId} · ` : ''}{r.syncedAt}
+                  </p>
+                </div>
+                <span className={['shrink-0 flex items-center gap-1 text-[12px] font-semibold px-2.5 py-1 rounded-full', meta.cls].join(' ')}>
+                  <span className={['size-1.5 rounded-full', meta.dot].join(' ')} />
+                  {meta.label}
+                </span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Security note */}
+      <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded-2xl p-4 flex items-start gap-3">
+        <ShieldAlert size={18} className="text-blue-600 shrink-0 mt-0.5" />
+        <div>
+          <p className="text-[13px] font-semibold text-[var(--text-primary)]">Xavfsiz ulanish</p>
+          <p className="text-[12px] text-[var(--text-tertiary)] mt-0.5 leading-relaxed">
+            Dmed.uz bilan barcha aloqa server tomonida, shifrlangan kanal orqali amalga oshiriladi.
+            Davlat API kaliti hech qachon brauzerga uzatilmaydi.
+          </p>
+        </div>
       </div>
     </div>
   )
@@ -306,7 +450,7 @@ function SecurityTab() {
       <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5 space-y-4">
         <h3 className="text-sm font-bold text-[var(--text-primary)]">Parol</h3>
         {msg && (
-          <p className={['text-sm font-medium', msg.type === 'ok' ? 'text-green-600' : 'text-red-500'].join(' ')}>
+          <p className={['text-sm font-medium', msg.type === 'ok' ? 'text-blue-600' : 'text-red-500'].join(' ')}>
             {msg.text}
           </p>
         )}
@@ -317,14 +461,14 @@ function SecurityTab() {
               type="password"
               value={f.value}
               onChange={e => f.set(e.target.value)}
-              className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500"
+              className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-blue-500"
             />
           </div>
         ))}
         <button
           onClick={handleChangePassword}
           disabled={!current || !next || !confirm}
-          className="px-5 py-2.5 bg-teal-500 text-white rounded-xl text-sm font-semibold hover:bg-teal-600 transition-colors disabled:opacity-40"
+          className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-semibold hover:bg-blue-600 transition-colors disabled:opacity-40"
         >
           Parolni o'zgartirish
         </button>
@@ -367,7 +511,7 @@ function SecurityTab() {
               </div>
               {s.current
                 ? (
-                  <span className="shrink-0 flex items-center gap-1 text-xs font-semibold text-teal-600 bg-teal-50 dark:bg-teal-900/20 px-2.5 py-1 rounded-full">
+                  <span className="shrink-0 flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-full">
                     <CheckCircle2 size={11} />
                     Joriy
                   </span>
@@ -395,6 +539,7 @@ function SecurityTab() {
 const TABS: { key: Tab; icon: React.ElementType; label: string }[] = [
   { key: 'profile',       icon: User,      label: 'Profil'          },
   { key: 'clinics',       icon: Building2, label: 'Klinikalar'      },
+  { key: 'dmed',          icon: Landmark,  label: 'Davlat tizimi'   },
   { key: 'notifications', icon: Bell,      label: 'Bildirishnomalar'},
   { key: 'security',      icon: Lock,      label: 'Xavfsizlik'      },
 ]
@@ -416,13 +561,13 @@ export function SettingsPage() {
               className={[
                 'flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all',
                 tab === key
-                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                   : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]',
               ].join(' ')}
             >
               <Icon
                 size={16}
-                className={tab === key ? 'text-teal-500' : 'text-[var(--text-quaternary)]'}
+                className={tab === key ? 'text-blue-500' : 'text-[var(--text-quaternary)]'}
               />
               <span className="hidden sm:block">{label}</span>
             </button>
@@ -433,6 +578,7 @@ export function SettingsPage() {
         <div className="flex-1 min-w-0">
           {tab === 'profile'       && <ProfileTab />}
           {tab === 'clinics'       && <ClinicsTab />}
+          {tab === 'dmed'          && <DmedTab />}
           {tab === 'notifications' && <NotificationsTab />}
           {tab === 'security'      && <SecurityTab />}
         </div>
