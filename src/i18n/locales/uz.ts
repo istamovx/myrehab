@@ -345,6 +345,8 @@ const uz = {
     typeMessage: "Xabar yozing...", send: "Yuborish", you: "Siz",
     scheduled: "Rejalashtirilgan", past: "O'tgan", bookAppointment: "Qabul band qilish",
     inPerson: "Klinikada", teleconsult: "Onlayn konsultatsiya",
+    teleconsultation: "Onlayn konsultatsiya",
+    selectType: "Qabul turi", selectDate: "Sana", selectTime: "Vaqt",
     noAppointments: "Qabullar yo'q",
   },
   auth: {

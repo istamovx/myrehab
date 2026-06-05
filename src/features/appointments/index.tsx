@@ -113,7 +113,9 @@ export function AppointmentsPage() {
 
   const [currentDate, setCurrentDate] = useState(today)
   const [selectedDay, setSelectedDay] = useState(today.getDate())
-  const [allApts, setAllApts] = useState<DisplayApt[]>(MOCK_APPOINTMENTS.map(toMockDisplayApt))
+  const [allApts] = useState<DisplayApt[]>(MOCK_APPOINTMENTS.map(toMockDisplayApt))
+  const [rawApts, setRawApts] = useState<Appointment[]>([])
+  const [nameMap, setNameMap] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
   const [addOpen, setAddOpen] = useState(false)
   const [addSuccess, setAddSuccess] = useState(false)
@@ -127,7 +129,8 @@ export function AppointmentsPage() {
         if (data.length > 0) {
           const patientIds = [...new Set(data.map(a => a.patient_id))]
           const nm = await getProfilesByIds(patientIds)
-          setAllApts(data.map(a => toDisplayApt(a, nm)))
+          setRawApts(data)
+          setNameMap(nm)
         }
       })
       .catch(console.error)
@@ -151,9 +154,6 @@ export function AppointmentsPage() {
     t('months.may'), t('months.june'), t('months.july'), t('months.august'),
     t('months.september'), t('months.october'), t('months.november'), t('months.december'),
   ]
-
-  const [rawApts, setRawApts] = useState<Appointment[]>([])
-  const [nameMap, setNameMap] = useState<Record<string, string>>({})
 
   function prevMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1)) }
   function nextMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1)) }

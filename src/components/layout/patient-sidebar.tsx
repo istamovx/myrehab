@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   CalendarDays, CheckSquare, Dumbbell, FlaskConical, Heart,
-  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X, LogOut,
+  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X, LogOut, Video,
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
@@ -59,9 +59,10 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
     { to: '/patient/symptoms',     icon: Stethoscope, label: t('patient.symptoms')            },
     { to: '/patient/nutrition',    icon: Apple,       label: t('patient.nutrition')           },
     { to: '/patient/knowledge',    icon: BookOpen,    label: t('patient.healthKnowledge')     },
-    { to: '/patient/messages',     icon: MessageSquare,label: t('patient.messages')           },
-    { to: '/patient/appointments', icon: CalendarDays,label: t('patient.patientAppointments') },
-    { to: '/patient/settings',     icon: Settings,    label: t('patient.patientSettings')     },
+    { to: '/patient/messages',        icon: MessageSquare,label: t('patient.messages')           },
+    { to: '/patient/appointments',    icon: CalendarDays,label: t('patient.patientAppointments') },
+    { to: '/patient/teleconsultation',icon: Video,       label: t('patient.teleconsultation', 'Onlayn konsultatsiya') },
+    { to: '/patient/settings',        icon: Settings,    label: t('patient.patientSettings')     },
   ]
 
   const sidebar = (
