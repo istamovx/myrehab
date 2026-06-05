@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Search, Bell, Sun, Moon, Globe, ChevronDown, LogOut, Settings, UserRound, Check, Eye,
 } from 'lucide-react'
@@ -7,6 +8,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { Menu, MenuTrigger, MenuContent, MenuItem, MenuSeparator, MenuLabel } from '@/components/ui/menu'
 import { useLangStore } from '@/store/lang'
 import { useThemeStore } from '@/store/theme'
+import { useAuthStore } from '@/store/auth'
 import { DASHBOARD_ALERTS } from '@/data/mock-data'
 import { cn } from '@/lib/utils'
 
@@ -16,14 +18,22 @@ const LANGS = [
   { code: 'ru', label: 'Русский' },
 ] as const
 
-const USER = { name: 'Dr. Muhrim Devonov', roleKey: 'doctor' as const }
-
 export function TopBar() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { lang, setLang } = useLangStore()
   const { theme, toggle } = useThemeStore()
+  const user = useAuthStore(s => s.user)
+  const logout = useAuthStore(s => s.logout)
   const [search, setSearch] = useState('')
   const unread = 6
+
+  const USER = { name: user?.name ?? 'Dr. Muhrim Devonov', roleKey: 'doctor' as const }
+
+  function handleLogout() {
+    logout()
+    navigate({ to: '/login' })
+  }
 
   return (
     <header className="sticky top-0 z-20 h-[72px] flex items-center gap-3 px-4 sm:px-6 bg-[var(--bg-primary)]/80 backdrop-blur-md border-b border-[var(--border-secondary)]">
@@ -132,7 +142,7 @@ export function TopBar() {
             <MenuItem><UserRound size={16} className="text-[var(--fg-quaternary)]" />{t('header.viewProfile')}</MenuItem>
             <MenuItem><Settings size={16} className="text-[var(--fg-quaternary)]" />{t('header.settings')}</MenuItem>
             <MenuSeparator />
-            <MenuItem danger><LogOut size={16} />{t('header.logout')}</MenuItem>
+            <MenuItem danger onClick={handleLogout}><LogOut size={16} />{t('header.logout')}</MenuItem>
           </MenuContent>
         </Menu>
       </div>

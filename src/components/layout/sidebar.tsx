@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Search, X, LogOut,
@@ -6,6 +6,7 @@ import {
   Video, UsersRound, Dumbbell, Newspaper,
   TrendingUp, History, Settings,
 } from 'lucide-react'
+import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 
 function NavItem({ to, icon: Icon, label, badge, onClose }: {
@@ -62,6 +63,14 @@ interface SidebarProps { onClose?: () => void }
 
 export function Sidebar({ onClose }: SidebarProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const user = useAuthStore(s => s.user)
+  const logout = useAuthStore(s => s.logout)
+
+  function handleLogout() {
+    logout()
+    navigate({ to: '/login' })
+  }
 
   return (
     <aside className="w-[260px] h-full bg-[var(--bg-primary)] border-r border-[var(--border-secondary)] flex flex-col select-none">
@@ -133,12 +142,13 @@ export function Sidebar({ onClose }: SidebarProps) {
             MD
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[13px] font-bold text-[var(--text-primary)] truncate">Muhrim Devonov</p>
-            <p className="text-[11px] text-[var(--text-tertiary)]">Shifokor</p>
+            <p className="text-[13px] font-bold text-[var(--text-primary)] truncate">{user?.name ?? 'Muhrim Devonov'}</p>
+            <p className="text-[11px] text-[var(--text-tertiary)]">{t('roles.doctor')}</p>
           </div>
           <button
+            onClick={handleLogout}
             className="size-8 rounded-lg flex items-center justify-center text-[var(--text-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-red-500 transition-colors cursor-pointer shrink-0"
-            title="Chiqish"
+            title={t('header.logout')}
           >
             <LogOut size={15} />
           </button>

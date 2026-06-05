@@ -1,10 +1,11 @@
-import { Link, useRouterState } from '@tanstack/react-router'
+import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   CalendarDays, CheckSquare, Dumbbell, FlaskConical, Heart,
-  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X
+  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X, LogOut,
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
+import { useAuthStore } from '@/store/auth'
 
 interface NavItem {
   to:    string
@@ -40,6 +41,14 @@ interface Props {
 
 export function PatientSidebar({ mobileOpen, onClose }: Props) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const user = useAuthStore(s => s.user)
+  const logout = useAuthStore(s => s.logout)
+
+  function handleLogout() {
+    logout()
+    navigate({ to: '/login' })
+  }
 
   const navItems: NavItem[] = [
     { to: '/patient/today',        icon: CheckSquare, label: t('patient.today')              },
@@ -73,7 +82,7 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
 
       {/* Patient profile card */}
       <div className="mx-3 mt-3 mb-1 p-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-secondary)]">
-        <p className="text-[12px] font-semibold text-[var(--text-primary)] truncate">{PATIENT_PROFILE.name}</p>
+        <p className="text-[12px] font-semibold text-[var(--text-primary)] truncate">{user?.name ?? PATIENT_PROFILE.name}</p>
         <p className="text-[11px] text-[var(--text-tertiary)] truncate mt-0.5">{PATIENT_PROFILE.diagnosis}</p>
       </div>
 
@@ -85,11 +94,20 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
       </nav>
 
       {/* Doctor card */}
-      <div className="mx-3 mb-3 p-3 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white">
+      <div className="mx-3 mb-2 p-3 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 text-white">
         <p className="text-[11px] opacity-80 font-medium">{t('patient.assignedDoctor')}</p>
         <p className="text-[13px] font-semibold mt-0.5 truncate">{ASSIGNED_DOCTOR.name}</p>
         <p className="text-[11px] opacity-80 truncate">{ASSIGNED_DOCTOR.specialization}</p>
       </div>
+
+      {/* Logout */}
+      <button
+        onClick={handleLogout}
+        className="mx-3 mb-3 flex items-center gap-2.5 px-[10px] py-[9px] rounded-[10px] text-[13.5px] font-semibold text-[var(--text-secondary)] hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-500 transition-colors"
+      >
+        <LogOut size={16} className="shrink-0" />
+        <span>{t('header.logout')}</span>
+      </button>
     </aside>
   )
 

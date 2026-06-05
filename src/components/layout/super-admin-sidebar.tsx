@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import {
   X, LayoutDashboard, Building2, CreditCard, Settings, ShieldCheck, LogOut,
 } from 'lucide-react'
+import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
 
 function NavItem({ to, icon: Icon, label, badge, onClose }: {
@@ -57,6 +58,14 @@ function NavGroup({ label, children }: { label: string; children: React.ReactNod
 interface SuperAdminSidebarProps { onClose?: () => void }
 
 export function SuperAdminSidebar({ onClose }: SuperAdminSidebarProps) {
+  const navigate = useNavigate()
+  const logout = useAuthStore(s => s.logout)
+
+  function handleLogout() {
+    logout()
+    navigate({ to: '/login' })
+  }
+
   return (
     <aside className="w-[260px] h-full bg-[var(--bg-primary)] border-r border-[var(--border-secondary)] flex flex-col select-none">
       {/* Logo */}
@@ -104,6 +113,7 @@ export function SuperAdminSidebar({ onClose }: SuperAdminSidebarProps) {
             <p className="text-[11px] text-indigo-500 font-semibold">Platform boshqaruvchi</p>
           </div>
           <button
+            onClick={handleLogout}
             className="size-8 rounded-lg flex items-center justify-center text-[var(--text-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-red-500 transition-colors cursor-pointer shrink-0"
             title="Chiqish"
           >

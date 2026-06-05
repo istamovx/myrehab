@@ -1,11 +1,34 @@
 import { useState } from 'react'
 import { Shield, Bell, Globe, Lock } from 'lucide-react'
+import { useAuthStore } from '@/store/auth'
 
 type Tab = 'general' | 'security' | 'notifications'
 
 export function SuperAdminSettingsPage() {
   const [tab, setTab] = useState<Tab>('general')
   const [saved, setSaved] = useState(false)
+
+  const changePassword = useAuthStore(s => s.changePassword)
+  const [current, setCurrent] = useState('')
+  const [next, setNext] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [pwMsg, setPwMsg] = useState<{ type: 'ok' | 'error'; text: string } | null>(null)
+
+  function handleChangePassword() {
+    const res = changePassword(current, next, confirm)
+    if (res.ok) {
+      setPwMsg({ type: 'ok', text: "✓ Parol muvaffaqiyatli o'zgartirildi!" })
+      setCurrent(''); setNext(''); setConfirm('')
+    } else {
+      const text =
+        res.error === 'wrong_password' ? "Joriy parol noto'g'ri"
+          : res.error === 'too_short' ? "Yangi parol kamida 4 ta belgidan iborat bo'lishi kerak"
+          : res.error === 'mismatch' ? 'Parollar mos kelmadi'
+          : 'Xatolik yuz berdi'
+      setPwMsg({ type: 'error', text })
+    }
+    setTimeout(() => setPwMsg(null), 3000)
+  }
 
   const TABS = [
     { key: 'general' as Tab, icon: Globe, label: 'Umumiy' },
@@ -106,16 +129,31 @@ export function SuperAdminSettingsPage() {
       {tab === 'security' && (
         <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-6 space-y-4">
           <h2 className="text-base font-bold text-[var(--text-primary)]">Parolni o'zgartirish</h2>
-          {['Joriy parol', 'Yangi parol', 'Parolni tasdiqlang'].map(label => (
-            <div key={label}>
-              <label className="text-xs font-medium text-[var(--text-secondary)]">{label}</label>
+          {pwMsg && (
+            <p className={['text-sm font-medium', pwMsg.type === 'ok' ? 'text-green-600' : 'text-red-500'].join(' ')}>
+              {pwMsg.text}
+            </p>
+          )}
+          {[
+            { label: 'Joriy parol', value: current, set: setCurrent },
+            { label: 'Yangi parol', value: next, set: setNext },
+            { label: 'Parolni tasdiqlang', value: confirm, set: setConfirm },
+          ].map(f => (
+            <div key={f.label}>
+              <label className="text-xs font-medium text-[var(--text-secondary)]">{f.label}</label>
               <input
                 type="password"
+                value={f.value}
+                onChange={e => f.set(e.target.value)}
                 className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-indigo-500"
               />
             </div>
           ))}
-          <button onClick={save} className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90">
+          <button
+            onClick={handleChangePassword}
+            disabled={!current || !next || !confirm}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
+          >
             Parolni o'zgartirish
           </button>
         </div>
