@@ -31,7 +31,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       </div>
 
       {/* Main area */}
-      <div className="flex-1 lg:ml-[272px] min-h-screen flex flex-col min-w-0">
+      <div className="flex-1 lg:ml-[260px] min-h-screen flex flex-col min-w-0">
         {/* Mobile menu button bar (sits above TopBar on small screens) */}
         <div className="lg:hidden flex items-center h-12 px-4 bg-[var(--bg-primary)] border-b border-[var(--border-secondary)]">
           <button

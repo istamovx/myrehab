@@ -6,9 +6,12 @@ const uz = {
     appointments: "Uchrashuvlar",
     documents:    "Hujjatlar",
     team:         "Jamoa",
+    general:      "Umumiy",
     management:   "Boshqaruv",
     support:      "Yordam",
     settings:     "Sozlamalar",
+    clinic:       "Klinika",
+    clinicName:   "Toshkent Klinikasi",
     clinicalPlatform: "Klinik platforma",
   },
   common: {

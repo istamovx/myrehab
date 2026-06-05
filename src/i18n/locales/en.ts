@@ -6,9 +6,12 @@ const en = {
     appointments: "Appointments",
     documents:    "Documents",
     team:         "Team",
+    general:      "General",
     management:   "Management",
     support:      "Support",
     settings:     "Settings",
+    clinic:       "Clinic",
+    clinicName:   "Tashkent Clinic",
     clinicalPlatform: "Clinical Platform",
   },
   common: {
