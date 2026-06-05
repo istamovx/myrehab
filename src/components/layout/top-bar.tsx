@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import {
-  Search, Sun, Moon, Bell, LogOut, Settings, UserRound, ChevronDown, Menu,
+  Search, Sun, Moon, LogOut, Settings, UserRound, ChevronDown, Menu,
 } from 'lucide-react'
 import { Avatar } from '@/components/ui/avatar'
 import { Menu as DropMenu, MenuTrigger, MenuContent, MenuItem, MenuSeparator } from '@/components/ui/menu'
+import { NotificationsBell } from '@/components/notifications-bell'
 import { useThemeStore } from '@/store/theme'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
@@ -77,13 +78,7 @@ export function TopBar({ onMobileMenu }: TopBarProps) {
         </button>
 
         {/* Notifications */}
-        <button
-          aria-label="Bildirishnomalar"
-          className="relative size-9 rounded-lg flex items-center justify-center text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
-        >
-          <Bell size={17} />
-          <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-red-500 ring-2 ring-[var(--bg-primary)]" />
-        </button>
+        <NotificationsBell audience="doctor" />
 
         {/* Avatar + dropdown */}
         <DropMenu>
