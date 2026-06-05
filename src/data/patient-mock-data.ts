@@ -153,7 +153,7 @@ export const PATIENT_PROFILE = {
   id: 'pat-001',
   name: 'Murod Aliyev',
   phone: '+998 90 123 45 67',
-  diagnosis: 'ACL post-op (left knee)',
+  diagnosis: 'ACL operatsiyadan keyin (chap tizza)',
   dob: '1990-03-15',
   avatar: null,
 }

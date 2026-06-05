@@ -8,9 +8,10 @@ import {
 import { PillSelect } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { Avatar } from '@/components/ui/avatar'
+import { ThemeConstructor } from '@/components/theme-constructor'
 import { DOCTORS, DASHBOARD_ALERTS, type Doctor, type ScheduleBlock } from '@/data/mock-data'
 import { CLINIC_STATS } from '@/data/clinic-mock-data'
-import { cn } from '@/lib/utils'
+import { cn, formatUzDate } from '@/lib/utils'
 import { SUPABASE_ENABLED } from '@/lib/supabase'
 import { getOrganizationStats } from '@/services/analytics.service'
 import { useAuthStore } from '@/store/auth'
@@ -135,7 +136,7 @@ export function DashboardPage() {
     { value: 'cardio',      label: 'Kardiologiya' },
   ]
 
-  const todayLabel = new Intl.DateTimeFormat('uz-UZ', { day: '2-digit', month: 'long', year: 'numeric' }).format(new Date())
+  const todayLabel = formatUzDate(new Date())
 
   // Real-time team schedule
   const now = useNow()
@@ -418,8 +419,13 @@ export function DashboardPage() {
           </div>
         </Card>
 
-        {/* Team availability */}
-        <Card>
+        {/* Right column: theme constructor + team availability */}
+        <div className="space-y-5">
+          {/* Theme constructor widget */}
+          <ThemeConstructor />
+
+          {/* Team availability */}
+          <Card>
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">
             <h3 className="text-[16px] font-semibold text-[var(--text-primary)]">{t('dashboard.teamAvailable')}</h3>
             <button className="size-7 rounded-md hover:bg-[var(--bg-tertiary)] flex items-center justify-center text-[var(--fg-quaternary)] cursor-pointer transition-colors">
@@ -447,7 +453,8 @@ export function DashboardPage() {
               </div>
             ))}
           </div>
-        </Card>
+          </Card>
+        </div>
       </div>
     </div>
   )

@@ -71,7 +71,7 @@ function ToggleSwitch({ on, onChange }: { on: boolean; onChange: (v: boolean) =>
       onClick={() => onChange(!on)}
       className={[
         'relative w-10 h-6 rounded-full transition-colors shrink-0',
-        on ? 'bg-teal-500' : 'bg-[var(--bg-tertiary)]',
+        on ? 'bg-blue-500' : 'bg-[var(--bg-tertiary)]',
       ].join(' ')}
     >
       <span className={[
@@ -100,14 +100,14 @@ function ProfileTab() {
 
       {/* Avatar + verified */}
       <div className="flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-bold shrink-0">
           {DOCTOR.initials}
         </div>
         <div>
           <div className="flex items-center gap-2 flex-wrap">
             <p className="text-base font-bold text-[var(--text-primary)]">Dr. {name}</p>
-            <span className="flex items-center gap-1 text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
+            <span className="flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />
               Tasdiqlangan
             </span>
           </div>
@@ -116,7 +116,7 @@ function ProfileTab() {
       </div>
 
       {saved && (
-        <p className="text-green-600 text-sm font-medium">✓ O'zgarishlar saqlandi!</p>
+        <p className="text-blue-600 text-sm font-medium">✓ O'zgarishlar saqlandi!</p>
       )}
 
       {/* Form fields */}
@@ -126,7 +126,7 @@ function ProfileTab() {
           <input
             value={name}
             onChange={e => setName(e.target.value)}
-            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500 transition-colors"
+            className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-blue-500 transition-colors"
           />
         </div>
         <div>
@@ -165,7 +165,7 @@ function ProfileTab() {
           className={[
             'px-5 py-2.5 rounded-xl text-sm font-semibold transition-all',
             dirty
-              ? 'bg-teal-500 text-white hover:bg-teal-600'
+              ? 'bg-blue-500 text-white hover:bg-blue-600'
               : 'bg-[var(--bg-tertiary)] text-[var(--text-quaternary)] cursor-not-allowed',
           ].join(' ')}
         >
@@ -194,7 +194,7 @@ function ClinicsTab() {
           {MY_REQUESTS.map(r => (
             <div key={r.id} className="flex items-center justify-between p-3 bg-[var(--bg-secondary)] rounded-xl">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-sm font-bold shrink-0">
                   {r.initials}
                 </div>
                 <div>
@@ -220,7 +220,7 @@ function ClinicsTab() {
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Klinika, shahar qidiring"
-              className="pl-7 pr-3 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs text-[var(--text-primary)] outline-none focus:border-teal-500 w-48"
+              className="pl-7 pr-3 py-1.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-xs text-[var(--text-primary)] outline-none focus:border-blue-500 w-48"
             />
           </div>
         </div>
@@ -450,7 +450,7 @@ function SecurityTab() {
       <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] p-5 space-y-4">
         <h3 className="text-sm font-bold text-[var(--text-primary)]">Parol</h3>
         {msg && (
-          <p className={['text-sm font-medium', msg.type === 'ok' ? 'text-green-600' : 'text-red-500'].join(' ')}>
+          <p className={['text-sm font-medium', msg.type === 'ok' ? 'text-blue-600' : 'text-red-500'].join(' ')}>
             {msg.text}
           </p>
         )}
@@ -461,14 +461,14 @@ function SecurityTab() {
               type="password"
               value={f.value}
               onChange={e => f.set(e.target.value)}
-              className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-teal-500"
+              className="mt-1.5 w-full px-3 py-2.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-blue-500"
             />
           </div>
         ))}
         <button
           onClick={handleChangePassword}
           disabled={!current || !next || !confirm}
-          className="px-5 py-2.5 bg-teal-500 text-white rounded-xl text-sm font-semibold hover:bg-teal-600 transition-colors disabled:opacity-40"
+          className="px-5 py-2.5 bg-blue-500 text-white rounded-xl text-sm font-semibold hover:bg-blue-600 transition-colors disabled:opacity-40"
         >
           Parolni o'zgartirish
         </button>
@@ -511,7 +511,7 @@ function SecurityTab() {
               </div>
               {s.current
                 ? (
-                  <span className="shrink-0 flex items-center gap-1 text-xs font-semibold text-teal-600 bg-teal-50 dark:bg-teal-900/20 px-2.5 py-1 rounded-full">
+                  <span className="shrink-0 flex items-center gap-1 text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/20 px-2.5 py-1 rounded-full">
                     <CheckCircle2 size={11} />
                     Joriy
                   </span>
@@ -561,13 +561,13 @@ export function SettingsPage() {
               className={[
                 'flex items-center gap-2.5 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all',
                 tab === key
-                  ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400'
+                  ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                   : 'text-[var(--text-secondary)] hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)]',
               ].join(' ')}
             >
               <Icon
                 size={16}
-                className={tab === key ? 'text-teal-500' : 'text-[var(--text-quaternary)]'}
+                className={tab === key ? 'text-blue-500' : 'text-[var(--text-quaternary)]'}
               />
               <span className="hidden sm:block">{label}</span>
             </button>

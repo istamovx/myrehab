@@ -23,6 +23,12 @@ export function formatUzDateTime(dateStr: string): string {
   return `${day} ${UZ_MONTHS[d.getMonth()]}, ${time}`
 }
 
+/** "05 iyun 2026" — date only, Uzbek month names. */
+export function formatUzDate(date: Date | string): string {
+  const d = typeof date === 'string' ? new Date(date) : date
+  return `${String(d.getDate()).padStart(2, '0')} ${UZ_MONTHS[d.getMonth()]} ${d.getFullYear()}`
+}
+
 export function getInitials(name: string): string {
   return name
     .split(' ')

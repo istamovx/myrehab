@@ -189,7 +189,7 @@ export function PatientSettingsPage() {
           <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-6 space-y-4">
             <h2 className="text-base font-bold text-[var(--text-primary)]">Profil ma'lumotlari</h2>
             {saved && (
-              <p className="text-green-600 text-sm font-medium">✓ Saqlandi!</p>
+              <p className="text-blue-600 text-sm font-medium">✓ Saqlandi!</p>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
@@ -236,7 +236,7 @@ export function PatientSettingsPage() {
           <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-6 space-y-4">
             <h2 className="text-base font-bold text-[var(--text-primary)]">{t('settings.changePassword')}</h2>
             {pwMsg && (
-              <p className={['text-sm font-medium', pwMsg.type === 'ok' ? 'text-green-600' : 'text-red-500'].join(' ')}>
+              <p className={['text-sm font-medium', pwMsg.type === 'ok' ? 'text-blue-600' : 'text-red-500'].join(' ')}>
                 {pwMsg.text}
               </p>
             )}
