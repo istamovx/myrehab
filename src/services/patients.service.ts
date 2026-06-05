@@ -7,15 +7,25 @@ import type {
   ProfileInsert,
 } from '@/types/database.types'
 
-export async function getPatients(organizationId: string): Promise<Patient[]> {
+export type PatientWithProfile = Patient & {
+  profile: { name: string; phone: string | null; is_active: boolean; created_at: string } | null
+}
+
+export async function getPatients(organizationId: string): Promise<PatientWithProfile[]> {
   if (!supabase) return []
   const { data, error } = await supabase
     .from('patients')
-    .select('*')
+    .select('*, profile:profiles(name, phone, is_active, created_at)')
     .eq('organization_id', organizationId)
     .order('id')
   if (error) throw error
-  return data ?? []
+  return (data ?? []) as PatientWithProfile[]
+}
+
+export async function getDoctorProfiles(ids: string[]): Promise<Record<string, string>> {
+  if (!supabase || ids.length === 0) return {}
+  const { data } = await supabase.from('profiles').select('id, name').in('id', ids)
+  return Object.fromEntries((data ?? []).map(d => [d.id, d.name]))
 }
 
 export async function getPatient(id: string): Promise<(Patient & { profile: Profile }) | null> {

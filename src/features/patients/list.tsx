@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Search, ArrowUpDown, LayoutGrid, List, Download, Plus, Edit, Trash2 } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
@@ -10,11 +10,42 @@ import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog } from '@/components/ui/dialog'
 import { PageHeader } from '@/components/layout/page-header'
-import { PATIENTS, type Patient, type PatientStatus } from '@/data/mock-data'
+import { PATIENTS, type PatientStatus } from '@/data/mock-data'
 import { formatDate, cn } from '@/lib/utils'
+import { SUPABASE_ENABLED } from '@/lib/supabase'
+import { getPatients, getDoctorProfiles, type PatientWithProfile } from '@/services/patients.service'
+import { useAuthStore } from '@/store/auth'
+
+interface PatientDisplay {
+  id: string
+  displayId: string
+  name: string
+  procedure: string
+  status: PatientStatus
+  procedureDate: string
+  attendingPhysician: string
+  tags: string[]
+}
+
+function fromMock(p: typeof PATIENTS[number]): PatientDisplay {
+  return { ...p, displayId: p.id }
+}
+
+function fromSupabase(p: PatientWithProfile, doctorMap: Record<string, string>): PatientDisplay {
+  return {
+    id: p.id,
+    displayId: `P-${p.id.replace(/-/g, '').slice(-6).toUpperCase()}`,
+    name: p.profile?.name ?? '—',
+    procedure: p.diagnosis_primary ?? '—',
+    status: p.profile?.is_active !== false ? 'In Progress' : 'Ready',
+    procedureDate: p.profile?.created_at ?? new Date().toISOString(),
+    attendingPhysician: p.assigned_doctor_id ? (doctorMap[p.assigned_doctor_id] ?? '—') : '—',
+    tags: p.diagnosis_icd10 ?? [],
+  }
+}
 
 function PatientCard({ patient, selected, onSelect }: {
-  patient: typeof PATIENTS[number]
+  patient: PatientDisplay
   selected: boolean
   onSelect: (id: string) => void
 }) {
@@ -45,7 +76,7 @@ function PatientCard({ patient, selected, onSelect }: {
           <div className="flex items-center gap-3 mb-4 cursor-pointer group/link">
             <Avatar name={patient.name} size="md" />
             <div>
-              <p className="text-[11px] font-medium text-[var(--text-brand-primary)] uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
+              <p className="text-[11px] font-medium text-[var(--text-brand-primary)] uppercase tracking-wide">{t('patients.id')}: {patient.displayId}</p>
               <p className="text-sm font-semibold text-[var(--text-primary)] group-hover/link:text-[var(--text-brand-secondary)] transition-colors">{patient.name}</p>
             </div>
           </div>
@@ -81,7 +112,7 @@ function PatientCard({ patient, selected, onSelect }: {
 }
 
 function PatientRow({ patient, selected, onSelect }: {
-  patient: typeof PATIENTS[number]
+  patient: PatientDisplay
   selected: boolean
   onSelect: (id: string) => void
 }) {
@@ -96,7 +127,7 @@ function PatientRow({ patient, selected, onSelect }: {
           <div className="flex items-center gap-3 cursor-pointer">
             <Avatar name={patient.name} size="sm" />
             <div>
-              <p className="text-[11px] text-[var(--text-brand-primary)] font-semibold uppercase tracking-wide">{t('patients.id')}: {patient.id}</p>
+              <p className="text-[11px] text-[var(--text-brand-primary)] font-semibold uppercase tracking-wide">{t('patients.id')}: {patient.displayId}</p>
               <p className="text-[14px] font-semibold text-[var(--text-primary)]">{patient.name}</p>
             </div>
           </div>
@@ -131,7 +162,12 @@ const EMPTY_FORM = { name: '', gender: 'Male' as const, procedure: '', status: '
 
 export function PatientsListPage() {
   const { t } = useTranslation()
-  const [patients, setPatients] = useState<Patient[]>(PATIENTS)
+  const orgId = useAuthStore(s => s.user?.organizationId)
+
+  const [rows, setRows] = useState<PatientDisplay[]>(
+    SUPABASE_ENABLED ? [] : PATIENTS.map(fromMock),
+  )
+  const [loading, setLoading] = useState(SUPABASE_ENABLED)
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('name')
   const [filterBy, setFilterBy] = useState('all')
@@ -141,21 +177,35 @@ export function PatientsListPage() {
   const [addSuccess, setAddSuccess] = useState(false)
   const [form, setForm] = useState(EMPTY_FORM)
 
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !orgId) {
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    getPatients(orgId)
+      .then(async data => {
+        const doctorIds = [...new Set(data.map(p => p.assigned_doctor_id).filter(Boolean) as string[])]
+        const doctorMap = await getDoctorProfiles(doctorIds)
+        setRows(data.map(p => fromSupabase(p, doctorMap)))
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [orgId])
+
   function handleAddPatient() {
     if (!form.name || !form.procedure || !form.attendingPhysician) return
-    const newPatient: Patient = {
-      id: `P-${String(patients.length + 1).padStart(3, '0')}`,
+    const newRow: PatientDisplay = {
+      id: `local-${Date.now()}`,
+      displayId: `P-${String(rows.length + 1).padStart(3, '0')}`,
       name: form.name,
-      gender: form.gender,
-      dateOfBirth: form.dateOfBirth || '1990-01-01',
-      location: form.location || 'Toshkent',
       procedure: form.procedure,
       status: form.status,
       procedureDate: form.procedureDate || new Date().toISOString().slice(0, 10),
       attendingPhysician: form.attendingPhysician,
       tags: [],
     }
-    setPatients(prev => [newPatient, ...prev])
+    setRows(prev => [newRow, ...prev])
     setAddSuccess(true)
     setTimeout(() => {
       setAddSuccess(false)
@@ -178,9 +228,9 @@ export function PatientsListPage() {
     { value: 'in-progress', label: t('patients.inProgress') },
   ]
 
-  const filtered = patients.filter(p => {
+  const filtered = rows.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.id.includes(search) ||
+      p.displayId.includes(search) ||
       p.procedure.toLowerCase().includes(search.toLowerCase())
     const matchFilter = filterBy === 'all' ||
       (filterBy === 'at-risk'     && p.status === 'At-Risk') ||
@@ -212,7 +262,7 @@ export function PatientsListPage() {
     <div>
       <PageHeader
         title={t('patients.title')}
-        subtitle={t('patients.subtitle', { count: patients.length })}
+        subtitle={t('patients.subtitle', { count: rows.length })}
         crumbs={[{ label: t('nav.patients') }]}
         actions={
           <>
@@ -262,8 +312,17 @@ export function PatientsListPage() {
         }
       />
 
+      {/* Loading state */}
+      {loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] h-40 animate-pulse" />
+          ))}
+        </div>
+      )}
+
       {/* Content */}
-      {viewMode === 'grid' ? (
+      {!loading && viewMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map(patient => (
             <PatientCard
@@ -279,7 +338,7 @@ export function PatientsListPage() {
             </div>
           )}
         </div>
-      ) : (
+      ) : !loading ? (
         <div className="bg-[var(--bg-primary)] rounded-2xl border border-[var(--border-secondary)] [box-shadow:var(--shadow-xs)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -326,12 +385,12 @@ export function PatientsListPage() {
           {filtered.length > 0 && (
             <div className="px-5 py-3.5 border-t border-[var(--border-secondary)] flex items-center justify-between bg-[var(--bg-secondary-subtle)]">
               <p className="text-[13px] text-[var(--text-tertiary)]">
-                {t('patients.showingOf', { count: filtered.length, total: patients.length })}
+                {t('patients.showingOf', { count: filtered.length, total: rows.length })}
               </p>
             </div>
           )}
         </div>
-      )}
+      ) : null}
 
       {/* Add Patient Dialog */}
       <Dialog

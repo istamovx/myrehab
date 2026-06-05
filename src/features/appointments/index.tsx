@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Calendar, ChevronLeft, ChevronRight, Plus, Clock, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -7,26 +7,32 @@ import { Select } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { cn } from '@/lib/utils'
 import { PATIENTS } from '@/data/mock-data'
+import { SUPABASE_ENABLED } from '@/lib/supabase'
+import { getAppointments, getProfilesByIds } from '@/services/appointments.service'
+import { useAuthStore } from '@/store/auth'
+import type { Appointment } from '@/types/database.types'
 
-const APPOINTMENTS = [
-  { id: 1, patientId: '1001', time: '09:00', duration: 60, type: 'physiotherapy', room: 'Room 201', status: 'confirmed' },
-  { id: 2, patientId: '1002', time: '10:30', duration: 45, type: 'consultation',  room: 'Room 105', status: 'confirmed' },
-  { id: 3, patientId: '1003', time: '11:30', duration: 30, type: 'followUp',      room: 'Room 301', status: 'pending' },
-  { id: 4, patientId: '1004', time: '13:00', duration: 60, type: 'assessment',    room: 'Room 202', status: 'confirmed' },
-  { id: 5, patientId: '1005', time: '14:30', duration: 45, type: 'physiotherapy', room: 'Room 201', status: 'confirmed' },
-  { id: 6, patientId: '1006', time: '15:30', duration: 30, type: 'review',        room: 'Room 105', status: 'cancelled' },
+const MOCK_APPOINTMENTS = [
+  { id: '1', patient_id: '1001', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Physiotherapy', organization_id: '', doctor_id: '' },
+  { id: '2', patient_id: '1002', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Consultation',  organization_id: '', doctor_id: '' },
+  { id: '3', patient_id: '1003', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'in_person', status: 'scheduled' as const, reason: 'Follow-up',     organization_id: '', doctor_id: '' },
+  { id: '4', patient_id: '1004', scheduled_at: new Date().toISOString(), duration_minutes: 60, type: 'in_person', status: 'confirmed' as const, reason: 'Assessment',    organization_id: '', doctor_id: '' },
+  { id: '5', patient_id: '1005', scheduled_at: new Date().toISOString(), duration_minutes: 45, type: 'video',     status: 'confirmed' as const, reason: 'Physiotherapy', organization_id: '', doctor_id: '' },
+  { id: '6', patient_id: '1006', scheduled_at: new Date().toISOString(), duration_minutes: 30, type: 'phone',     status: 'cancelled' as const, reason: 'Review',        organization_id: '', doctor_id: '' },
 ]
+
+type AptStatus = 'confirmed' | 'scheduled' | 'cancelled'
 
 const STATUS_STYLE: Record<string, string> = {
   confirmed: 'text-[var(--text-success-primary)] bg-[var(--bg-success-primary)]',
-  pending:   'text-[var(--text-warning-primary)] bg-[var(--bg-warning-primary)]',
-  cancelled: 'text-[var(--fg-error-primary)] bg-[var(--bg-error-primary)]',
+  scheduled: 'text-[var(--text-warning-primary)] bg-[var(--bg-warning-primary)]',
+  cancelled:  'text-[var(--fg-error-primary)] bg-[var(--bg-error-primary)]',
 }
 
 const STATUS_BORDER: Record<string, string> = {
   confirmed: 'border-l-[var(--fg-success-primary)]',
-  pending:   'border-l-[var(--fg-warning-primary)]',
-  cancelled: 'border-l-[var(--fg-error-primary)] opacity-60',
+  scheduled: 'border-l-[var(--fg-warning-primary)]',
+  cancelled:  'border-l-[var(--fg-error-primary)] opacity-60',
 }
 
 function getDaysInMonth(year: number, month: number) {
@@ -38,19 +44,100 @@ function getFirstDayOfMonth(year: number, month: number) {
   return day === 0 ? 6 : day - 1
 }
 
+function aptTime(iso: string) {
+  const d = new Date(iso)
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
+
+function aptStatus(raw: string): AptStatus {
+  if (raw === 'confirmed') return 'confirmed'
+  if (raw === 'cancelled' || raw === 'no_show') return 'cancelled'
+  return 'scheduled'
+}
+
+function aptTypeLabel(type: string) {
+  const labels: Record<string, string> = {
+    in_person: 'In-person',
+    video: 'Video',
+    phone: 'Telefon',
+    home_visit: 'Uyga tashrif',
+  }
+  return labels[type] ?? type
+}
+
+interface DisplayApt {
+  id: string
+  patientId: string
+  patientName: string
+  time: string
+  duration: number
+  type: string
+  status: AptStatus
+  reason: string
+}
+
+function toDisplayApt(apt: Appointment, nameMap: Record<string, string>): DisplayApt {
+  return {
+    id: apt.id,
+    patientId: apt.patient_id,
+    patientName: nameMap[apt.patient_id] ?? '—',
+    time: aptTime(apt.scheduled_at),
+    duration: apt.duration_minutes,
+    type: apt.type ?? 'in_person',
+    status: aptStatus(apt.status),
+    reason: apt.reason ?? '',
+  }
+}
+
+function toMockDisplayApt(apt: typeof MOCK_APPOINTMENTS[number]): DisplayApt {
+  const mockPatient = PATIENTS.find(p => p.id === apt.patient_id)
+  return {
+    id: apt.id,
+    patientId: apt.patient_id,
+    patientName: mockPatient?.name ?? '—',
+    time: aptTime(apt.scheduled_at),
+    duration: apt.duration_minutes,
+    type: apt.type,
+    status: aptStatus(apt.status),
+    reason: apt.reason,
+  }
+}
+
 export function AppointmentsPage() {
   const { t } = useTranslation()
   const today = new Date()
+  const orgId = useAuthStore(s => s.user?.organizationId)
+
   const [currentDate, setCurrentDate] = useState(today)
   const [selectedDay, setSelectedDay] = useState(today.getDate())
+  const [allApts, setAllApts] = useState<DisplayApt[]>(
+    SUPABASE_ENABLED ? [] : MOCK_APPOINTMENTS.map(toMockDisplayApt),
+  )
+  const [loading, setLoading] = useState(SUPABASE_ENABLED)
   const [addOpen, setAddOpen] = useState(false)
   const [addSuccess, setAddSuccess] = useState(false)
-  const [aptForm, setAptForm] = useState({ patientId: '', type: 'physiotherapy', time: '', duration: '60', room: '' })
+  const [aptForm, setAptForm] = useState({ patientId: '', type: 'in_person', time: '', duration: '60' })
+
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !orgId) {
+      setLoading(false)
+      return
+    }
+    setLoading(true)
+    getAppointments(orgId)
+      .then(async data => {
+        const patientIds = [...new Set(data.map(a => a.patient_id))]
+        const nameMap = await getProfilesByIds(patientIds)
+        setAllApts(data.map(a => toDisplayApt(a, nameMap)))
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false))
+  }, [orgId])
 
   function handleAddApt() {
     if (!aptForm.patientId || !aptForm.time) return
     setAddSuccess(true)
-    setTimeout(() => { setAddSuccess(false); setAddOpen(false); setAptForm({ patientId: '', type: 'physiotherapy', time: '', duration: '60', room: '' }) }, 1500)
+    setTimeout(() => { setAddSuccess(false); setAddOpen(false); setAptForm({ patientId: '', type: 'in_person', time: '', duration: '60' }) }, 1500)
   }
 
   const year  = currentDate.getFullYear()
@@ -65,14 +152,45 @@ export function AppointmentsPage() {
     t('months.september'), t('months.october'), t('months.november'), t('months.december'),
   ]
 
+  const [rawApts, setRawApts] = useState<Appointment[]>([])
+  const [nameMap, setNameMap] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    if (!SUPABASE_ENABLED || !orgId) return
+    getAppointments(orgId)
+      .then(async data => {
+        const patientIds = [...new Set(data.map(a => a.patient_id))]
+        const nm = await getProfilesByIds(patientIds)
+        setRawApts(data)
+        setNameMap(nm)
+      })
+      .catch(console.error)
+  }, [orgId])
+
   function prevMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() - 1, 1)) }
   function nextMonth() { setCurrentDate(d => new Date(d.getFullYear(), d.getMonth() + 1, 1)) }
+
+  const selectedDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
+
+  const displayApts: DisplayApt[] = SUPABASE_ENABLED
+    ? rawApts
+        .filter(a => {
+          const d = new Date(a.scheduled_at)
+          const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+          return dStr === selectedDateStr
+        })
+        .map(a => toDisplayApt(a, nameMap))
+    : allApts
+
+  const daysWithApts = new Set(
+    rawApts.map(a => new Date(a.scheduled_at).getDate()),
+  )
 
   return (
     <div className="space-y-6">
       <PageHeader
         title={t('appointments.title')}
-        subtitle={t('appointments.subtitle', { count: APPOINTMENTS.length })}
+        subtitle={t('appointments.subtitle', { count: SUPABASE_ENABLED ? rawApts.length : allApts.length })}
         crumbs={[{ label: t('nav.appointments') }]}
         actions={
           <Button size="sm" onClick={() => setAddOpen(true)}>
@@ -121,19 +239,23 @@ export function AppointmentsPage() {
               const day        = i + 1
               const isToday    = day === today.getDate() && month === today.getMonth() && year === today.getFullYear()
               const isSelected = day === selectedDay
+              const hasApt     = SUPABASE_ENABLED ? daysWithApts.has(day) : false
 
               return (
                 <button
                   key={day}
                   onClick={() => setSelectedDay(day)}
                   className={cn(
-                    'h-8 w-full rounded-lg text-sm font-medium transition-all cursor-pointer flex items-center justify-center',
+                    'h-8 w-full rounded-lg text-sm font-medium transition-all cursor-pointer flex items-center justify-center relative',
                     isSelected && 'bg-[var(--fg-brand-primary)] text-white',
                     isToday && !isSelected && 'bg-[var(--bg-brand-primary)] text-[var(--text-brand-secondary)] font-semibold',
                     !isSelected && !isToday && 'text-[var(--text-tertiary)] hover:bg-[var(--bg-tertiary)]',
                   )}
                 >
                   {day}
+                  {hasApt && !isSelected && (
+                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-[var(--fg-brand-primary)]" />
+                  )}
                 </button>
               )
             })}
@@ -161,7 +283,7 @@ export function AppointmentsPage() {
               <h3 className="text-sm font-semibold text-[var(--text-primary)]">
                 {t('appointments.schedule', { month: MONTHS[month], day: selectedDay })}
               </h3>
-              <p className="text-xs text-[var(--text-quaternary)] mt-0.5">{t('appointments.totalCount', { count: APPOINTMENTS.length })}</p>
+              <p className="text-xs text-[var(--text-quaternary)] mt-0.5">{t('appointments.totalCount', { count: displayApts.length })}</p>
             </div>
             <span className="flex items-center gap-1.5 text-xs text-[var(--text-quaternary)] bg-[var(--bg-secondary)] border border-[var(--border-secondary)] px-3 py-1.5 rounded-lg">
               <Calendar size={12} />
@@ -169,11 +291,22 @@ export function AppointmentsPage() {
             </span>
           </div>
 
-          <div className="divide-y divide-[var(--border-secondary)]">
-            {APPOINTMENTS.map(apt => {
-              const patient = PATIENTS.find(p => p.id === apt.patientId)
-
-              return (
+          {loading ? (
+            <div className="divide-y divide-[var(--border-secondary)]">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-4 px-5 py-4">
+                  <div className="w-14 h-8 bg-[var(--bg-tertiary)] rounded animate-pulse" />
+                  <div className="flex-1 h-8 bg-[var(--bg-tertiary)] rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="divide-y divide-[var(--border-secondary)]">
+              {displayApts.length === 0 ? (
+                <div className="px-5 py-12 text-center text-[var(--fg-quaternary)] text-sm">
+                  Bu kunda qabullar yo'q
+                </div>
+              ) : displayApts.map(apt => (
                 <div
                   key={apt.id}
                   className={cn(
@@ -191,33 +324,30 @@ export function AppointmentsPage() {
 
                   <div className="w-px h-10 bg-[var(--bg-tertiary)] shrink-0" />
 
-                  {patient && (
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      <Avatar name={patient.name} size="sm" />
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium text-[var(--text-primary)] truncate">{patient.name}</p>
-                        <p className="text-xs text-[var(--fg-quaternary)]">{t('patients.id')}: {patient.id}</p>
-                      </div>
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <Avatar name={apt.patientName} size="sm" />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-[var(--text-primary)] truncate">{apt.patientName}</p>
+                      <p className="text-xs text-[var(--fg-quaternary)]">{apt.reason}</p>
                     </div>
-                  )}
+                  </div>
 
                   <div className="flex-1 min-w-0 hidden sm:block">
                     <p className="text-sm font-medium text-[var(--text-secondary)]">
-                      {t(`appointments.${apt.type}` as any, apt.type)}
+                      {aptTypeLabel(apt.type)}
                     </p>
-                    <p className="text-xs text-[var(--fg-quaternary)] mt-0.5">{apt.room}</p>
                   </div>
 
                   <span className={cn(
                     'text-xs font-medium px-2.5 py-1 rounded-full shrink-0',
                     STATUS_STYLE[apt.status] ?? 'bg-[var(--bg-tertiary)] text-[var(--text-tertiary)]',
                   )}>
-                    {t(`appointments.${apt.status}` as any, apt.status)}
+                    {{ confirmed: t('appointments.confirmed'), scheduled: t('appointments.pending'), cancelled: t('appointments.cancelled') }[apt.status] ?? apt.status}
                   </span>
                 </div>
-              )
-            })}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -227,9 +357,7 @@ export function AppointmentsPage() {
           <div className="fixed inset-0 bg-black/40" onClick={() => setAddOpen(false)} />
           <div className="relative bg-[var(--bg-primary)] rounded-2xl shadow-xl w-full max-w-sm p-6 z-10 space-y-4">
             <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{t('appointments.newAppointment')}</h3>
-              </div>
+              <h3 className="text-[16px] font-bold text-[var(--text-primary)]">{t('appointments.newAppointment')}</h3>
               <button onClick={() => setAddOpen(false)} className="text-[var(--text-tertiary)]"><X size={18} /></button>
             </div>
 
@@ -244,7 +372,11 @@ export function AppointmentsPage() {
                   <Select
                     value={aptForm.patientId}
                     onValueChange={v => setAptForm(f => ({ ...f, patientId: v }))}
-                    options={PATIENTS.map(p => ({ value: p.id, label: p.name }))}
+                    options={
+                      SUPABASE_ENABLED
+                        ? allApts.map(a => ({ value: a.patientId, label: a.patientName }))
+                        : PATIENTS.map(p => ({ value: p.id, label: p.name }))
+                    }
                     placeholder="Bemorni tanlang"
                     triggerClassName="w-full mt-1"
                   />
@@ -255,10 +387,9 @@ export function AppointmentsPage() {
                     value={aptForm.type}
                     onValueChange={v => setAptForm(f => ({ ...f, type: v }))}
                     options={[
-                      { value: 'physiotherapy', label: t('appointments.physiotherapy') },
-                      { value: 'consultation',  label: t('appointments.consultation') },
-                      { value: 'followUp',      label: t('appointments.followUp') },
-                      { value: 'assessment',    label: t('appointments.assessment') },
+                      { value: 'in_person', label: 'In-person' },
+                      { value: 'video',     label: 'Video' },
+                      { value: 'phone',     label: 'Telefon' },
                     ]}
                     triggerClassName="w-full mt-1"
                   />
@@ -276,12 +407,6 @@ export function AppointmentsPage() {
                       className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
                     />
                   </div>
-                </div>
-                <div>
-                  <label className="text-[12px] font-semibold text-[var(--text-secondary)]">Xona</label>
-                  <input type="text" value={aptForm.room} onChange={e => setAptForm(f => ({ ...f, room: e.target.value }))} placeholder="Room 201"
-                    className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
-                  />
                 </div>
                 <div className="flex gap-3 pt-1">
                   <button onClick={() => setAddOpen(false)} className="flex-1 py-2.5 rounded-lg border border-[var(--border-secondary)] text-sm font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors">

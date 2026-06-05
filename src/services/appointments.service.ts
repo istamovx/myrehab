@@ -86,3 +86,9 @@ export async function getTodayAppointments(organizationId: string): Promise<Appo
   const today = new Date().toISOString().slice(0, 10)
   return getAppointments(organizationId, { date: today })
 }
+
+export async function getProfilesByIds(ids: string[]): Promise<Record<string, string>> {
+  if (!supabase || ids.length === 0) return {}
+  const { data } = await supabase.from('profiles').select('id, name').in('id', ids)
+  return Object.fromEntries((data ?? []).map(d => [d.id, d.name]))
+}
