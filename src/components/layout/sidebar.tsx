@@ -88,17 +88,27 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
         collapsed ? 'w-16' : 'w-[260px]',
       )}
     >
-      {/* Mobile close button (top-right, mobile only) */}
-      {onClose && (
-        <div className="lg:hidden flex justify-end p-2 shrink-0">
+      {/* Header — logo */}
+      <div className={cn(
+        'h-16 border-b border-[var(--border-secondary)] shrink-0 flex items-center',
+        collapsed ? 'justify-center px-2' : 'px-[18px] justify-between',
+      )}>
+        <div className="flex items-center gap-[9px]">
+          <img src="/logo.svg" alt="" className="size-7 shrink-0" />
+          {!collapsed && (
+            <span className="font-extrabold text-[16px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
+          )}
+        </div>
+        {/* Mobile close button (mobile only) */}
+        {onClose && (
           <button
             onClick={onClose}
-            className="size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
+            className="lg:hidden size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] cursor-pointer transition-colors"
           >
             <X size={17} />
           </button>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Navigation */}
       <nav className={cn('flex-1 overflow-y-auto py-2', collapsed ? 'px-1.5' : 'px-[14px]')}>
@@ -128,27 +138,25 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
         </NavGroup>
       </nav>
 
-      {/* Footer — logo + collapse toggle */}
-      <div className={cn(
-        'border-t border-[var(--border-secondary)] shrink-0',
-        collapsed ? 'p-2 flex flex-col items-center gap-2' : 'px-[14px] py-3 flex items-center justify-between',
-      )}>
-        <div className="flex items-center gap-[9px]">
-          <img src="/logo.svg" alt="" className="size-7 shrink-0" />
-          {!collapsed && (
-            <span className="font-extrabold text-[16px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
-          )}
-        </div>
-        {onToggle && (
+      {/* Footer — collapse toggle */}
+      {onToggle && (
+        <div className={cn(
+          'border-t border-[var(--border-secondary)] shrink-0',
+          collapsed ? 'p-2 flex justify-center' : 'px-[14px] py-3',
+        )}>
           <button
             onClick={onToggle}
             title={collapsed ? 'Kengaytirish' : 'Yig\'ish'}
-            className="hidden lg:flex size-8 rounded-lg items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors"
+            className={cn(
+              'hidden lg:flex items-center rounded-[10px] text-[13.5px] font-semibold text-[var(--text-tertiary)] hover:bg-[var(--bg-secondary)] hover:text-[var(--text-primary)] cursor-pointer transition-colors',
+              collapsed ? 'size-9 justify-center' : 'w-full gap-[11px] px-[10px] py-[9px]',
+            )}
           >
-            {collapsed ? <ChevronRight size={17} /> : <ChevronLeft size={17} />}
+            {collapsed ? <ChevronRight size={17} className="shrink-0" /> : <ChevronLeft size={17} className="shrink-0" />}
+            {!collapsed && <span>Yig'ish</span>}
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </aside>
   )
 }

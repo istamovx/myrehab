@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { PatientSidebar } from './patient-sidebar'
+import { ThemeCustomizer } from '@/components/theme-customizer'
 
 export function PatientLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -28,6 +29,9 @@ export function PatientLayout() {
           </div>
         </main>
       </div>
+
+      {/* Floating theme customizer */}
+      <ThemeCustomizer showLayout={false} />
     </div>
   )
 }

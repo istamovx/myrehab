@@ -8,7 +8,6 @@ import {
 import { PillSelect } from '@/components/ui/select'
 import { PageHeader } from '@/components/layout/page-header'
 import { Avatar } from '@/components/ui/avatar'
-import { ThemeConstructor } from '@/components/theme-constructor'
 import { DOCTORS, DASHBOARD_ALERTS, type Doctor, type ScheduleBlock } from '@/data/mock-data'
 import { CLINIC_STATS } from '@/data/clinic-mock-data'
 import { cn, formatUzDate } from '@/lib/utils'
@@ -419,11 +418,8 @@ export function DashboardPage() {
           </div>
         </Card>
 
-        {/* Right column: theme constructor + team availability */}
+        {/* Right column: team availability */}
         <div className="space-y-5">
-          {/* Theme constructor widget */}
-          <ThemeConstructor />
-
           {/* Team availability */}
           <Card>
           <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--border-secondary)]">

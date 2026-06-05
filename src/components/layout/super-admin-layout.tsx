@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Outlet, useNavigate } from '@tanstack/react-router'
 import { Menu, Glasses, X, Search, Sun, Moon, LogOut, ChevronRight, UserCheck } from 'lucide-react'
 import { SuperAdminSidebar } from './super-admin-sidebar'
+import { ThemeCustomizer } from '@/components/theme-customizer'
 import { useThemeStore } from '@/store/theme'
 import { useAuthStore } from '@/store/auth'
 import { ORG_USERS, ORGANIZATIONS, type OrgUser } from '@/data/super-admin-mock-data'
@@ -244,6 +245,9 @@ export function SuperAdminLayout() {
           </div>
         </div>
       )}
+
+      {/* Floating theme customizer */}
+      <ThemeCustomizer showLayout={false} />
     </div>
   )
 }
