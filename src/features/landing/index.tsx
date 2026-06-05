@@ -104,9 +104,7 @@ function Navbar({ scrolled, open, setOpen }: { scrolled: boolean; open: boolean;
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         <a href="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
-            <Activity size={16} className="text-white" />
-          </div>
+          <img src="/logo.svg" alt="" className="w-8 h-8 shrink-0" />
           <span className="font-bold text-[17px] text-white tracking-tight">My<span style={{ color: '#818cf8' }}>Rehab</span></span>
         </a>
 
@@ -679,9 +677,7 @@ function FooterSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
-                <Activity size={16} className="text-white" />
-              </div>
+              <img src="/logo.svg" alt="" className="w-8 h-8 shrink-0" />
               <span className="font-bold text-lg text-white">My<span style={{ color: '#818cf8' }}>Rehab</span></span>
             </a>
             <p className="text-sm leading-relaxed" style={{ color: 'rgba(248,250,252,0.4)' }}>

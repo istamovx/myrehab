@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import {
-  X, LayoutDashboard, Building2, CreditCard, Settings, ShieldCheck, LogOut,
+  X, LayoutDashboard, Building2, CreditCard, Settings, LogOut,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { cn } from '@/lib/utils'
@@ -71,9 +71,7 @@ export function SuperAdminSidebar({ onClose }: SuperAdminSidebarProps) {
       {/* Logo */}
       <div className="h-[72px] flex items-center justify-between px-[14px] border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-[9px]">
-          <div className="size-[26px] rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center shrink-0">
-            <ShieldCheck size={14} className="text-white" />
-          </div>
+          <img src="/logo.svg" alt="" className="size-7 shrink-0" />
           <div>
             <span className="font-extrabold text-[15px] tracking-[-0.3px] text-[var(--text-primary)] block leading-none">MyRehab</span>
             <span className="text-[10px] text-indigo-500 font-bold">Super Admin</span>

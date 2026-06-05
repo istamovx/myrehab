@@ -69,10 +69,7 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
       {/* Brand */}
       <div className="flex items-center justify-between h-[72px] px-5 border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold"
-            style={{ background: 'linear-gradient(135deg,#2970FF,#6941C6)' }}>
-            R
-          </div>
+          <img src="/logo.svg" alt="" className="w-8 h-8 shrink-0" />
           <span className="text-[13.5px] font-semibold text-[var(--text-primary)]">MyRehab</span>
         </div>
         <button onClick={onClose} className="lg:hidden p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">

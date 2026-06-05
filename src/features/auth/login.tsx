@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse,
-  Globe, ChevronDown, Activity, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
+  Globe, ChevronDown, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
 } from 'lucide-react'
 import { useAuthStore, homePathForRole, type Role } from '@/store/auth'
 import { useLangStore } from '@/store/lang'
@@ -116,9 +116,7 @@ export function LoginPage() {
 
         {/* Logo */}
         <div className="relative flex items-center gap-3" style={{ animation: 'heroFadeUp 0.6s ease-out both' }}>
-          <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)', boxShadow: '0 0 20px rgba(99,102,241,0.4)' }}>
-            <Activity size={22} className="text-white" />
-          </div>
+          <img src="/logo.svg" alt="" className="w-11 h-11 shrink-0" />
           <div>
             <p className="text-[20px] font-extrabold text-white tracking-tight leading-none">My<span style={{ color: '#818cf8' }}>Rehab</span></p>
             <p className="text-xs mt-0.5" style={{ color: 'rgba(248,250,252,0.45)' }}>{t('auth.platformSubtitle')}</p>
@@ -189,9 +187,7 @@ export function LoginPage() {
 
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg,#6366f1,#8b5cf6)' }}>
-              <Activity size={14} className="text-white" />
-            </div>
+            <img src="/logo.svg" alt="" className="w-7 h-7 shrink-0" />
             <span className="font-bold text-[15px] text-white">My<span style={{ color: '#818cf8' }}>Rehab</span></span>
           </div>
 

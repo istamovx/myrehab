@@ -77,11 +77,7 @@ export function Sidebar({ onClose }: SidebarProps) {
       {/* Logo */}
       <div className="h-[72px] flex items-center justify-between px-[14px] border-b border-[var(--border-secondary)] shrink-0">
         <div className="flex items-center gap-[9px]">
-          <div className="size-[26px] rounded-lg bg-gradient-to-br from-[#6d6bf0] to-[#4b48d6] flex items-center justify-center shrink-0">
-            <svg width="15" height="15" viewBox="0 0 20 20" fill="none">
-              <path d="M8 3h4v4h4v4h-4v4H8v-4H4V7h4V3z" fill="white" />
-            </svg>
-          </div>
+          <img src="/logo.svg" alt="" className="size-7 shrink-0" />
           <div>
             <span className="font-extrabold text-[15px] tracking-[-0.3px] text-[var(--text-primary)] block leading-none">MyRehab</span>
             <span className="text-[10px] text-[var(--text-quaternary)] font-medium">{t('nav.clinicalPlatform')}</span>
