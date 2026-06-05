@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Send } from 'lucide-react'
 import { MESSAGES, ASSIGNED_DOCTOR, type Message } from '@/data/patient-mock-data'
+import { formatUzDate } from '@/lib/utils'
 
 function groupByDate(messages: Message[]) {
   const groups: { label: string; messages: Message[] }[] = []
@@ -9,7 +10,7 @@ function groupByDate(messages: Message[]) {
   for (const m of messages) {
     const date = m.created_at.slice(0, 10)
     if (date !== lastDate) {
-      groups.push({ label: date, messages: [] })
+      groups.push({ label: formatUzDate(m.created_at), messages: [] })
       lastDate = date
     }
     groups[groups.length - 1].messages.push(m)
@@ -101,12 +102,12 @@ export function PatientMessagesPage() {
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
             placeholder={t('patient.typeMessage')}
-            className="flex-1 px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)] placeholder:text-[var(--text-quaternary)]"
+            className="flex-1 h-11 px-3.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none transition-colors focus:bg-[var(--bg-primary)] focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)] placeholder:text-[var(--text-quaternary)]"
           />
           <button
             onClick={send}
             disabled={!input.trim()}
-            className="w-10 h-10 rounded-xl bg-[var(--fg-brand-primary)] text-white flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-opacity"
+            className="w-11 h-11 shrink-0 rounded-xl bg-[var(--fg-brand-primary)] text-white flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-opacity"
           >
             <Send size={16} />
           </button>

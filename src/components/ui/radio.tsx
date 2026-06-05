@@ -42,7 +42,7 @@ export function RadioGroup({ value, onValueChange, options, name, className, dis
               'size-5 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors outline-none',
               'border-[var(--border-primary)] bg-[var(--bg-primary)]',
               'data-[checked]:border-[var(--fg-brand-primary)]',
-              'focus-visible:[box-shadow:0_0_0_3px_rgba(41,112,255,0.20)]',
+              'focus-visible:[box-shadow:var(--focus-ring)]',
             )}
           >
             <BaseRadio.Indicator className="size-2.5 rounded-full bg-[var(--fg-brand-primary)] transition-transform data-[unchecked]:scale-0" />

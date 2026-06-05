@@ -113,7 +113,7 @@ export function PatientKnowledgePage() {
       </div>
 
       {filtered.length === 0 && (
-        <p className="text-center text-[var(--text-tertiary)] py-12">No articles found</p>
+        <p className="text-center text-[var(--text-tertiary)] py-12">Maqolalar topilmadi</p>
       )}
     </div>
   )

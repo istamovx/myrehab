@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Monitor, LogOut, Lock, User, Send, Check, Copy, Unlink, Bell } from 'lucide-react'
 import { PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
+import { Input, FieldLabel } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 type Tab = 'profile' | 'security'
 
@@ -199,28 +201,17 @@ export function PatientSettingsPage() {
                 { label: "Tug'ilgan sana", value: PATIENT_PROFILE.dob,      onChange: () => {}, disabled: true },
               ].map(f => (
                 <div key={f.label}>
-                  <label className="text-xs font-medium text-[var(--text-secondary)]">{f.label}</label>
-                  <input
+                  <FieldLabel>{f.label}</FieldLabel>
+                  <Input
                     value={f.value}
                     onChange={e => f.onChange(e.target.value)}
                     disabled={f.disabled}
-                    className={[
-                      'mt-1 w-full px-3 py-2 border rounded-lg text-sm text-[var(--text-primary)] outline-none',
-                      f.disabled
-                        ? 'bg-[var(--bg-tertiary)] border-[var(--border-secondary)] text-[var(--text-tertiary)] cursor-not-allowed'
-                        : 'bg-[var(--bg-secondary)] border-[var(--border-secondary)] focus:border-[var(--fg-brand-primary)]',
-                    ].join(' ')}
                   />
                 </div>
               ))}
             </div>
             <div className="flex justify-end">
-              <button
-                onClick={saveProfile}
-                className="px-4 py-2 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90"
-              >
-                {t('settings.saveChanges')}
-              </button>
+              <Button onClick={saveProfile}>{t('settings.saveChanges')}</Button>
             </div>
           </div>
 
@@ -246,22 +237,20 @@ export function PatientSettingsPage() {
               { label: t('settings.confirmPassword'), value: confirm, set: setConfirm },
             ].map(f => (
               <div key={f.label}>
-                <label className="text-xs font-medium text-[var(--text-secondary)]">{f.label}</label>
-                <input
+                <FieldLabel>{f.label}</FieldLabel>
+                <Input
                   type="password"
                   value={f.value}
                   onChange={e => f.set(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-lg text-sm text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)]"
                 />
               </div>
             ))}
-            <button
+            <Button
               onClick={handleChangePassword}
               disabled={!current || !next || !confirm}
-              className="px-4 py-2 bg-[var(--fg-brand-primary)] text-white rounded-lg text-sm font-semibold hover:opacity-90 disabled:opacity-40"
             >
               {t('settings.changePassword')}
-            </button>
+            </Button>
           </div>
 
           {/* Active sessions */}
