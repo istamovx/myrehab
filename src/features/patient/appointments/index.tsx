@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CalendarPlus, CheckCircle2, Clock, MapPin, Monitor, XCircle } from 'lucide-react'
+import { CalendarPlus, CheckCircle2, Clock, MapPin, Monitor, XCircle, Video, CalendarDays } from 'lucide-react'
 import { APPOINTMENTS, type Appointment } from '@/data/patient-mock-data'
 import { Dialog } from '@/components/ui/dialog'
-import { Input, Textarea, FieldLabel } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { formatUzDateTime } from '@/lib/utils'
+import { cn, formatUzDateTime } from '@/lib/utils'
 
 const STATUS_STYLE: Record<string, string> = {
   scheduled: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -51,12 +50,126 @@ function AppointmentCard({ apt }: { apt: Appointment }) {
   )
 }
 
+const TIME_SLOTS = ['09:00', '10:00', '10:30', '11:00', '12:00', '14:00', '15:00', '15:30', '16:00', '17:00']
+
+function BookingForm({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+  const { t } = useTranslation()
+  const [type, setType]     = useState<'in_person' | 'teleconsult'>('in_person')
+  const [date, setDate]     = useState('')
+  const [time, setTime]     = useState('')
+  const [note, setNote]     = useState('')
+
+  const minDate = new Date().toISOString().slice(0, 10)
+  const canBook = date && time
+
+  return (
+    <div className="space-y-5">
+      {/* Type selector — card buttons */}
+      <div>
+        <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide mb-2">{t('patient.selectType')}</p>
+        <div className="grid grid-cols-2 gap-3">
+          {([
+            { value: 'in_person',   label: t('patient.inPerson'),   Icon: MapPin,  color: 'text-[var(--fg-brand-primary)]', bg: 'bg-[var(--bg-brand-primary)]' },
+            { value: 'teleconsult', label: t('patient.teleconsult'), Icon: Video,   color: 'text-teal-600',                  bg: 'bg-teal-50 dark:bg-teal-900/20' },
+          ] as const).map(opt => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => setType(opt.value)}
+              className={cn(
+                'flex flex-col items-center gap-2 py-4 px-3 rounded-xl border-2 transition-all text-center cursor-pointer',
+                type === opt.value
+                  ? 'border-[var(--fg-brand-primary)] bg-[var(--bg-brand-primary)]'
+                  : 'border-[var(--border-secondary)] bg-[var(--bg-primary)] hover:border-[var(--fg-brand-primary)]/40',
+              )}
+            >
+              <div className={cn('size-9 rounded-xl flex items-center justify-center', opt.bg)}>
+                <opt.Icon size={18} className={opt.color} />
+              </div>
+              <span className="text-[13px] font-semibold text-[var(--text-primary)] leading-tight">{opt.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Date picker */}
+      <div>
+        <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide mb-2">{t('patient.selectDate')}</p>
+        <div className="relative">
+          <CalendarDays size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--fg-quaternary)] pointer-events-none" />
+          <input
+            type="date"
+            min={minDate}
+            value={date}
+            onChange={e => { setDate(e.target.value); setTime('') }}
+            className="w-full h-11 pl-10 pr-4 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-secondary)] text-[13.5px] text-[var(--text-primary)] outline-none focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)] transition-colors cursor-pointer"
+          />
+        </div>
+      </div>
+
+      {/* Time slots grid */}
+      {date && (
+        <div>
+          <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide mb-2">{t('patient.selectTime')}</p>
+          <div className="grid grid-cols-5 gap-2">
+            {TIME_SLOTS.map(slot => (
+              <button
+                key={slot}
+                type="button"
+                onClick={() => setTime(slot)}
+                className={cn(
+                  'py-2 rounded-lg text-[13px] font-semibold transition-all cursor-pointer',
+                  time === slot
+                    ? 'bg-[var(--fg-brand-primary)] text-white shadow-sm'
+                    : 'bg-[var(--bg-secondary)] text-[var(--text-secondary)] border border-[var(--border-secondary)] hover:border-[var(--fg-brand-primary)] hover:text-[var(--text-primary)]',
+                )}
+              >
+                {slot}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Note */}
+      <div>
+        <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide mb-2">{t('patient.note')}</p>
+        <Textarea
+          value={note}
+          onChange={e => setNote(e.target.value)}
+          rows={2}
+          placeholder="Qo'shimcha ma'lumot yoki savollaringiz..."
+          className="resize-none"
+        />
+      </div>
+
+      {/* Actions */}
+      <div className="flex gap-3 pt-1">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="flex-1 h-11 rounded-xl border border-[var(--border-secondary)] text-[13.5px] font-semibold text-[var(--text-secondary)] hover:bg-[var(--bg-secondary)] transition-colors cursor-pointer"
+        >
+          Bekor qilish
+        </button>
+        <Button
+          onClick={onConfirm}
+          disabled={!canBook}
+          className="flex-1 h-11"
+        >
+          <CalendarPlus size={15} />
+          Band qilish
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function PatientAppointmentsPage() {
   const { t } = useTranslation()
   const [tab, setTab] = useState<'upcoming' | 'past'>('upcoming')
   const [showModal, setShowModal] = useState(false)
   const [booked, setBooked] = useState(false)
-  const [type, setType] = useState('in_person')
 
   const now = new Date()
   const upcoming = APPOINTMENTS.filter(a => new Date(a.scheduled_at) >= now && a.status === 'scheduled')
@@ -117,38 +230,10 @@ export function PatientAppointmentsPage() {
 
       {/* Book modal */}
       <Dialog open={showModal} onOpenChange={setShowModal} title={t('patient.bookAppointment')} className="max-w-md">
-        <div className="space-y-4">
-          <div>
-            <FieldLabel>{t('patient.selectType')}</FieldLabel>
-            <Select
-              value={type}
-              onValueChange={setType}
-              triggerClassName="w-full h-11"
-              options={[
-                { value: 'in_person', label: t('patient.inPerson') },
-                { value: 'teleconsult', label: t('patient.teleconsult') },
-              ]}
-            />
-          </div>
-          <div>
-            <FieldLabel>{t('patient.selectDate')}</FieldLabel>
-            <Input type="date" min={new Date().toISOString().slice(0, 10)} />
-          </div>
-          <div>
-            <FieldLabel>{t('patient.selectTime')}</FieldLabel>
-            <Input type="time" />
-          </div>
-          <div>
-            <FieldLabel>{t('patient.note')}</FieldLabel>
-            <Textarea rows={2} />
-          </div>
-          <Button
-            onClick={() => { setShowModal(false); setBooked(true); setTimeout(() => setBooked(false), 3000) }}
-            className="w-full"
-          >
-            {t('patient.bookAppointment')}
-          </Button>
-        </div>
+        <BookingForm
+          onConfirm={() => { setShowModal(false); setBooked(true); setTimeout(() => setBooked(false), 3000) }}
+          onCancel={() => setShowModal(false)}
+        />
       </Dialog>
     </div>
   )

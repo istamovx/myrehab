@@ -81,7 +81,7 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
           <span className="text-[13.5px] font-semibold text-[var(--text-primary)]">MyRehab</span>
         </div>
         <div className="flex items-center gap-0.5">
-          <NotificationsBell audience="patient" />
+          <NotificationsBell audience="patient" side="left" />
           <button onClick={onClose} className="lg:hidden p-1 rounded text-[var(--text-tertiary)] hover:text-[var(--text-primary)]">
             <X size={18} />
           </button>
