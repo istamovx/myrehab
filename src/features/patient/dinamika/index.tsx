@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CheckCircle2, Circle, Clock, Lock, PlayCircle,
-  TrendingDown, TrendingUp,
+  TrendingDown, TrendingUp, X, Play,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -36,12 +36,85 @@ const CATEGORY_COLORS: Record<string, string> = {
   other:       'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
 }
 
+// ─── Video Modal ──────────────────────────────────────────────────────────────
+
+function ExerciseVideoModal({ ex, onClose }: { ex: Exercise; onClose: () => void }) {
+  const { t } = useTranslation()
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="bg-[var(--bg-primary)] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Video area */}
+        {ex.videoUrl ? (
+          <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+            <iframe
+              className="absolute inset-0 w-full h-full"
+              src={ex.videoUrl}
+              title={ex.title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : (
+          <div className="w-full aspect-video bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-tertiary)] flex flex-col items-center justify-center gap-3">
+            <div className="size-16 rounded-full bg-[var(--bg-brand-primary)] flex items-center justify-center">
+              <Play size={28} className="text-[var(--fg-brand-primary)] ml-1" />
+            </div>
+            <p className="text-sm font-medium text-[var(--text-tertiary)]">Video tez orada qo'shiladi</p>
+          </div>
+        )}
+
+        {/* Info */}
+        <div className="p-5">
+          <div className="flex items-start justify-between gap-3 mb-3">
+            <div className="flex-1 min-w-0">
+              <h2 className="text-[16px] font-bold text-[var(--text-primary)]">{ex.title}</h2>
+              <span className={cn('text-xs font-semibold px-2 py-0.5 rounded-full mt-1.5 inline-block', CATEGORY_COLORS[ex.category])}>
+                {t(`patient.${ex.category}`)}
+              </span>
+            </div>
+            <button
+              onClick={onClose}
+              className="size-8 rounded-lg flex items-center justify-center text-[var(--fg-quaternary)] hover:bg-[var(--bg-secondary)] transition-colors shrink-0"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-4 mb-3">
+            <div className="bg-[var(--bg-secondary)] rounded-lg px-3 py-2 text-center">
+              <p className="text-[11px] text-[var(--text-tertiary)] font-medium">Takrorlar</p>
+              <p className="text-[18px] font-bold text-[var(--fg-brand-primary)]">{ex.default_reps}</p>
+            </div>
+            <div className="bg-[var(--bg-secondary)] rounded-lg px-3 py-2 text-center">
+              <p className="text-[11px] text-[var(--text-tertiary)] font-medium">Yondashuvlar</p>
+              <p className="text-[18px] font-bold text-[var(--fg-brand-primary)]">{ex.default_sets}</p>
+            </div>
+          </div>
+
+          {ex.description && (
+            <p className="text-[13px] text-[var(--text-secondary)] leading-relaxed">{ex.description}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Exercises section ────────────────────────────────────────────────────────
+
 function ExercisesSection() {
   const { t } = useTranslation()
   const [category, setCategory] = useState<Category>('all')
   const [done, setDone] = useState<Set<string>>(
     new Set(TODAY_EXERCISES.filter(e => e.completedToday).map(e => e.exercise_id))
   )
+  const [videoEx, setVideoEx] = useState<Exercise | null>(null)
 
   const filtered = category === 'all'
     ? EXERCISE_LIBRARY
@@ -56,57 +129,70 @@ function ExercisesSection() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Category filter */}
-      <div className="flex flex-wrap gap-2">
-        {CATEGORIES.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setCategory(key)}
-            className={cn(
-              'px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
-              category === key
-                ? 'bg-[var(--fg-brand-primary)] text-white'
-                : 'bg-[var(--bg-primary)] text-[var(--text-secondary)] border border-[var(--border-secondary)] hover:border-[var(--fg-brand-primary)]',
-            )}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+    <>
+      <div className="space-y-4">
+        {/* Category filter */}
+        <div className="flex flex-wrap gap-2">
+          {CATEGORIES.map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setCategory(key)}
+              className={cn(
+                'px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors',
+                category === key
+                  ? 'bg-[var(--fg-brand-primary)] text-white'
+                  : 'bg-[var(--bg-primary)] text-[var(--text-secondary)] border border-[var(--border-secondary)] hover:border-[var(--fg-brand-primary)]',
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
 
-      {/* Exercise cards */}
-      <div className="grid sm:grid-cols-2 gap-3">
-        {filtered.map(ex => (
-          <div
-            key={ex.id}
-            className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4"
-          >
-            <div className="flex items-start justify-between gap-3 mb-3">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-[var(--text-primary)] text-sm">{ex.title}</h3>
-                <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block', CATEGORY_COLORS[ex.category])}>
-                  {t(`patient.${ex.category}`)}
-                </span>
+        {/* Exercise cards */}
+        <div className="grid sm:grid-cols-2 gap-3">
+          {filtered.map(ex => (
+            <div
+              key={ex.id}
+              className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4"
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-[var(--text-primary)] text-sm">{ex.title}</h3>
+                  <span className={cn('text-xs font-medium px-2 py-0.5 rounded-full mt-1 inline-block', CATEGORY_COLORS[ex.category])}>
+                    {t(`patient.${ex.category}`)}
+                  </span>
+                </div>
+                <button onClick={() => toggle(ex.id)} className="shrink-0 mt-0.5">
+                  {done.has(ex.id)
+                    ? <CheckCircle2 size={22} className="text-green-500" />
+                    : <Circle size={22} className="text-[var(--text-quaternary)]" />
+                  }
+                </button>
               </div>
-              <button onClick={() => toggle(ex.id)} className="shrink-0 mt-0.5">
-                {done.has(ex.id)
-                  ? <CheckCircle2 size={22} className="text-green-500" />
-                  : <Circle size={22} className="text-[var(--text-quaternary)]" />
-                }
-              </button>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[var(--text-secondary)] font-medium">
+                  {t('patient.setsReps', { sets: ex.default_sets, reps: ex.default_reps })}
+                </span>
+                <button
+                  onClick={() => setVideoEx(ex)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[var(--bg-brand-primary)] text-[var(--fg-brand-primary)] text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                >
+                  <PlayCircle size={13} />
+                  Video
+                </button>
+              </div>
             </div>
-            <div className="flex gap-4 text-xs text-[var(--text-secondary)]">
-              <span className="font-medium">{t('patient.setsReps', { sets: ex.default_sets, reps: ex.default_reps })}</span>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
+        {filtered.length === 0 && (
+          <p className="text-center text-[var(--text-tertiary)] py-12">{t('patient.noExercises')}</p>
+        )}
       </div>
 
-      {filtered.length === 0 && (
-        <p className="text-center text-[var(--text-tertiary)] py-12">{t('patient.noExercises')}</p>
-      )}
-    </div>
+      {videoEx && <ExerciseVideoModal ex={videoEx} onClose={() => setVideoEx(null)} />}
+    </>
   )
 }
 

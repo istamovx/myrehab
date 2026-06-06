@@ -37,7 +37,6 @@ export function NotificationsBell({ audience }: { audience: NotificationAudience
     if (link === '/messages') navigate({ to: '/messages' })
     else if (link === '/patient/messages') navigate({ to: '/patient/messages' })
     else if (link === '/patient/today') navigate({ to: '/patient/today' })
-    else if (link === '/patient/symptoms') navigate({ to: '/patient/symptoms' })
     else if (link === '/patient/teleconsultation') navigate({ to: '/patient/teleconsultation' })
   }
 
