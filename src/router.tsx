@@ -25,7 +25,6 @@ import { PatientDinamikaPage } from './features/patient/dinamika'
 import { PatientVitalsPage } from './features/patient/vitals'
 import { PatientSymptomsPage } from './features/patient/symptoms'
 import { PatientNutritionPage } from './features/patient/nutrition'
-import { PatientKnowledgePage } from './features/patient/knowledge'
 import { PatientMessagesPage } from './features/patient/messages'
 import { PatientAppointmentsPage } from './features/patient/appointments'
 import { PatientSettingsPage } from './features/patient/settings'
@@ -274,12 +273,6 @@ const patientNutritionRoute = createRoute({
   component: PatientNutritionPage,
 })
 
-const patientKnowledgeRoute = createRoute({
-  getParentRoute: () => patientLayoutRoute,
-  path: '/knowledge',
-  component: PatientKnowledgePage,
-})
-
 const patientMessagesRoute = createRoute({
   getParentRoute: () => patientLayoutRoute,
   path: '/messages',
@@ -343,7 +336,6 @@ const routeTree = rootRoute.addChildren([
     patientVitalsRoute,
     patientSymptomsRoute,
     patientNutritionRoute,
-    patientKnowledgeRoute,
     patientMessagesRoute,
     patientAppointmentsRoute,
     patientTeleconsultationRoute,

@@ -300,7 +300,7 @@ const uz = {
   patient: {
     today: "Bugungi vazifalar", exercises: "Mashqlar", myPlan: "Rejaim",
     myProgress: "O'sishim", vitals: "Sog'liq ko'rsatkichlari", symptoms: "Simptom jurnali",
-    nutrition: "Ovqatlanish", healthKnowledge: "Kasalligim haqida", messages: "Xabarlar",
+    nutrition: "Diyeta", healthKnowledge: "Kasalligim haqida", messages: "Xabarlar",
     patientAppointments: "Qabullar", patientSettings: "Sozlamalar",
     greeting: "Salom", remainingTasks: "{{count}} ta vazifa qoldi",
     recoveryScore: "Tiklanish bali", streak: "Ketma-ket kunlar", tasksDone: "{{done}}/{{total}}",

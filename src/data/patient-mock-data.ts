@@ -120,6 +120,8 @@ export interface Message {
   is_read: boolean
   created_at: string
   attachment?: MessageAttachment
+  deleted?: boolean
+  edited?: boolean
 }
 
 export interface Appointment {

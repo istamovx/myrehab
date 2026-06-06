@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
   CalendarDays, CheckSquare, BarChart2, Heart,
-  MessageSquare, Settings, BookOpen, Apple, Stethoscope, X, LogOut, Video,
+  MessageSquare, Settings, Apple, Stethoscope, X, LogOut, Video,
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
@@ -66,8 +66,7 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
     { to: '/patient/dinamika', icon: BarChart2,   label: 'Dinamika'           },
     { to: '/patient/vitals',   icon: Heart,       label: t('patient.vitals')  },
     { to: '/patient/symptoms',     icon: Stethoscope, label: t('patient.symptoms')            },
-    { to: '/patient/nutrition',    icon: Apple,       label: t('patient.nutrition')           },
-    { to: '/patient/knowledge',    icon: BookOpen,    label: t('patient.healthKnowledge')     },
+    { to: '/patient/nutrition',    icon: Apple,       label: t('patient.nutrition')  },
     { to: '/patient/messages',        icon: MessageSquare,label: t('patient.messages')           },
     { to: '/patient/appointments',    icon: CalendarDays,label: t('patient.patientAppointments') },
     { to: '/patient/teleconsultation',icon: Video,       label: t('patient.teleconsultation', 'Onlayn konsultatsiya') },

@@ -71,6 +71,8 @@ interface ConnectState {
 
 interface ConnectStore extends ConnectState {
   sendMessage: (from: Party, body: string, attachment?: MessageAttachment) => void
+  deleteMessage: (id: string) => void
+  editMessage: (id: string, newBody: string) => void
   markThreadRead: (reader: Party) => void
   assignMedication: (med: Omit<ConnectMedication, 'id' | 'assigned_at'>) => void
   reportSymptom: (symptom: Omit<ConnectSymptom, 'id' | 'reported_at'>) => void
@@ -177,6 +179,20 @@ export const useConnectStore = create<ConnectStore>((set, get) => ({
     }
     persist(next)
     set({ messages: next.messages, notifications: next.notifications })
+  },
+
+  deleteMessage: (id) => {
+    const messages = get().messages.map(m => m.id === id ? { ...m, deleted: true, body: '', attachment: undefined } : m)
+    persist({ ...get(), messages })
+    set({ messages })
+  },
+
+  editMessage: (id, newBody) => {
+    const trimmed = newBody.trim()
+    if (!trimmed) return
+    const messages = get().messages.map(m => m.id === id ? { ...m, body: trimmed, edited: true } : m)
+    persist({ ...get(), messages })
+    set({ messages })
   },
 
   // Mark the other party's messages (and message notifications) as read.
