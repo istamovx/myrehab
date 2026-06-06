@@ -8,7 +8,7 @@ import { Input, Textarea, FieldLabel } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/layout/page-header'
 import { RichChatInput } from '@/components/chat/rich-input'
-import { AttachmentView } from '@/components/chat/attachment-view'
+import { MessageBubble } from '@/components/chat/message-bubble'
 import { formatUzDate, formatUzDateTime } from '@/lib/utils'
 
 const SEVERITY_COLORS: Record<string, string> = {
@@ -35,10 +35,6 @@ function groupByDate(messages: Message[]) {
   return groups
 }
 
-function formatTime(iso: string) {
-  return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-}
-
 const EMPTY_MED = { name: '', dose: '', schedule: '', instructions: '' }
 
 export function MessagesPage() {
@@ -46,6 +42,8 @@ export function MessagesPage() {
   const symptoms = useConnectStore(s => s.symptoms)
   const telegramLinked = useConnectStore(s => s.telegramLinked)
   const sendMessage = useConnectStore(s => s.sendMessage)
+  const deleteMessage = useConnectStore(s => s.deleteMessage)
+  const editMessage = useConnectStore(s => s.editMessage)
   const markThreadRead = useConnectStore(s => s.markThreadRead)
   const assignMedication = useConnectStore(s => s.assignMedication)
 
@@ -140,30 +138,16 @@ export function MessagesPage() {
                 </span>
               </div>
               <div className="space-y-2">
-                {group.messages.map(m => {
-                  const isDoctor = m.sender_role === 'doctor'
-                  return (
-                    <div key={m.id} className={['flex', isDoctor ? 'justify-end' : 'justify-start'].join(' ')}>
-                      {!isDoctor && (
-                        <div className="mr-2 mt-1 shrink-0">
-                          <Avatar name={PATIENT_PROFILE.name} size="xs" />
-                        </div>
-                      )}
-                      <div className={[
-                        'max-w-[75%] rounded-2xl px-3.5 py-2.5',
-                        isDoctor
-                          ? 'bg-[var(--fg-brand-primary)] text-white rounded-br-sm'
-                          : 'bg-[var(--bg-primary)] text-[var(--text-primary)] border border-[var(--border-secondary)] rounded-bl-sm',
-                      ].join(' ')}>
-                        {m.body && <p className="text-sm leading-relaxed">{m.body}</p>}
-                        {m.attachment && <AttachmentView att={m.attachment} isSelf={isDoctor} />}
-                        <p className={['text-xs mt-1 text-right', isDoctor ? 'text-blue-200' : 'text-[var(--text-quaternary)]'].join(' ')}>
-                          {formatTime(m.created_at)}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                })}
+                {group.messages.map(m => (
+                  <MessageBubble
+                    key={m.id}
+                    message={m}
+                    isSelf={m.sender_role === 'doctor'}
+                    avatar={<Avatar name={PATIENT_PROFILE.name} size="xs" />}
+                    onDelete={deleteMessage}
+                    onEdit={editMessage}
+                  />
+                ))}
               </div>
             </div>
           ))}
