@@ -1,9 +1,9 @@
 import { Link } from '@tanstack/react-router'
 import {
-  X, LayoutDashboard, Users, CalendarDays,
-  Settings, ChevronLeft, ChevronRight, Video, Dumbbell, MessageSquare,
+  X, LayoutDashboard, TrendingUp, Stethoscope, UsersRound,
+  FileText, Bell, Package, FlaskConical, Settings,
+  ChevronLeft, ChevronRight,
 } from 'lucide-react'
-import { useConnectStore, selectUnreadMessages } from '@/store/connect'
 import { cn } from '@/lib/utils'
 
 function NavItem({ to, icon: Icon, label, badge, onClose, collapsed }: {
@@ -80,8 +80,7 @@ interface SidebarProps {
   onToggle?: () => void
 }
 
-export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) {
-  const unreadMessages = useConnectStore(selectUnreadMessages('doctor'))
+export function OrgAdminSidebar({ onClose, collapsed = false, onToggle }: SidebarProps) {
   return (
     <aside
       className={cn(
@@ -100,7 +99,6 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
             <span className="font-extrabold text-[16px] tracking-[-0.3px] text-[var(--text-primary)] leading-none">MyRehab</span>
           )}
         </div>
-        {/* Mobile close button (mobile only) */}
         {onClose && (
           <button
             onClick={onClose}
@@ -114,16 +112,24 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
       {/* Navigation */}
       <nav className={cn('flex-1 overflow-y-auto py-2', collapsed ? 'px-1.5' : 'px-[14px]')}>
         <NavGroup label="ASOSIY" collapsed={collapsed}>
-          <NavItem to="/dashboard"        icon={LayoutDashboard} label="Bosh sahifa"       onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/patients"         icon={Users}           label="Bemorlar"          badge={3} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/appointments"     icon={CalendarDays}    label="Uchrashuvlar"      onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/teleconsultation" icon={Video}           label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/messages"         icon={MessageSquare}   label="Xabarlar"          badge={unreadMessages} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/exercises"        icon={Dumbbell}        label="Mashqlar"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/dashboard" icon={LayoutDashboard} label="Bosh sahifa" onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/insights"  icon={TrendingUp}      label="Tahlillar"   onClose={onClose} collapsed={collapsed} />
+        </NavGroup>
+
+        <NavGroup label="KLINIKA" collapsed={collapsed}>
+          <NavItem to="/org-admin/doctors"             icon={Stethoscope} label="Shifokorlar"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/team"                icon={UsersRound}  label="MDT jamoasi"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/docs"                icon={FileText}    label="Hujjatlar"            onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/membership-requests" icon={Bell}        label="Hamkorlik so'rovlari" badge={3} onClose={onClose} collapsed={collapsed} />
+        </NavGroup>
+
+        <NavGroup label="TIBBIY" collapsed={collapsed}>
+          <NavItem to="/org-admin/inventory"   icon={Package}      label="Omborxona"    onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/lab-results" icon={FlaskConical} label="Laboratoriya" onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
         <NavGroup label="SOZLAMALAR" collapsed={collapsed}>
-          <NavItem to="/settings" icon={Settings} label="Sozlamalar" onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/org-admin/settings" icon={Settings} label="Sozlamalar" onClose={onClose} collapsed={collapsed} />
         </NavGroup>
       </nav>
 

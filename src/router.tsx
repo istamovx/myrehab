@@ -1,5 +1,6 @@
 import { createRouter, createRoute, createRootRoute, Outlet, redirect } from '@tanstack/react-router'
 import { AppLayout } from './components/layout/app-layout'
+import { OrgAdminLayout } from './components/layout/org-admin-layout'
 import { PatientLayout } from './components/layout/patient-layout'
 import { SuperAdminLayout } from './components/layout/super-admin-layout'
 import { DashboardPage } from './features/dashboard'
@@ -68,7 +69,7 @@ const rootIndexRoute = createRoute({
   component: LandingPage,
 })
 
-// ── Admin layout ─────────────────────────────────────────────────────────────
+// ── Doctor layout ─────────────────────────────────────────────────────────────
 const adminLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: '_admin',
@@ -94,58 +95,10 @@ const patientDetailRoute = createRoute({
   component: PatientDetailPage,
 })
 
-const doctorsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/doctors',
-  component: DoctorsPage,
-})
-
-const membershipRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/membership-requests',
-  component: MembershipRequestsPage,
-})
-
-const settingsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/settings',
-  component: SettingsPage,
-})
-
-const insightsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/insights',
-  component: InsightsPage,
-})
-
 const appointmentsRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/appointments',
   component: AppointmentsPage,
-})
-
-const docsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/docs',
-  component: DocsPage,
-})
-
-const teamRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/team',
-  component: TeamPage,
-})
-
-const inventoryRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/inventory',
-  component: InventoryPage,
-})
-
-const labResultsRoute = createRoute({
-  getParentRoute: () => adminLayoutRoute,
-  path: '/lab-results',
-  component: LabResultsPage,
 })
 
 const teleconsultationRoute = createRoute({
@@ -164,6 +117,80 @@ const messagesRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/messages',
   component: MessagesPage,
+})
+
+const settingsRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/settings',
+  component: SettingsPage,
+})
+
+// ── Org Admin layout ──────────────────────────────────────────────────────────
+const orgAdminLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/org-admin',
+  beforeLoad: () => requireRole('org_admin'),
+  component: OrgAdminLayout,
+})
+
+const orgAdminIndexRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/',
+  beforeLoad: () => { throw redirect({ to: '/org-admin/dashboard' }) },
+})
+
+const orgAdminDashboardRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/dashboard',
+  component: DashboardPage,
+})
+
+const insightsRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/insights',
+  component: InsightsPage,
+})
+
+const doctorsRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/doctors',
+  component: DoctorsPage,
+})
+
+const teamRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/team',
+  component: TeamPage,
+})
+
+const docsRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/docs',
+  component: DocsPage,
+})
+
+const membershipRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/membership-requests',
+  component: MembershipRequestsPage,
+})
+
+const inventoryRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/inventory',
+  component: InventoryPage,
+})
+
+const labResultsRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/lab-results',
+  component: LabResultsPage,
+})
+
+const orgAdminSettingsRoute = createRoute({
+  getParentRoute: () => orgAdminLayoutRoute,
+  path: '/settings',
+  component: SettingsPage,
 })
 
 // ── Super Admin layout ────────────────────────────────────────────────────────
@@ -297,18 +324,23 @@ const routeTree = rootRoute.addChildren([
     dashboardRoute,
     patientsRoute,
     patientDetailRoute,
-    doctorsRoute,
-    membershipRoute,
-    settingsRoute,
-    insightsRoute,
     appointmentsRoute,
-    docsRoute,
-    teamRoute,
-    inventoryRoute,
-    labResultsRoute,
     teleconsultationRoute,
     exercisesRoute,
     messagesRoute,
+    settingsRoute,
+  ]),
+  orgAdminLayoutRoute.addChildren([
+    orgAdminIndexRoute,
+    orgAdminDashboardRoute,
+    insightsRoute,
+    doctorsRoute,
+    teamRoute,
+    docsRoute,
+    membershipRoute,
+    inventoryRoute,
+    labResultsRoute,
+    orgAdminSettingsRoute,
   ]),
   superAdminLayoutRoute.addChildren([
     superAdminIndexRoute,

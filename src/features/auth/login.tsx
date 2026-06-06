@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse,
+  Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse, Building2,
   Globe, ChevronDown, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
   Sun, Moon,
 } from 'lucide-react'
@@ -38,6 +38,16 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     color: '#528BFF',
     bg: 'rgba(21,94,239,0.12)',
     border: 'rgba(21,94,239,0.25)',
+  },
+  {
+    role: 'org_admin',
+    username: 'orgadmin',
+    password: 'orgadmin123',
+    icon: Building2,
+    label: 'Tashkilot admini',
+    color: '#a855f7',
+    bg: 'rgba(168,85,247,0.12)',
+    border: 'rgba(168,85,247,0.25)',
   },
   {
     role: 'doctor',
