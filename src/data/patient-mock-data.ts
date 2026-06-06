@@ -102,12 +102,24 @@ export interface KnowledgeArticle {
   is_read: boolean
 }
 
+export type AttachmentKind = 'image' | 'audio' | 'video' | 'file'
+
+export interface MessageAttachment {
+  kind: AttachmentKind
+  url: string
+  name: string
+  size: number
+  mimeType: string
+  duration?: number
+}
+
 export interface Message {
   id: string
   sender_role: 'patient' | 'doctor'
   body: string
   is_read: boolean
   created_at: string
+  attachment?: MessageAttachment
 }
 
 export interface Appointment {

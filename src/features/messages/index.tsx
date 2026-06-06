@@ -1,12 +1,14 @@
-import { useState, useRef, useEffect } from 'react'
-import { Send, Pill, AlertTriangle, Plus, Check } from 'lucide-react'
+import { useRef, useEffect, useState } from 'react'
+import { Pill, AlertTriangle, Plus, Check } from 'lucide-react'
 import { useConnectStore } from '@/store/connect'
-import { PATIENT_PROFILE, type Message } from '@/data/patient-mock-data'
+import { PATIENT_PROFILE, type Message, type MessageAttachment } from '@/data/patient-mock-data'
 import { Avatar } from '@/components/ui/avatar'
 import { Dialog } from '@/components/ui/dialog'
 import { Input, Textarea, FieldLabel } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { PageHeader } from '@/components/layout/page-header'
+import { RichChatInput } from '@/components/chat/rich-input'
+import { AttachmentView } from '@/components/chat/attachment-view'
 import { formatUzDate, formatUzDateTime } from '@/lib/utils'
 
 const SEVERITY_COLORS: Record<string, string> = {
@@ -47,21 +49,16 @@ export function MessagesPage() {
   const markThreadRead = useConnectStore(s => s.markThreadRead)
   const assignMedication = useConnectStore(s => s.assignMedication)
 
-  const [input, setInput] = useState('')
   const [medOpen, setMedOpen] = useState(false)
   const [med, setMed] = useState(EMPTY_MED)
   const [medDone, setMedDone] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
-  // Reading the thread clears the doctor's unread message notifications.
   useEffect(() => { markThreadRead('doctor') }, [markThreadRead, messages.length])
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
 
-  function send() {
-    const text = input.trim()
-    if (!text) return
-    sendMessage('doctor', text)
-    setInput('')
+  function handleSend(text: string, attachment?: MessageAttachment) {
+    sendMessage('doctor', text, attachment)
   }
 
   function saveMed() {
@@ -79,7 +76,7 @@ export function MessagesPage() {
   const groups = groupByDate(messages)
 
   return (
-    <div>
+    <div className="max-w-2xl mx-auto">
       <PageHeader
         title="Xabarlar"
         subtitle="Bemor bilan yozishmalar va tayinlovlar"
@@ -92,9 +89,9 @@ export function MessagesPage() {
         }
       />
 
-      {/* Recent complaints reported by the patient (cross-role) */}
+      {/* Recent complaints */}
       {symptoms.length > 0 && (
-        <div className="max-w-2xl mb-4 rounded-xl border border-[var(--border-secondary)] bg-[var(--bg-primary)] p-4">
+        <div className="mb-4 rounded-xl border border-[var(--border-secondary)] bg-[var(--bg-primary)] p-4">
           <p className="text-[13px] font-bold text-[var(--text-primary)] mb-2.5 flex items-center gap-1.5">
             <AlertTriangle size={15} className="text-[var(--fg-warning-primary)]" />
             So'nggi shikoyatlar ({symptoms.length})
@@ -116,8 +113,9 @@ export function MessagesPage() {
         </div>
       )}
 
-      <div className="flex flex-col h-[calc(100vh-13rem)] max-w-2xl">
-        {/* Header — patient */}
+      {/* Chat window */}
+      <div className="flex flex-col h-[calc(100vh-13rem)]">
+        {/* Header */}
         <div className="bg-[var(--bg-primary)] rounded-t-xl border border-b-0 border-[var(--border-secondary)] px-4 py-3 flex items-center gap-3">
           <Avatar name={PATIENT_PROFILE.name} size="sm" />
           <div className="min-w-0 flex-1">
@@ -132,7 +130,7 @@ export function MessagesPage() {
           )}
         </div>
 
-        {/* Messages */}
+        {/* Messages list */}
         <div className="flex-1 overflow-y-auto bg-[var(--bg-secondary)] border-x border-[var(--border-secondary)] px-4 py-3 space-y-4">
           {groups.map(group => (
             <div key={group.label}>
@@ -157,7 +155,8 @@ export function MessagesPage() {
                           ? 'bg-[var(--fg-brand-primary)] text-white rounded-br-sm'
                           : 'bg-[var(--bg-primary)] text-[var(--text-primary)] border border-[var(--border-secondary)] rounded-bl-sm',
                       ].join(' ')}>
-                        <p className="text-sm leading-relaxed">{m.body}</p>
+                        {m.body && <p className="text-sm leading-relaxed">{m.body}</p>}
+                        {m.attachment && <AttachmentView att={m.attachment} isSelf={isDoctor} />}
                         <p className={['text-xs mt-1 text-right', isDoctor ? 'text-blue-200' : 'text-[var(--text-quaternary)]'].join(' ')}>
                           {formatTime(m.created_at)}
                         </p>
@@ -171,25 +170,8 @@ export function MessagesPage() {
           <div ref={endRef} />
         </div>
 
-        {/* Input */}
-        <div className="bg-[var(--bg-primary)] rounded-b-xl border border-t-0 border-[var(--border-secondary)] px-4 py-3">
-          <div className="flex gap-2">
-            <input
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
-              placeholder="Xabar yozing..."
-              className="flex-1 h-11 px-3.5 bg-[var(--bg-secondary)] border border-[var(--border-secondary)] rounded-xl text-sm text-[var(--text-primary)] outline-none transition-colors focus:bg-[var(--bg-primary)] focus:border-[var(--fg-brand-primary)] focus:[box-shadow:var(--focus-ring)] placeholder:text-[var(--text-quaternary)]"
-            />
-            <button
-              onClick={send}
-              disabled={!input.trim()}
-              className="w-11 h-11 shrink-0 rounded-xl bg-[var(--fg-brand-primary)] text-white flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer"
-            >
-              <Send size={16} />
-            </button>
-          </div>
-        </div>
+        {/* Rich input */}
+        <RichChatInput onSend={handleSend} placeholder="Xabar yozing..." />
       </div>
 
       {/* Assign medication dialog */}

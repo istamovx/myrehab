@@ -4,6 +4,7 @@ import { OrgAdminLayout } from './components/layout/org-admin-layout'
 import { PatientLayout } from './components/layout/patient-layout'
 import { SuperAdminLayout } from './components/layout/super-admin-layout'
 import { DashboardPage } from './features/dashboard'
+import { DoctorDashboardPage } from './features/dashboard/doctor'
 import { PatientsListPage } from './features/patients/list'
 import { PatientDetailPage } from './features/patients/detail'
 import { DoctorsPage } from './features/doctors'
@@ -80,7 +81,7 @@ const adminLayoutRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/dashboard',
-  component: DashboardPage,
+  component: DoctorDashboardPage,
 })
 
 const patientsRoute = createRoute({
