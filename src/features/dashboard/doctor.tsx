@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react'
 import {
   Users, CalendarDays, MessageSquare, TrendingUp,
   AlertTriangle, Clock, CheckCircle2, ChevronRight,
 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  LineChart, Line, Area, AreaChart, ReferenceLine,
+  Area, AreaChart, ReferenceLine,
 } from 'recharts'
 import { Avatar } from '@/components/ui/avatar'
 import { PageHeader } from '@/components/layout/page-header'
