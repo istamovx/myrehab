@@ -21,9 +21,7 @@ import { TeleconsultationPage } from './features/teleconsultation'
 import { MessagesPage } from './features/messages'
 import { PatientTodayPage } from './features/patient/today'
 import { PatientTeleconsultationPage } from './features/patient/teleconsultation'
-import { PatientExercisesPage } from './features/patient/exercises'
-import { PatientPlanPage } from './features/patient/plan'
-import { PatientProgressPage } from './features/patient/progress'
+import { PatientDinamikaPage } from './features/patient/dinamika'
 import { PatientVitalsPage } from './features/patient/vitals'
 import { PatientSymptomsPage } from './features/patient/symptoms'
 import { PatientNutritionPage } from './features/patient/nutrition'
@@ -252,22 +250,10 @@ const patientTodayRoute = createRoute({
   component: PatientTodayPage,
 })
 
-const patientExercisesRoute = createRoute({
+const patientDinamikaRoute = createRoute({
   getParentRoute: () => patientLayoutRoute,
-  path: '/exercises',
-  component: PatientExercisesPage,
-})
-
-const patientPlanRoute = createRoute({
-  getParentRoute: () => patientLayoutRoute,
-  path: '/plan',
-  component: PatientPlanPage,
-})
-
-const patientProgressRoute = createRoute({
-  getParentRoute: () => patientLayoutRoute,
-  path: '/progress',
-  component: PatientProgressPage,
+  path: '/dinamika',
+  component: PatientDinamikaPage,
 })
 
 const patientVitalsRoute = createRoute({
@@ -353,9 +339,7 @@ const routeTree = rootRoute.addChildren([
   patientLayoutRoute.addChildren([
     patientIndexRoute,
     patientTodayRoute,
-    patientExercisesRoute,
-    patientPlanRoute,
-    patientProgressRoute,
+    patientDinamikaRoute,
     patientVitalsRoute,
     patientSymptomsRoute,
     patientNutritionRoute,

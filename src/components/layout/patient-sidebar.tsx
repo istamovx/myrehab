@@ -1,8 +1,8 @@
 import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  CalendarDays, CheckSquare, Dumbbell, FlaskConical, Heart,
-  MessageSquare, Settings, Activity, BookOpen, Apple, Stethoscope, X, LogOut, Video,
+  CalendarDays, CheckSquare, BarChart2, Heart,
+  MessageSquare, Settings, BookOpen, Apple, Stethoscope, X, LogOut, Video,
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
@@ -62,11 +62,9 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
   }
 
   const navItems: NavItem[] = [
-    { to: '/patient/today',        icon: CheckSquare, label: t('patient.today')              },
-    { to: '/patient/exercises',    icon: Dumbbell,    label: t('patient.exercises')           },
-    { to: '/patient/plan',         icon: Activity,    label: t('patient.myPlan')              },
-    { to: '/patient/progress',     icon: FlaskConical,label: t('patient.myProgress')          },
-    { to: '/patient/vitals',       icon: Heart,       label: t('patient.vitals')              },
+    { to: '/patient/today',    icon: CheckSquare, label: t('patient.today')   },
+    { to: '/patient/dinamika', icon: BarChart2,   label: 'Dinamika'           },
+    { to: '/patient/vitals',   icon: Heart,       label: t('patient.vitals')  },
     { to: '/patient/symptoms',     icon: Stethoscope, label: t('patient.symptoms')            },
     { to: '/patient/nutrition',    icon: Apple,       label: t('patient.nutrition')           },
     { to: '/patient/knowledge',    icon: BookOpen,    label: t('patient.healthKnowledge')     },
