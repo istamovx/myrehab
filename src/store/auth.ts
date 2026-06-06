@@ -5,7 +5,7 @@ import type { Profile } from '@/types/database.types'
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-export type Role = 'super_admin' | 'doctor' | 'patient'
+export type Role = 'super_admin' | 'org_admin' | 'doctor' | 'patient'
 
 export interface SessionUser {
   username: string
@@ -27,9 +27,10 @@ interface StoredAccount {
 
 // Default credentials for every role (demo).
 const DEFAULT_ACCOUNTS: StoredAccount[] = [
-  { username: 'superadmin', password: 'admin123',   role: 'super_admin', name: 'Bosh Administrator',  initials: 'BA', email: 'superadmin@myrehab.uz' },
-  { username: 'doctor',     password: 'doctor123',  role: 'doctor',      name: 'Dr. Muhrim Devonov',  initials: 'MD', email: 'muhrim.devonov@myrehab.uz' },
-  { username: 'patient',    password: 'patient123', role: 'patient',     name: 'Murod Aliyev',        initials: 'MA', email: 'murod.aliyev@myrehab.uz' },
+  { username: 'superadmin', password: 'admin123',    role: 'super_admin', name: 'Bosh Administrator',  initials: 'BA', email: 'superadmin@myrehab.uz' },
+  { username: 'orgadmin',   password: 'orgadmin123', role: 'org_admin',   name: 'Sardor Xolmatov',     initials: 'SX', email: 'sardor.xolmatov@myrehab.uz' },
+  { username: 'doctor',     password: 'doctor123',   role: 'doctor',      name: 'Dr. Muhrim Devonov',  initials: 'MD', email: 'muhrim.devonov@myrehab.uz' },
+  { username: 'patient',    password: 'patient123',  role: 'patient',     name: 'Murod Aliyev',        initials: 'MA', email: 'murod.aliyev@myrehab.uz' },
 ]
 
 const ACCOUNTS_KEY = 'myrehab_accounts'
@@ -256,5 +257,6 @@ export const useAuthStore = create<AuthStore>((set, get) => {
 export function homePathForRole(role: Role): string {
   if (role === 'patient') return '/patient/today'
   if (role === 'super_admin') return '/super-admin/dashboard'
+  if (role === 'org_admin') return '/org-admin/dashboard'
   return '/dashboard'
 }

@@ -17,6 +17,7 @@ interface TopBarProps {
 
 const ROLE_LABELS: Record<string, string> = {
   super_admin: 'Platforma egasi',
+  org_admin:   'Tashkilot admini',
   doctor:      'Shifokor',
   patient:     'Bemor',
 }
