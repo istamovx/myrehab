@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { MESSAGES, type Message } from '@/data/patient-mock-data'
+import { MESSAGES, type Message, type MessageAttachment } from '@/data/patient-mock-data'
 import { generateMeetLink } from '@/lib/meet'
 import { formatUzDateTime } from '@/lib/utils'
 
@@ -70,7 +70,7 @@ interface ConnectState {
 }
 
 interface ConnectStore extends ConnectState {
-  sendMessage: (from: Party, body: string) => void
+  sendMessage: (from: Party, body: string, attachment?: MessageAttachment) => void
   markThreadRead: (reader: Party) => void
   assignMedication: (med: Omit<ConnectMedication, 'id' | 'assigned_at'>) => void
   reportSymptom: (symptom: Omit<ConnectSymptom, 'id' | 'reported_at'>) => void
@@ -126,8 +126,12 @@ function load(): ConnectState {
 
 function persist(state: ConnectState) {
   try {
+    // Strip blob URLs from attachments — they don't survive page reload.
+    const messages = state.messages.map(m =>
+      m.attachment?.url.startsWith('blob:') ? { ...m, attachment: { ...m.attachment, url: '' } } : m
+    )
     localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      messages: state.messages,
+      messages,
       notifications: state.notifications,
       medications: state.medications,
       symptoms: state.symptoms,
@@ -147,11 +151,11 @@ export const useConnectStore = create<ConnectStore>((set, get) => ({
   ...load(),
 
   // -- Messaging --------------------------------------------------------------
-  sendMessage: (from, body) => {
+  sendMessage: (from, body, attachment) => {
     const text = body.trim()
-    if (!text) return
+    if (!text && !attachment) return
     const now = new Date().toISOString()
-    const msg: Message = { id: uid('msg'), sender_role: from, body: text, is_read: false, created_at: now }
+    const msg: Message = { id: uid('msg'), sender_role: from, body: text, is_read: false, created_at: now, attachment }
 
     // Notify the *other* party of the new message.
     const audience: NotificationAudience = from === 'doctor' ? 'patient' : 'doctor'
@@ -160,7 +164,7 @@ export const useConnectStore = create<ConnectStore>((set, get) => ({
       audience,
       type: 'message',
       title: from === 'doctor' ? 'Shifokordan yangi xabar' : 'Bemordan yangi xabar',
-      body: truncate(text),
+      body: text ? truncate(text) : attachment?.kind === 'audio' ? '🎤 Ovozli xabar' : attachment?.kind === 'video' ? '🎬 Video xabar' : attachment?.kind === 'image' ? '📷 Rasm' : '📎 Fayl',
       read: false,
       created_at: now,
       link: audience === 'doctor' ? '/messages' : '/patient/messages',
