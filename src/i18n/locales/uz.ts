@@ -346,7 +346,7 @@ const uz = {
     warning_signs: "Ogohlantiruvchi belgilar", motivation: "Motivatsiya",
     condition: "Kasallik", exercisesCategory: "Mashqlar", markRead: "O'qildi",
     typeMessage: "Xabar yozing...", send: "Yuborish", you: "Siz",
-    scheduled: "Rejalashtirilgan", past: "O'tgan", bookAppointment: "Qabul band qilish",
+    scheduled: "Rejalashtirilgan", upcoming: "Kelayotgan", past: "O'tgan", bookAppointment: "Qabul band qilish",
     inPerson: "Klinikada", teleconsult: "Onlayn konsultatsiya",
     teleconsultation: "Onlayn konsultatsiya",
     selectType: "Qabul turi", selectDate: "Sana", selectTime: "Vaqt",

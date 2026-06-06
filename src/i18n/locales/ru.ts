@@ -357,7 +357,7 @@ const ru = {
     // Messages
     typeMessage: "Напишите сообщение...", send: "Отправить", you: "Вы",
     // Appointments
-    scheduled: "Предстоящие", past: "Прошедшие", bookAppointment: "Записаться на приём",
+    scheduled: "Предстоящие", upcoming: "Предстоящие", past: "Прошедшие", bookAppointment: "Записаться на приём",
     inPerson: "Очный приём", teleconsult: "Онлайн-консультация",
     noAppointments: "Приёмов нет",
   },

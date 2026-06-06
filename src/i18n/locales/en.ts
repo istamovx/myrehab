@@ -357,7 +357,7 @@ const en = {
     // Messages
     typeMessage: "Type a message...", send: "Send", you: "You",
     // Appointments
-    scheduled: "Upcoming", past: "Past", bookAppointment: "Book Appointment",
+    scheduled: "Upcoming", upcoming: "Upcoming", past: "Past", bookAppointment: "Book Appointment",
     inPerson: "In-Person", teleconsult: "Teleconsult",
     noAppointments: "No appointments",
   },
