@@ -1,5 +1,6 @@
 import { FileText, Download } from 'lucide-react'
 import type { MessageAttachment } from '@/data/patient-mock-data'
+import { AudioPlayer } from './audio-player'
 
 function fmtBytes(b: number) {
   if (b < 1024) return `${b} B`
@@ -26,11 +27,7 @@ export function AttachmentView({ att, isSelf }: { att: MessageAttachment; isSelf
   }
 
   if (att.kind === 'audio') {
-    return (
-      <div className="mt-1.5">
-        <audio controls src={att.url} className="max-w-[220px] w-full" style={{ height: 32 }} />
-      </div>
-    )
+    return <AudioPlayer src={att.url} duration={att.duration} isSelf={isSelf} />
   }
 
   if (att.kind === 'video') {

@@ -18,6 +18,8 @@ export interface Exercise {
   category: 'strength' | 'mobility' | 'balance' | 'circulation' | 'other'
   default_sets: number
   default_reps: number
+  videoUrl?: string
+  description?: string
 }
 
 export interface PlanExercise {
@@ -238,22 +240,22 @@ export const TREATMENT_PLAN = {
 
 export const EXERCISE_LIBRARY: Exercise[] = [
   // Strength (3)
-  { id: 'ex-001', title: 'Son mushagini taranglashtirish', category: 'strength', default_sets: 3, default_reps: 15 },
-  { id: 'ex-002', title: "To'g'ri oyoqni ko'tarish", category: 'strength', default_sets: 3, default_reps: 12 },
-  { id: 'ex-003', title: "Yarim cho'kkalash", category: 'strength', default_sets: 3, default_reps: 10 },
+  { id: 'ex-001', title: 'Son mushagini taranglashtirish', category: 'strength', default_sets: 3, default_reps: 15, description: "Orqaga yoting. Son mushaklarini taranglashtirib 5 soniya ushlab turing, so'ng bo'shating. Har bir mashqni sekin va nazorat ostida bajaring." },
+  { id: 'ex-002', title: "To'g'ri oyoqni ko'tarish", category: 'strength', default_sets: 3, default_reps: 12, description: "Orqaga yoting, bir oyoqni tiz bo'gʻimida bukib, ikkinchi oyoqni to'g'ri holda 45° ga ko'taring. 2 soniya ushlab turing." },
+  { id: 'ex-003', title: "Yarim cho'kkalash", category: 'strength', default_sets: 3, default_reps: 10, description: "Oyoqlarni yelka kengligida qo'ying. Tizzalarni 45–60° ga buking, orqangiz to'g'ri bo'lsin. Asta tiklaning." },
   // Mobility (3)
-  { id: 'ex-004', title: 'Tovonni sirpantirish', category: 'mobility', default_sets: 2, default_reps: 20 },
-  { id: 'ex-005', title: "Tizzani bukib cho'zish", category: 'mobility', default_sets: 2, default_reps: 15 },
-  { id: 'ex-006', title: 'Qorinda yotib tizzani bukish', category: 'mobility', default_sets: 2, default_reps: 10 },
+  { id: 'ex-004', title: 'Tovonni sirpantirish', category: 'mobility', default_sets: 2, default_reps: 20, description: "Orqaga yoting. Tovonni asta siljitib tizzani buking, so'ng qaytaring. Harakat silliq bo'lsin, og'riq bo'lmasin." },
+  { id: 'ex-005', title: "Tizzani bukib cho'zish", category: 'mobility', default_sets: 2, default_reps: 15, description: "Stulda o'tiring. Oyoqni ko'tarib tizzani to'g'rilab 5 soniya ushlab turing. Pastki oyoq mushaklarini his qiling." },
+  { id: 'ex-006', title: 'Qorinda yotib tizzani bukish', category: 'mobility', default_sets: 2, default_reps: 10, description: "Qoringizda yoting. Tizzangizni sekin buking, to'pig'ingizni songa yaqinlashtiring. 2 soniya ushlab, qaytaring." },
   // Balance (2)
-  { id: 'ex-007', title: 'Bir oyoqda turish', category: 'balance', default_sets: 3, default_reps: 30 },
-  { id: 'ex-008', title: 'Muvozanat taxtasi mashqi', category: 'balance', default_sets: 2, default_reps: 60 },
+  { id: 'ex-007', title: 'Bir oyoqda turish', category: 'balance', default_sets: 3, default_reps: 30, description: "Devor yonida turing. Bir oyoqni ko'tarib 30 soniya turing. Yiqilmaslik uchun devordan ushlanishingiz mumkin." },
+  { id: 'ex-008', title: 'Muvozanat taxtasi mashqi', category: 'balance', default_sets: 2, default_reps: 60, description: "Muvozanat taxtasiga turing va 60 soniya barqaror turishga harakat qiling. Nazar nuqtasini oldinga qarating." },
   // Circulation (2)
-  { id: 'ex-009', title: 'Oyoq panjasi mashqi', category: 'circulation', default_sets: 3, default_reps: 20 },
-  { id: 'ex-010', title: "Boldirni ko'tarish", category: 'circulation', default_sets: 3, default_reps: 15 },
+  { id: 'ex-009', title: 'Oyoq panjasi mashqi', category: 'circulation', default_sets: 3, default_reps: 20, description: "Orqaga yoting. Oyoq panjangizni oldinga va orqaga buking (dorsifleksiya va plantarfleksiya). Sekin va ritmik harakat." },
+  { id: 'ex-010', title: "Boldirni ko'tarish", category: 'circulation', default_sets: 3, default_reps: 15, description: "Oyoqlaringiz yer ustida. Barmoqlar uchida ko'tarilib, asta tushing. Boldir mushaklarini his qiling." },
   // Other (2)
-  { id: 'ex-011', title: "Muz qo'yish", category: 'other', default_sets: 1, default_reps: 1 },
-  { id: 'ex-012', title: "Nafas olish va bo'shashish", category: 'other', default_sets: 1, default_reps: 1 },
+  { id: 'ex-011', title: "Muz qo'yish", category: 'other', default_sets: 1, default_reps: 1, description: "Sezgi qismiga 15–20 daqiqa muz (mato bilan o'ralgan) qo'ying. To'g'ridan-to'g'ri teriga tegmang. Og'riq va shishni kamaytiradi." },
+  { id: 'ex-012', title: "Nafas olish va bo'shashish", category: 'other', default_sets: 1, default_reps: 1, description: "Qulay o'tirib, burun orqali 4 soniya nafas oling, 4 soniya ushlab, 6 soniya og'iz orqali chiqaring. 10 marta takrorlang." },
 ]
 
 // ─── Today's Exercises ────────────────────────────────────────────────────────
