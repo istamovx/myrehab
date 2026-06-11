@@ -22,7 +22,7 @@ function timeAgo(iso: string): string {
   return `${Math.round(h / 24)} kun oldin`
 }
 
-export function NotificationsBell({ audience }: { audience: NotificationAudience }) {
+export function NotificationsBell({ audience, side = 'right' }: { audience: NotificationAudience; side?: 'left' | 'right' }) {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const notifications = useConnectStore(s => s.notifications)
@@ -64,7 +64,7 @@ export function NotificationsBell({ audience }: { audience: NotificationAudience
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 w-[360px] max-w-[calc(100vw-2rem)] rounded-xl border border-[var(--border-secondary)] bg-[var(--bg-primary)] [box-shadow:var(--shadow-dropdown)] z-50 overflow-hidden">
+          <div className={cn('absolute mt-2 w-[360px] max-w-[calc(100vw-2rem)] rounded-xl border border-[var(--border-secondary)] bg-[var(--bg-primary)] [box-shadow:var(--shadow-dropdown)] z-50 overflow-hidden', side === 'left' ? 'left-0' : 'right-0')}>
             <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border-secondary)]">
               <p className="text-[14px] font-bold text-[var(--text-primary)]">Bildirishnomalar</p>
               {unread > 0 && (

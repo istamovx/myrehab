@@ -20,12 +20,12 @@ import { cn } from '@/lib/utils'
 type Category = Exercise['category'] | 'all'
 
 const CATEGORIES: { key: Category; label: string }[] = [
-  { key: 'all',         label: 'Barchasi'    },
-  { key: 'strength',    label: 'Kuch'        },
+  { key: 'all',         label: 'Barchasi'       },
+  { key: 'strength',    label: 'Kuch'           },
   { key: 'mobility',    label: 'Harakatchanlik' },
-  { key: 'balance',     label: 'Muvozanat'   },
-  { key: 'circulation', label: 'Qon aylanish' },
-  { key: 'other',       label: 'Boshqa'      },
+  { key: 'balance',     label: 'Muvozanat'      },
+  { key: 'circulation', label: 'Qon aylanish'   },
+  { key: 'other',       label: 'Boshqa'         },
 ]
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -49,7 +49,6 @@ function ExerciseVideoModal({ ex, onClose }: { ex: Exercise; onClose: () => void
         className="bg-[var(--bg-primary)] rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
-        {/* Video area */}
         {ex.videoUrl ? (
           <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
             <iframe
@@ -69,7 +68,6 @@ function ExerciseVideoModal({ ex, onClose }: { ex: Exercise; onClose: () => void
           </div>
         )}
 
-        {/* Info */}
         <div className="p-5">
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex-1 min-w-0">
@@ -131,7 +129,6 @@ function ExercisesSection() {
   return (
     <>
       <div className="space-y-4">
-        {/* Category filter */}
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map(({ key, label }) => (
             <button
@@ -149,7 +146,6 @@ function ExercisesSection() {
           ))}
         </div>
 
-        {/* Exercise cards */}
         <div className="grid sm:grid-cols-2 gap-3">
           {filtered.map(ex => (
             <div
@@ -203,6 +199,7 @@ const PHASE_ICON = {
   current:   <PlayCircle size={20} className="text-[var(--fg-brand-primary)]" />,
   locked:    <Lock size={20} className="text-[var(--text-quaternary)]" />,
 }
+
 const PHASE_BORDER = {
   completed: 'border-green-200 dark:border-green-900',
   current:   'border-[var(--fg-brand-primary)]',
@@ -255,7 +252,6 @@ function PlanSection() {
 
   return (
     <div className="space-y-4">
-      {/* Summary card */}
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div>
@@ -275,7 +271,6 @@ function PlanSection() {
         </div>
       </div>
 
-      {/* Overall progress */}
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-semibold text-[var(--text-primary)]">Umumiy jarayon</span>
@@ -289,7 +284,6 @@ function PlanSection() {
         </div>
       </div>
 
-      {/* Phase cards */}
       <div className="space-y-3">
         {TREATMENT_PLAN.phases.map(phase => (
           <PhaseCard key={phase.id} phase={phase} />
@@ -309,7 +303,6 @@ function ProgressSection() {
 
   return (
     <div className="space-y-4">
-      {/* KPI row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: t('patient.recoveryScore'), value: TODAY_SUMMARY.recoveryScore,               color: 'text-[var(--fg-brand-primary)]' },
@@ -324,7 +317,6 @@ function ProgressSection() {
         ))}
       </div>
 
-      {/* Weekly adherence bar chart */}
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <h2 className="text-sm font-semibold text-[var(--text-primary)] mb-4">{t('patient.weeklyAdherence')}</h2>
         <ResponsiveContainer width="100%" height={200}>
@@ -341,7 +333,6 @@ function ProgressSection() {
         </ResponsiveContainer>
       </div>
 
-      {/* Pain trend line chart */}
       <div className="bg-[var(--bg-primary)] rounded-xl border border-[var(--border-secondary)] p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-[var(--text-primary)]">{t('patient.painTrend')}</h2>
@@ -395,7 +386,6 @@ export function PatientDinamikaPage() {
         <p className="text-sm text-[var(--text-tertiary)] mt-0.5">O'sish, reja va mashqlaringiz bir joyda</p>
       </div>
 
-      {/* Tab bar */}
       <div className="flex gap-1 bg-[var(--bg-secondary)] p-1 rounded-xl border border-[var(--border-secondary)]">
         {TABS.map(t => (
           <button
@@ -413,7 +403,6 @@ export function PatientDinamikaPage() {
         ))}
       </div>
 
-      {/* Tab content */}
       {tab === 'progress'  && <ProgressSection />}
       {tab === 'plan'      && <PlanSection />}
       {tab === 'exercises' && <ExercisesSection />}
