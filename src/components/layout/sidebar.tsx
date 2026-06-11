@@ -2,6 +2,7 @@ import { Link } from '@tanstack/react-router'
 import {
   X, LayoutDashboard, Users, CalendarDays,
   Settings, ChevronLeft, ChevronRight, Video, Dumbbell, MessageSquare,
+  Activity, PenLine, Newspaper,
 } from 'lucide-react'
 import { useConnectStore, selectUnreadMessages } from '@/store/connect'
 import { cn } from '@/lib/utils'
@@ -119,7 +120,13 @@ export function Sidebar({ onClose, collapsed = false, onToggle }: SidebarProps) 
           <NavItem to="/appointments"     icon={CalendarDays}    label="Uchrashuvlar"      onClose={onClose} collapsed={collapsed} />
           <NavItem to="/teleconsultation" icon={Video}           label="Telekonsultatsiya" onClose={onClose} collapsed={collapsed} />
           <NavItem to="/messages"         icon={MessageSquare}   label="Xabarlar"          badge={unreadMessages} onClose={onClose} collapsed={collapsed} />
-          <NavItem to="/exercises"        icon={Dumbbell}        label="Mashqlar"          onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/monitoring"       icon={Activity}        label="Monitoring"        onClose={onClose} collapsed={collapsed} />
+        </NavGroup>
+
+        <NavGroup label="KLINIKA" collapsed={collapsed}>
+          <NavItem to="/exercises" icon={Dumbbell}  label="Mashqlar"       onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/composer"  icon={PenLine}   label="Reja yaratish"  onClose={onClose} collapsed={collapsed} />
+          <NavItem to="/news"      icon={Newspaper} label="Yangiliklar"    onClose={onClose} collapsed={collapsed} />
         </NavGroup>
 
         <NavGroup label="SOZLAMALAR" collapsed={collapsed}>

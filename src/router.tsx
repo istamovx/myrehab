@@ -3,8 +3,10 @@ import { AppLayout } from './components/layout/app-layout'
 import { OrgAdminLayout } from './components/layout/org-admin-layout'
 import { PatientLayout } from './components/layout/patient-layout'
 import { SuperAdminLayout } from './components/layout/super-admin-layout'
-import { DashboardPage } from './features/dashboard'
+import { NurseLayout } from './components/layout/nurse-layout'
+import { CaregiverLayout } from './components/layout/caregiver-layout'
 import { DoctorDashboardPage } from './features/dashboard/doctor'
+import { DashboardPage } from './features/dashboard'
 import { PatientsListPage } from './features/patients/list'
 import { PatientDetailPage } from './features/patients/detail'
 import { DoctorsPage } from './features/doctors'
@@ -19,9 +21,14 @@ import { LabResultsPage } from './features/lab-results'
 import { ExercisesPage } from './features/exercises'
 import { TeleconsultationPage } from './features/teleconsultation'
 import { MessagesPage } from './features/messages'
+import { MonitoringPage } from './features/monitoring'
+import { ComposerPage } from './features/composer'
+import { NewsPage } from './features/news'
 import { PatientTodayPage } from './features/patient/today'
 import { PatientTeleconsultationPage } from './features/patient/teleconsultation'
 import { PatientDinamikaPage } from './features/patient/dinamika'
+import { PatientOutcomesPage } from './features/patient/outcomes'
+import { PatientAchievementsPage } from './features/patient/achievements'
 import { PatientVitalsPage } from './features/patient/vitals'
 import { PatientNutritionPage } from './features/patient/nutrition'
 import { PatientMessagesPage } from './features/patient/messages'
@@ -31,6 +38,11 @@ import { SuperAdminDashboardPage } from './features/super-admin/dashboard'
 import { SuperAdminOrganizationsPage } from './features/super-admin/organizations'
 import { SuperAdminPaymentsPage } from './features/super-admin/payments'
 import { SuperAdminSettingsPage } from './features/super-admin/settings'
+import { NurseDashboardPage } from './features/nurse/dashboard'
+import { NurseVisitPage } from './features/nurse/visit'
+import { NurseMedsPage } from './features/nurse/meds'
+import { NurseReportsPage } from './features/nurse/reports'
+import { CaregiverExercisesPage } from './features/caregiver/exercises'
 import { LoginPage } from './features/auth/login'
 import { LandingPage } from './features/landing'
 import { useAuthStore, homePathForRole, type Role } from './store/auth'
@@ -120,6 +132,24 @@ const settingsRoute = createRoute({
   getParentRoute: () => adminLayoutRoute,
   path: '/settings',
   component: SettingsPage,
+})
+
+const monitoringRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/monitoring',
+  component: MonitoringPage,
+})
+
+const composerRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/composer',
+  component: ComposerPage,
+})
+
+const newsRoute = createRoute({
+  getParentRoute: () => adminLayoutRoute,
+  path: '/news',
+  component: NewsPage,
 })
 
 // ── Org Admin layout ──────────────────────────────────────────────────────────
@@ -254,12 +284,23 @@ const patientDinamikaRoute = createRoute({
   component: PatientDinamikaPage,
 })
 
+const patientOutcomesRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/outcomes',
+  component: PatientOutcomesPage,
+})
+
+const patientAchievementsRoute = createRoute({
+  getParentRoute: () => patientLayoutRoute,
+  path: '/achievements',
+  component: PatientAchievementsPage,
+})
+
 const patientVitalsRoute = createRoute({
   getParentRoute: () => patientLayoutRoute,
   path: '/vitals',
   component: PatientVitalsPage,
 })
-
 
 const patientNutritionRoute = createRoute({
   getParentRoute: () => patientLayoutRoute,
@@ -291,6 +332,64 @@ const patientSettingsRoute = createRoute({
   component: PatientSettingsPage,
 })
 
+// ── Nurse layout ─────────────────────────────────────────────────────────────
+const nurseLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/nurse',
+  beforeLoad: () => requireRole('nurse'),
+  component: NurseLayout,
+})
+
+const nurseIndexRoute = createRoute({
+  getParentRoute: () => nurseLayoutRoute,
+  path: '/',
+  beforeLoad: () => { throw redirect({ to: '/nurse/dashboard' }) },
+})
+
+const nurseDashboardRoute = createRoute({
+  getParentRoute: () => nurseLayoutRoute,
+  path: '/dashboard',
+  component: NurseDashboardPage,
+})
+
+const nurseVisitRoute = createRoute({
+  getParentRoute: () => nurseLayoutRoute,
+  path: '/visit',
+  component: NurseVisitPage,
+})
+
+const nurseMedsRoute = createRoute({
+  getParentRoute: () => nurseLayoutRoute,
+  path: '/meds',
+  component: NurseMedsPage,
+})
+
+const nurseReportsRoute = createRoute({
+  getParentRoute: () => nurseLayoutRoute,
+  path: '/reports',
+  component: NurseReportsPage,
+})
+
+// ── Caregiver layout ──────────────────────────────────────────────────────────
+const caregiverLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/caregiver',
+  beforeLoad: () => requireRole('caregiver'),
+  component: CaregiverLayout,
+})
+
+const caregiverIndexRoute = createRoute({
+  getParentRoute: () => caregiverLayoutRoute,
+  path: '/',
+  beforeLoad: () => { throw redirect({ to: '/caregiver/exercises' }) },
+})
+
+const caregiverExercisesRoute = createRoute({
+  getParentRoute: () => caregiverLayoutRoute,
+  path: '/exercises',
+  component: CaregiverExercisesPage,
+})
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   rootIndexRoute,
@@ -303,6 +402,9 @@ const routeTree = rootRoute.addChildren([
     exercisesRoute,
     messagesRoute,
     settingsRoute,
+    monitoringRoute,
+    composerRoute,
+    newsRoute,
   ]),
   orgAdminLayoutRoute.addChildren([
     orgAdminIndexRoute,
@@ -327,12 +429,25 @@ const routeTree = rootRoute.addChildren([
     patientIndexRoute,
     patientTodayRoute,
     patientDinamikaRoute,
+    patientOutcomesRoute,
+    patientAchievementsRoute,
     patientVitalsRoute,
     patientNutritionRoute,
     patientMessagesRoute,
     patientAppointmentsRoute,
     patientTeleconsultationRoute,
     patientSettingsRoute,
+  ]),
+  nurseLayoutRoute.addChildren([
+    nurseIndexRoute,
+    nurseDashboardRoute,
+    nurseVisitRoute,
+    nurseMedsRoute,
+    nurseReportsRoute,
+  ]),
+  caregiverLayoutRoute.addChildren([
+    caregiverIndexRoute,
+    caregiverExercisesRoute,
   ]),
 ])
 

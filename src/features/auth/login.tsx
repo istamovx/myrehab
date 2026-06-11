@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Eye, EyeOff, Lock, User, ShieldCheck, Stethoscope, HeartPulse, Building2,
   Globe, ChevronDown, Check, ArrowLeft, Sparkles, TrendingUp, Users, Shield,
-  Sun, Moon,
+  Sun, Moon, Home, HandHeart,
 } from 'lucide-react'
 import { useAuthStore, homePathForRole, type Role } from '@/store/auth'
 import { useLangStore } from '@/store/lang'
@@ -68,6 +68,26 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     color: '#34d399',
     bg: 'rgba(16,185,129,0.12)',
     border: 'rgba(16,185,129,0.25)',
+  },
+  {
+    role: 'nurse',
+    username: 'nurse',
+    password: 'nurse123',
+    icon: Home,
+    label: 'Patronaj hamshira',
+    color: '#f472b6',
+    bg: 'rgba(236,72,153,0.12)',
+    border: 'rgba(236,72,153,0.25)',
+  },
+  {
+    role: 'caregiver',
+    username: 'caregiver',
+    password: 'care123',
+    icon: HandHeart,
+    label: 'Parvarish yordamchisi',
+    color: '#fb923c',
+    bg: 'rgba(249,115,22,0.12)',
+    border: 'rgba(249,115,22,0.25)',
   },
 ]
 

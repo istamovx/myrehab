@@ -1,8 +1,8 @@
 import { Link, useRouterState, useNavigate } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
 import {
-  CalendarDays, CheckSquare, BarChart2, Heart,
-  MessageSquare, Settings, Apple, X, LogOut, Video,
+  CalendarDays, CheckSquare, BarChart2,
+  MessageSquare, Settings, Activity, Apple, Trophy, X, LogOut, Video,
 } from 'lucide-react'
 import { ASSIGNED_DOCTOR, PATIENT_PROFILE } from '@/data/patient-mock-data'
 import { useAuthStore } from '@/store/auth'
@@ -62,14 +62,15 @@ export function PatientSidebar({ mobileOpen, onClose }: Props) {
   }
 
   const navItems: NavItem[] = [
-    { to: '/patient/today',    icon: CheckSquare, label: t('patient.today')   },
-    { to: '/patient/dinamika', icon: BarChart2,   label: 'Dinamika'           },
-    { to: '/patient/vitals',       icon: Heart,  label: t('patient.vitals')    },
-    { to: '/patient/nutrition',    icon: Apple,  label: t('patient.nutrition')  },
-    { to: '/patient/messages',        icon: MessageSquare,label: t('patient.messages')           },
-    { to: '/patient/appointments',    icon: CalendarDays,label: t('patient.patientAppointments') },
-    { to: '/patient/teleconsultation',icon: Video,       label: t('patient.teleconsultation', 'Onlayn konsultatsiya') },
-    { to: '/patient/settings',        icon: Settings,    label: t('patient.patientSettings')     },
+    { to: '/patient/today',           icon: CheckSquare,  label: t('patient.today')                         },
+    { to: '/patient/dinamika',        icon: BarChart2,    label: t('patient.dinamika', "O'sishim")          },
+    { to: '/patient/outcomes',        icon: Activity,     label: t('patient.outcomes', 'Natijalarim')       },
+    { to: '/patient/achievements',    icon: Trophy,       label: t('patient.achievements', 'Yutuqlarim')    },
+    { to: '/patient/nutrition',       icon: Apple,        label: t('patient.nutrition')                     },
+    { to: '/patient/messages',        icon: MessageSquare,label: t('patient.messages')                      },
+    { to: '/patient/appointments',    icon: CalendarDays, label: t('patient.patientAppointments')           },
+    { to: '/patient/teleconsultation',icon: Video,        label: t('patient.teleconsultation', 'Onlayn konsultatsiya') },
+    { to: '/patient/settings',        icon: Settings,     label: t('patient.patientSettings')               },
   ]
 
   const sidebar = (

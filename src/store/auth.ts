@@ -5,7 +5,7 @@ import type { Profile } from '@/types/database.types'
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-export type Role = 'super_admin' | 'org_admin' | 'doctor' | 'patient'
+export type Role = 'super_admin' | 'org_admin' | 'doctor' | 'patient' | 'nurse' | 'caregiver'
 
 export interface SessionUser {
   username: string
@@ -31,6 +31,8 @@ const DEFAULT_ACCOUNTS: StoredAccount[] = [
   { username: 'orgadmin',   password: 'orgadmin123', role: 'org_admin',   name: 'Sardor Xolmatov',     initials: 'SX', email: 'sardor.xolmatov@myrehab.uz' },
   { username: 'doctor',     password: 'doctor123',   role: 'doctor',      name: 'Dr. Muhrim Devonov',  initials: 'MD', email: 'muhrim.devonov@myrehab.uz' },
   { username: 'patient',    password: 'patient123',  role: 'patient',     name: 'Murod Aliyev',        initials: 'MA', email: 'murod.aliyev@myrehab.uz' },
+  { username: 'nurse',      password: 'nurse123',    role: 'nurse',       name: 'Gulnora Nazarova',    initials: 'GN', email: 'gulnora.nazarova@myrehab.uz' },
+  { username: 'caregiver',  password: 'care123',     role: 'caregiver',   name: 'Sherzod Karimov',     initials: 'SK', email: 'sherzod.karimov@myrehab.uz' },
 ]
 
 const ACCOUNTS_KEY = 'myrehab_accounts'
@@ -258,5 +260,7 @@ export function homePathForRole(role: Role): string {
   if (role === 'patient') return '/patient/today'
   if (role === 'super_admin') return '/super-admin/dashboard'
   if (role === 'org_admin') return '/org-admin/dashboard'
+  if (role === 'nurse') return '/nurse/dashboard'
+  if (role === 'caregiver') return '/caregiver/exercises'
   return '/dashboard'
 }
